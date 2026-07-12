@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 13 – Transformarea unităților de măsură</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🗼</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 13: Turnul transformărilor</strong> · ultimul nivel!</p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Ultimul nivel! Metri, centimetri, kilometri… cum le „traducem” dintr-una în alta?
+      Există o scară fermecată: la fiecare treaptă în jos, <strong>înmulțești cu 10</strong>;
+      la fiecare treaptă în sus, <strong>împarți la 10</strong>. Hai să urcăm în turn!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 În turn!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Scara fermecată</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Apasă pe săgeți și plimbă numărul pe scară — vezi cum se transformă!</p>
+    </div>
+    <div class="center" style="margin:10px 0;">
+      <button class="btn-primary" onclick="ladderMove(-1)">⬆️ Împarte la 10</button>
+      <button class="btn-primary" onclick="ladderMove(1)">⬇️ Înmulțește cu 10</button>
+    </div>
+    <svg class="svg-fig" width="100%" height="330" viewBox="0 0 700 330" id="ladder-svg"></svg>
+    <div class="center"><span class="status-badge ok" id="lab-status">…</span></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am înțeles scara! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Regulile transformării</h2>
+    <div class="guide"><div class="face">🦊</div><p>Atenție — lungimile, ariile și volumele au scări diferite!</p></div>
+    <div class="learned">
+      <ul>
+        <li>📏 <strong>Lungimi</strong> (m, dm, cm, mm): fiecare treaptă = <strong>× 10</strong>. Iar 1 km = 1000 m.</li>
+        <li>🟧 <strong>Arii</strong> (m², dm², cm²): fiecare treaptă = <strong>× 100</strong>! (10 × 10, pentru că pătratul are 2 dimensiuni)</li>
+        <li>📦 <strong>Volume</strong> (m³, dm³, cm³): fiecare treaptă = <strong>× 1000</strong>! (10 × 10 × 10)</li>
+        <li>🧠 Exemplu: 1 m = 10 dm, dar 1 m² = 100 dm², iar 1 m³ = 1000 dm³.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Comanda de parchet!</h2>
+    <div class="guide">
+      <div class="face">🛒</div>
+      <p>Camera lui Vlad are aria de <strong>20 m²</strong>. La magazin, parchetul se vinde
+      la <strong>dm²</strong>. Câți dm² trebuie să comande?</p>
+    </div>
+    <div id="ch-choices">
+      <button class="btn-choice" onclick="chAnswer(0,this)">200 dm²</button>
+      <button class="btn-choice" onclick="chAnswer(1,this)">2000 dm²</button>
+      <button class="btn-choice" onclick="chAnswer(2,this)">20000 dm²</button>
+    </div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Comanda e făcută! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🎓</div>
+      <h1>FELICITĂRI! Ai terminat toată Academia!</h1>
+      <p>Harta Exploratorului e completă — ești Explorator Geometric cu diplomă! 🗺️✨</p>
+    </div>
+    <div class="learned">
+      <p><strong>La ultimul nivel ai descoperit:</strong></p>
+      <ul>
+        <li>📏 Lungimi: treapta = × 10 (1 m = 10 dm = 100 cm; 1 km = 1000 m).</li>
+        <li>🟧 Arii: treapta = × 100 (1 m² = 100 dm²).</li>
+        <li>📦 Volume: treapta = × 1000 (1 m³ = 1000 dm³).</li>
+      </ul>
+      <p style="margin-top:10px;"><strong>Iar în toată Academia ai învățat:</strong> puncte, drepte, segmente,
+      mijloc, congruență, simetrie, unghiuri de toate felurile, raportorul, grade și minute,
+      perimetre, arii și volume. Adică… toată geometria clasei a V-a! 💪</p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea finală:</strong> explică-i cuiva din familie, cu propriile tale cuvinte,
+      care e diferența dintre perimetru, arie și volum. Dacă poți explica — chiar ai înțeles.
+      A fost o onoare să explorăm împreună! — Rix 🦊</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 13 · Geometrie clasa a V-a · Transformarea unităților de măsură</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l13";
+
+/* ---------- scara interactivă ---------- */
+const units=["m","dm","cm","mm"];
+let step=0; // 0 = 3 m
+function ladderMove(d){
+  step=clamp(step+d,0,3);
+  drawLadder();
+}
+function drawLadder(){
+  const svg=document.getElementById("ladder-svg");
+  let out="";
+  for(let i=0;i<4;i++){
+    const x=80+i*150, y=50+i*70;
+    const active = i===step;
+    out+=`<rect x="${x}" y="${y}" width="140" height="52" rx="10" fill="${active?'#1d8fe1':'#eef2f8'}" stroke="#c9dcf5" stroke-width="2"/>
+      <text x="${x+70}" y="${y+33}" font-size="20" font-weight="bold" fill="${active?'#fff':'#556'}" text-anchor="middle">${(3*Math.pow(10,i)).toLocaleString('ro')} ${units[i]}</text>`;
+    if(i<3){
+      out+=`<text x="${x+185}" y="${y+65}" font-size="15" fill="#a05a00" font-weight="bold">× 10 ⬇</text>`;
+    }
+  }
+  svg.innerHTML=out;
+  document.getElementById("lab-status").textContent =
+    "3 m = "+(3*Math.pow(10,step)).toLocaleString('ro')+" "+units[step];
+}
+
+/* ---------- quiz ---------- */
+const questions = [
+  { title:"3 m = ? cm",
+    fig:null,
+    choices:["30 cm","300 cm","3000 cm"], correct:1,
+    hint:"m → dm → cm: două trepte, deci × 10 × 10…",
+    explain:"3 m = 3 × 100 = 300 cm. Două trepte în jos = × 100." },
+  { title:"2 km = ? m",
+    fig:null,
+    choices:["200 m","2000 m","20 m"], correct:1,
+    hint:"1 km = 1000 m.",
+    explain:"2 km = 2 × 1000 = 2000 m. Kilometrul e treapta cea mare: × 1000!" },
+  { title:"50 mm = ? cm",
+    fig:null,
+    choices:["5 cm","500 cm","0,5 cm"], correct:0,
+    hint:"De la mm la cm urci o treaptă — împarți la 10.",
+    explain:"50 mm = 50 : 10 = 5 cm. În sus pe scară, împărțim!" },
+  { title:"7 dm = ? cm",
+    fig:null,
+    choices:["70 cm","700 cm","7 cm"], correct:0,
+    hint:"O treaptă în jos = × 10.",
+    explain:"7 dm = 7 × 10 = 70 cm." },
+  { title:"Atenție, arie! 4 m² = ? dm²",
+    fig:null,
+    choices:["40 dm²","400 dm²","4000 dm²"], correct:1,
+    hint:"La ARII, o treaptă = × 100!",
+    explain:"4 m² = 4 × 100 = 400 dm². Ariile sar cu × 100, pentru că pătratul are două dimensiuni: 10 × 10." },
+  { title:"Robotul Bip spune: „1 m² = 10 dm², că doar 1 m = 10 dm.” Are dreptate?",
+    fig:null,
+    choices:["Da, logic!","Nu — 1 m² = 100 dm²"], correct:1,
+    hint:"Un pătrat de 1 m are 10 dm pe lungime ȘI 10 dm pe lățime…",
+    explain:"Bip greșește! Pătratul de 1m × 1m = 10 dm × 10 dm = 100 dm². La arii, înmulțim cu 100 pe treaptă!" },
+  { title:"Atenție, volum! 1 m³ = ? dm³",
+    fig:null,
+    choices:["10 dm³","100 dm³","1000 dm³"], correct:2,
+    hint:"Volumul are TREI dimensiuni: 10 × 10 × 10…",
+    explain:"1 m³ = 10 × 10 × 10 = 1000 dm³. Iar 1 dm³ e chiar 1 litru!" },
+  { title:"Gardul grădinii are 2000 cm. Câți metri are?",
+    fig:null,
+    choices:["20 m","200 m","2 m"], correct:0,
+    hint:"cm → dm → m: două trepte în sus, împarte la 100.",
+    explain:"2000 cm = 2000 : 100 = 20 m. Lungimile urcă împărțind la 10 pe fiecare treaptă." },
+];
+
+/* ---------- provocarea ---------- */
+let chMistakes=0;
+function chAnswer(i,btn){
+  const fb=document.getElementById("ch-feedback");
+  if(i===1){
+    btn.classList.add("correct");
+    document.querySelectorAll("#ch-choices button").forEach(b=>b.disabled=true);
+    fb.innerHTML=`<div class="feedback good">🛒 Corect! 20 m² = 20 × 100 = 2000 dm². Vlad are parchet fix cât îi trebuie — iar tu ai terminat Academia!</div>`;
+    document.getElementById("ch-next-wrap").classList.remove("hidden");
+  } else {
+    btn.classList.add("wrong"); btn.disabled=true;
+    chMistakes++;
+    if(chMistakes===1){
+      fb.innerHTML=`<div class="feedback hint">🤔 E vorba de ARIE (m²)! O treaptă la arii înseamnă × 100, nu × 10.</div>`;
+    } else {
+      fb.innerHTML=`<div class="feedback explain">💡 20 m² × 100 = 2000 dm². La arii fiecare treaptă înmulțește cu 100. Apasă răspunsul corect!</div>`;
+      document.querySelectorAll("#ch-choices button").forEach((b,bi)=>{ if(bi!==1) b.disabled=true; });
+    }
+  }
+}
+
+window.onShow=function(id){
+  if(id==="screen-explore") drawLadder();
+};
+</script>
+</body>
+</html>

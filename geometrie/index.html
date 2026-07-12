@@ -7,40 +7,74 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
   body { background: linear-gradient(160deg, #eef6ff, #e6fff2); min-height: 100vh; display: flex; justify-content: center; padding: 20px; }
-  .app { width: 100%; max-width: 640px; }
+  .app { width: 100%; max-width: 680px; }
   h1 { color: #1d4e89; text-align: center; margin: 16px 0 4px; }
-  .sub { text-align: center; color: #567; margin-bottom: 24px; }
+  .sub { text-align: center; color: #567; margin-bottom: 10px; }
+  .map-progress { text-align: center; font-size: 1.05rem; color: #1d4e89; font-weight: 600; margin-bottom: 20px; }
   a.lesson { display: flex; align-items: center; gap: 16px; background: #fff; border-radius: 18px;
-    box-shadow: 0 4px 16px rgba(30,60,120,.12); padding: 18px 22px; margin-bottom: 14px;
-    text-decoration: none; color: #1d4e89; font-size: 1.1rem; font-weight: 600; transition: transform .1s; }
+    box-shadow: 0 4px 16px rgba(30,60,120,.12); padding: 16px 20px; margin-bottom: 12px;
+    text-decoration: none; color: #1d4e89; font-size: 1.05rem; font-weight: 600; transition: transform .1s; position: relative; }
   a.lesson:hover { transform: scale(1.02); }
-  a.lesson .emoji { font-size: 2rem; }
-  a.lesson .desc { font-size: .9rem; color: #678; font-weight: 400; }
-  .soon { opacity: .45; pointer-events: none; }
+  a.lesson .emoji { font-size: 1.8rem; min-width: 40px; text-align: center; }
+  a.lesson .desc { font-size: .88rem; color: #678; font-weight: 400; }
+  a.lesson .badge { margin-left: auto; font-size: 1.5rem; }
+  a.lesson.done { background: #f2fbf4; border: 2px solid #b5e3bf; }
+  .reset { text-align: center; margin-top: 24px; }
+  .reset button { background: none; border: none; color: #8aa; font-size: .85rem; cursor: pointer; text-decoration: underline; }
 </style>
 </head>
 <body>
 <div class="app">
   <h1>🧭 Academia Exploratorilor Geometrici</h1>
   <p class="sub">Geometrie · clasa a V-a</p>
-
-  <a class="lesson" href="lectia-01-punct-dreapta-segment.html">
-    <span class="emoji">📍</span>
-    <span>Nivelul 1: Lumea punctelor și a liniilor<br>
-      <span class="desc">Punct, dreaptă, semidreaptă și segment</span></span>
-  </a>
-
-  <a class="lesson" href="lectia-02-coliniare-paralele-concurente.html">
-    <span class="emoji">🌉</span>
-    <span>Nivelul 2: Podurile paralele<br>
-      <span class="desc">Puncte coliniare, drepte paralele și concurente</span></span>
-  </a>
-
-  <a class="lesson soon" href="#">
-    <span class="emoji">🔒</span>
-    <span>Nivelul 3: Secretul mijlocului<br>
-      <span class="desc">Lungimea și mijlocul segmentului — în curând</span></span>
-  </a>
+  <p class="map-progress" id="map-progress"></p>
+  <div id="lessons"></div>
+  <div class="reset"><button onclick="resetProgress()">Șterge tot progresul</button></div>
 </div>
+
+<script>
+"use strict";
+const lessons = [
+  { id:"l01", file:"lectia-01-punct-dreapta-segment.html", emoji:"📍", title:"Nivelul 1: Lumea punctelor și a liniilor", desc:"Punct, dreaptă, semidreaptă și segment" },
+  { id:"l02", file:"lectia-02-coliniare-paralele-concurente.html", emoji:"🌉", title:"Nivelul 2: Podurile paralele", desc:"Puncte coliniare, drepte paralele și concurente" },
+  { id:"l03", file:"lectia-03-lungime-mijloc-segment.html", emoji:"🏴‍☠️", title:"Nivelul 3: Secretul mijlocului", desc:"Distanța, lungimea și mijlocul segmentului" },
+  { id:"l04", file:"lectia-04-congruente-simetric.html", emoji:"👯", title:"Nivelul 4: Gemenii geometrici", desc:"Segmente congruente și simetricul unui punct" },
+  { id:"l05", file:"lectia-05-unghiul.html", emoji:"👑", title:"Nivelul 5: Regatul unghiurilor", desc:"Unghiul: vârf, laturi, interior și exterior" },
+  { id:"l06", file:"lectia-06-raportorul.html", emoji:"🌡️", title:"Nivelul 6: Măsurătorii regali", desc:"Măsurarea și construcția unghiurilor cu raportorul" },
+  { id:"l07", file:"lectia-07-tipuri-unghiuri.html", emoji:"👨‍👩‍👧‍👦", title:"Nivelul 7: Familia unghiurilor", desc:"Unghi drept, ascuțit, obtuz, nul și alungit" },
+  { id:"l08", file:"lectia-08-grade-minute.html", emoji:"🔬", title:"Nivelul 8: Atelierul calculelor", desc:"Calcule cu grade și minute" },
+  { id:"l09", file:"lectia-09-simetrie.html", emoji:"🦋", title:"Nivelul 9: Oglinda simetriei", desc:"Figuri congruente și axe de simetrie" },
+  { id:"l10", file:"lectia-10-perimetre.html", emoji:"🏡", title:"Nivelul 10: Gardul grădinii", desc:"Lungimi și perimetre" },
+  { id:"l11", file:"lectia-11-arii.html", emoji:"🏗️", title:"Nivelul 11: Arhitectul suprafețelor", desc:"Aria pătratului și a dreptunghiului" },
+  { id:"l12", file:"lectia-12-volume.html", emoji:"📦", title:"Nivelul 12: Depozitul tridimensional", desc:"Volumul cubului și al paralelipipedului dreptunghic" },
+  { id:"l13", file:"lectia-13-unitati-masura.html", emoji:"🗼", title:"Nivelul 13: Turnul transformărilor", desc:"Transformarea unităților de măsură" },
+];
+function getProgress(){
+  try { return JSON.parse(localStorage.getItem("geoProgress")) || {}; } catch(e){ return {}; }
+}
+function render(){
+  const p = getProgress();
+  const doneCount = lessons.filter(l=>p[l.id]).length;
+  document.getElementById("map-progress").textContent =
+    doneCount === lessons.length
+      ? "🎓 Harta e completă — Explorator Geometric cu diplomă!"
+      : `🗺️ Piese de hartă adunate: ${doneCount} din ${lessons.length}`;
+  document.getElementById("lessons").innerHTML = lessons.map(l=>{
+    const done = !!p[l.id];
+    return `<a class="lesson ${done?'done':''}" href="${l.file}">
+      <span class="emoji">${l.emoji}</span>
+      <span>${l.title}<br><span class="desc">${l.desc}</span></span>
+      <span class="badge">${done?"✅":"🧩"}</span>
+    </a>`;
+  }).join("");
+}
+function resetProgress(){
+  if(confirm("Sigur ștergi tot progresul?")){
+    localStorage.removeItem("geoProgress");
+    render();
+  }
+}
+render();
+</script>
 </body>
 </html>

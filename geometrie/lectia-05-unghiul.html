@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 5 – Unghiul: vârf, laturi, interior și exterior</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">👑</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 5: Regatul unghiurilor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Deschide puțin o carte. Apoi deschide-o mai mult. Ce s-a schimbat între coperți?
+      Foarfeca, acele de ceas, cioburile de pizza 🍕 — toate ascund aceeași figură secretă:
+      <strong>unghiul</strong>. Bine ai venit în regatul lui!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 Intrăm în regat!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Laboratorul unghiurilor</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Trage punctele <strong>A</strong> și <strong>B</strong> ca să deschizi și să închizi unghiul.
+      Zona colorată e <em>interiorul</em> unghiului. Vezi cum cele două „brațe” pornesc din același loc?</p>
+    </div>
+    <canvas id="lab" width="800" height="380"></canvas>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am observat! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Cum îl numim și îl scriem</h2>
+    <div class="guide"><div class="face">🦊</div><p>Părțile unghiului au nume precise:</p></div>
+    <svg class="svg-fig" width="100%" height="300" viewBox="0 0 700 300">
+      <path d="M 100 250 L 340 250 A 60 60 0 0 0 291 148" fill="#fff3cd" opacity="0.7"/>
+      <line x1="100" y1="250" x2="380" y2="250" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="380,250 366,243 366,257" fill="#1d8fe1"/>
+      <line x1="100" y1="250" x2="320" y2="90" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="320,90 305,93 314,105" fill="#1d8fe1"/>
+      <circle cx="100" cy="250" r="8" fill="#e05555"/>
+      <text x="72" y="272" font-size="20" font-weight="bold">O</text>
+      <circle cx="300" cy="250" r="6" fill="#333"/><text x="295" y="278" font-size="18" font-weight="bold">B</text>
+      <circle cx="265" cy="130" r="6" fill="#333"/><text x="275" y="122" font-size="18" font-weight="bold">A</text>
+      <text x="215" y="215" font-size="16" fill="#a05a00" font-weight="bold">interior</text>
+      <text x="420" y="80" font-size="18" fill="#333">• <tspan font-weight="bold">Vârful</tspan> — punctul O, de unde pornesc brațele.</text>
+      <text x="420" y="115" font-size="18" fill="#333">• <tspan font-weight="bold">Laturile</tspan> — semidreptele OA și OB.</text>
+      <text x="420" y="150" font-size="18" fill="#333">• Notăm: <tspan font-weight="bold">∠AOB</tspan> — vârful se scrie</text>
+      <text x="435" y="172" font-size="18" fill="#333">întotdeauna <tspan font-weight="bold">la mijloc</tspan>!</text>
+      <text x="420" y="207" font-size="18" fill="#333">• <tspan font-weight="bold">Interiorul</tspan> — zona dintre laturi.</text>
+      <text x="420" y="242" font-size="18" fill="#333">• <tspan font-weight="bold">Exteriorul</tspan> — restul planului.</text>
+    </svg>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Deschide poarta castelului!</h2>
+    <div class="guide">
+      <div class="face">🏰</div>
+      <p>Poarta castelului se deschide doar dacă brațele unghiului trec prin cele două nestemate 💎.
+      <strong>Trage capetele albastre</strong> ale laturilor ca fiecare să treacă printr-o nestemată!</p>
+    </div>
+    <canvas id="challenge" width="800" height="380"></canvas>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Poarta s-a deschis! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 5!</h1>
+      <p>A cincea piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>📐 <strong>Unghiul</strong> — figura formată din două semidrepte cu aceeași origine.</li>
+        <li>🔴 <strong>Vârful</strong> — originea comună; <strong>laturile</strong> — cele două semidrepte.</li>
+        <li>✏️ Notăm <strong>∠AOB</strong> — litera vârfului stă mereu la mijloc.</li>
+        <li>🎨 Unghiul are <strong>interior</strong> (între laturi) și <strong>exterior</strong>.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> desenează cu rigla un unghi ∠MAT (care e vârful? litera din mijloc: A!).
+      Marchează un punct în interiorul lui și unul în exterior. Apoi caută 3 unghiuri prin casă —
+      foarfeca deschisă e un început bun!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-06-raportorul.html" class="btn-primary">Nivelul 6 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 5 · Geometrie clasa a V-a · Unghiul: vârf, laturi, interior și exterior</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l05";
+
+/* ---------- explorare ---------- */
+const lab = document.getElementById("lab");
+const lctx = lab.getContext("2d");
+const O = {x:180,y:300};
+const pts = { A:{x:600,y:120}, B:{x:640,y:300} };
+
+function rayAngle(p){ return Math.atan2(O.y-p.y, p.x-O.x); } // pozitiv în sus
+function drawAngleFig(ctx, O, A, B, opts){
+  const a1 = Math.atan2(A.y-O.y, A.x-O.x);
+  const a2 = Math.atan2(B.y-O.y, B.x-O.x);
+  // interior colorat
+  ctx.beginPath(); ctx.moveTo(O.x,O.y);
+  ctx.arc(O.x,O.y,90,a2,a1, ((a1-a2+2*Math.PI)%(2*Math.PI))>Math.PI );
+  ctx.closePath();
+  ctx.fillStyle="rgba(255,200,60,.35)"; ctx.fill();
+  ctx.lineWidth=4; ctx.lineCap="round"; ctx.strokeStyle=opts&&opts.color||"#1d8fe1";
+  for(const P of [A,B]){
+    const [,e]=extendLine(O,P,false);
+    ctx.beginPath(); ctx.moveTo(O.x,O.y); ctx.lineTo(e.x,e.y); ctx.stroke();
+  }
+}
+function drawLab(){
+  lctx.clearRect(0,0,lab.width,lab.height);
+  drawAngleFig(lctx, O, pts.A, pts.B);
+  drawPoint(lctx,O,"O  (vârf)","#e05555");
+  drawPoint(lctx,pts.A,"A","#1d8fe1");
+  drawPoint(lctx,pts.B,"B","#1d8fe1");
+  lctx.font="bold 20px Segoe UI"; lctx.fillStyle="#1d4e89";
+  lctx.fillText("∠AOB", 40, 45);
+}
+enableDrag(lab, ()=>pts, drawLab);
+
+/* ---------- figuri quiz ---------- */
+function figAngle(labels, extraPoint){
+  // labels = [varf, lat1, lat2]
+  return `<svg class="svg-fig" width="100%" height="190" viewBox="0 0 400 190">
+    <line x1="80" y1="160" x2="360" y2="160" stroke="#1d8fe1" stroke-width="4"/>
+    <polygon points="360,160 346,153 346,167" fill="#1d8fe1"/>
+    <line x1="80" y1="160" x2="300" y2="30" stroke="#1d8fe1" stroke-width="4"/>
+    <polygon points="300,30 285,34 294,45" fill="#1d8fe1"/>
+    <circle cx="80" cy="160" r="7" fill="#e05555"/>
+    <text x="55" y="180" font-size="18" font-weight="bold">${labels[0]}</text>
+    <circle cx="250" cy="60" r="5" fill="#333"/><text x="260" y="55" font-size="17" font-weight="bold">${labels[1]}</text>
+    <circle cx="280" cy="160" r="5" fill="#333"/><text x="274" y="185" font-size="17" font-weight="bold">${labels[2]}</text>
+    ${extraPoint?`<text x="${extraPoint.x}" y="${extraPoint.y}" font-size="22" font-weight="bold" fill="#35b653">•</text>
+      <text x="${extraPoint.x+10}" y="${extraPoint.y+5}" font-size="16" font-weight="bold" fill="#35b653">${extraPoint.l}</text>`:""}
+  </svg>`;
+}
+
+const questions = [
+  { title:"Care este vârful unghiului ∠AOB?",
+    fig:()=>figAngle(["O","A","B"]),
+    choices:["Punctul A","Punctul O","Punctul B"], correct:1,
+    hint:"Uită-te la litera din MIJLOCUL notației ∠AOB…",
+    explain:"Vârful este O — punctul din care pornesc ambele laturi. În notație, vârful se scrie mereu la mijloc!" },
+  { title:"Ce sunt laturile unghiului ∠AOB?",
+    fig:()=>figAngle(["O","A","B"]),
+    choices:["Segmentele OA și OB","Semidreptele OA și OB","Dreptele OA și OB"], correct:1,
+    hint:"Brațele unghiului au origine, dar se opresc vreodată?",
+    explain:"Laturile sunt semidreptele OA și OB — pornesc din vârful O și continuă la nesfârșit (vezi săgețile!)." },
+  { title:"Punctul verde M este în interiorul sau în exteriorul unghiului?",
+    fig:()=>figAngle(["O","A","B"], {x:200,y:120,l:"M"}),
+    choices:["În interior","În exterior","Pe o latură"], correct:0,
+    hint:"E între cele două brațe ale unghiului?",
+    explain:"M se află între laturile unghiului, deci în interiorul lui." },
+  { title:"Și punctul verde P?",
+    fig:()=>figAngle(["O","A","B"], {x:70,y:60,l:"P"}),
+    choices:["În interior","În exterior"], correct:1,
+    hint:"E între brațe sau în afara lor?",
+    explain:"P este în afara zonei dintre laturi — în exteriorul unghiului." },
+  { title:"Cum notăm unghiul cu vârful în T și laturile TM și TN?",
+    fig:()=>figAngle(["T","M","N"]),
+    choices:["∠TMN","∠MTN","∠MNT"], correct:1,
+    hint:"Vârful (T) trebuie să stea la mijloc.",
+    explain:"Notăm ∠MTN — vârful T e la mijloc, iar M și N sunt câte un punct de pe fiecare latură." },
+  { title:"Robotul Bip spune: „∠AOB și ∠BOA sunt două unghiuri diferite.” Are dreptate?",
+    fig:()=>figAngle(["O","A","B"]),
+    choices:["Da, sunt diferite","Nu — e același unghi, scris în două feluri"], correct:1,
+    hint:"În ambele notații, ce literă stă la mijloc?",
+    explain:"Bip greșește! Contează doar ca vârful O să fie la mijloc. ∠AOB și ∠BOA numesc exact același unghi." },
+  { title:"Acele unui ceas formează un unghi. Unde este vârful lui?",
+    fig:null,
+    choices:["La capătul acului mare","În centrul ceasului, unde se prind acele","Pe cifra 12"], correct:1,
+    hint:"Din ce punct „pornesc” amândouă acele?",
+    explain:"Ambele ace pornesc din centrul ceasului — acela e vârful unghiului, iar acele sunt laturile." },
+  { title:"Din ce este format un unghi?",
+    fig:null,
+    choices:["Din două drepte paralele","Din două semidrepte cu aceeași origine","Din două segmente oarecare"], correct:1,
+    hint:"Cele două brațe pornesc din același punct…",
+    explain:"Unghiul = două semidrepte care au aceeași origine (vârful). Aceasta e definiția lui!" },
+];
+
+/* ---------- provocarea: poarta castelului ---------- */
+const ch = document.getElementById("challenge");
+const cctx = ch.getContext("2d");
+const cO = {x:150,y:320};
+const hands = { H1:{x:500,y:280}, H2:{x:400,y:150} };
+const gems = [ {x:650,y:300}, {x:520,y:80} ];
+let chSolved=false;
+
+function distToRayFrom(orig, through, p){
+  const dx=through.x-orig.x, dy=through.y-orig.y;
+  const len2=dx*dx+dy*dy||1;
+  let t=((p.x-orig.x)*dx+(p.y-orig.y)*dy)/len2;
+  t=Math.max(0,t);
+  return Math.hypot(p.x-(orig.x+t*dx), p.y-(orig.y+t*dy));
+}
+function drawChallenge(){
+  cctx.clearRect(0,0,ch.width,ch.height);
+  const ok1 = distToRayFrom(cO,hands.H1,gems[0])<16 || distToRayFrom(cO,hands.H2,gems[0])<16;
+  const ok2 = distToRayFrom(cO,hands.H1,gems[1])<16 || distToRayFrom(cO,hands.H2,gems[1])<16;
+  drawAngleFig(cctx, cO, hands.H1, hands.H2, {color: ok1&&ok2 ? "#35b653" : "#1d8fe1"});
+  cctx.font="34px Segoe UI";
+  cctx.fillText(ok1?"✨":"💎", gems[0].x-17, gems[0].y+12);
+  cctx.fillText(ok2?"✨":"💎", gems[1].x-17, gems[1].y+12);
+  cctx.fillText("🏰", cO.x-20, cO.y+14);
+  drawPoint(cctx,hands.H1,"","#1d8fe1");
+  drawPoint(cctx,hands.H2,"","#1d8fe1");
+  const fb=document.getElementById("ch-feedback");
+  if(ok1&&ok2&&!chSolved){
+    chSolved=true;
+    fb.innerHTML=`<div class="feedback good">🔓 Ambele laturi trec prin nestemate — poarta se deschide! Ai construit unghiul perfect.</div>`;
+    document.getElementById("ch-next-wrap").classList.remove("hidden");
+  } else if(!chSolved){
+    fb.innerHTML=`<div class="feedback hint">${ok1||ok2 ? "O nestemată e atinsă — mai rămâne una!" : "Ține minte: fiecare latură a unghiului trebuie să treacă exact printr-o nestemată."}</div>`;
+  }
+}
+enableDrag(ch, ()=> chSolved ? {} : hands, drawChallenge);
+
+window.onShow = function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+};
+</script>
+</body>
+</html>

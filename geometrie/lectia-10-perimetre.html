@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 10 – Lungimi și perimetre</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🏡</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 10: Gardul grădinii</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Bunicul vrea să pună gard în jurul grădinii. Câți metri de gard să cumpere?
+      Ca să afle, trebuie să măsoare <em>tot conturul</em> grădinii — adică
+      <strong>perimetrul</strong>. Hai să-l ajutăm!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 La grădină!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Grădina elastică</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Trage de colțul grădinii și privește cum se schimbă perimetrul.
+      Fiecare pătrățel are latura de 1 metru. Observă: gardul = suma tuturor laturilor!</p>
+    </div>
+    <canvas id="lab" width="800" height="420"></canvas>
+    <div class="center"><span class="status-badge warn" id="lab-status">…</span></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am înțeles! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Formulele gardului</h2>
+    <div class="guide"><div class="face">🦊</div><p>Perimetrul = lungimea totală a conturului:</p></div>
+    <div class="learned">
+      <ul>
+        <li>🔷 <strong>Orice figură:</strong> P = suma lungimilor tuturor laturilor.</li>
+        <li>▭ <strong>Dreptunghi:</strong> P = 2 × (L + l) — două lungimi și două lățimi.</li>
+        <li>⬜ <strong>Pătrat:</strong> P = 4 × l — patru laturi egale.</li>
+        <li>📏 Perimetrul se măsoară în unități de lungime: m, cm, km…</li>
+      </ul>
+    </div>
+    <svg class="svg-fig" width="100%" height="170" viewBox="0 0 700 170">
+      <rect x="60" y="35" width="200" height="100" fill="#d8f7dd" stroke="#35b653" stroke-width="4"/>
+      <text x="140" y="25" font-size="16" fill="#1b6b2e" font-weight="bold">L = 5 m</text>
+      <text x="15" y="90" font-size="16" fill="#1b6b2e" font-weight="bold">l = 3 m</text>
+      <text x="80" y="165" font-size="17" fill="#333">P = 2 × (5 + 3) = 16 m</text>
+      <rect x="430" y="30" width="110" height="110" fill="#d8e9fb" stroke="#1d8fe1" stroke-width="4"/>
+      <text x="455" y="20" font-size="16" fill="#156bb0" font-weight="bold">l = 4 m</text>
+      <text x="420" y="165" font-size="17" fill="#333">P = 4 × 4 = 16 m</text>
+    </svg>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Gardul bunicului!</h2>
+    <div class="guide">
+      <div class="face">👴</div>
+      <p>Bunicul a cumpărat <strong>exact 20 de metri</strong> de gard și vrea să-l folosească pe tot.
+      <strong>Trage de colțul grădinii</strong> ca perimetrul să fie exact 20 m!</p>
+    </div>
+    <canvas id="challenge" width="800" height="420"></canvas>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Gardul e pus! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 10!</h1>
+      <p>A zecea piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>🔗 <strong>Perimetrul</strong> — lungimea totală a conturului (suma laturilor).</li>
+        <li>▭ Dreptunghi: P = 2 × (L + l) · ⬜ Pătrat: P = 4 × l.</li>
+        <li>🧠 Există mai multe dreptunghiuri diferite cu ACELAȘI perimetru!</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> măsoară cu rigla coperta unui caiet și calculează-i
+      perimetrul. Apoi desenează două dreptunghiuri diferite care au amândouă perimetrul 12 cm.
+      (Indiciu: 1 și 5? 2 și 4?)</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-11-arii.html" class="btn-primary">Nivelul 11 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 10 · Geometrie clasa a V-a · Lungimi și perimetre</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l10";
+
+/* ---------- dreptunghi elastic pe grilă ---------- */
+const GRID=45, GX=80, GY=40;
+function drawGardenGrid(ctx, w, h){
+  ctx.clearRect(0,0,800,420);
+  ctx.strokeStyle="#e3ecf5"; ctx.lineWidth=1;
+  for(let x=GX; x<=GX+13*GRID; x+=GRID){ ctx.beginPath(); ctx.moveTo(x,GY); ctx.lineTo(x,GY+7*GRID); ctx.stroke(); }
+  for(let y=GY; y<=GY+7*GRID; y+=GRID){ ctx.beginPath(); ctx.moveTo(GX,y); ctx.lineTo(GX+13*GRID,y); ctx.stroke(); }
+}
+function drawGarden(ctx, cols, rows, ok){
+  drawGardenGrid(ctx);
+  ctx.fillStyle="rgba(140,200,120,.25)";
+  ctx.fillRect(GX,GY,cols*GRID,rows*GRID);
+  ctx.strokeStyle= ok ? "#35b653" : "#8a6b3d";
+  ctx.lineWidth=6;
+  ctx.strokeRect(GX,GY,cols*GRID,rows*GRID);
+  ctx.font="22px Segoe UI";
+  ctx.fillText("🌻", GX+12, GY+34);
+  ctx.fillText("🥕", GX+cols*GRID-40, GY+rows*GRID-14);
+  ctx.font="bold 19px Segoe UI"; ctx.fillStyle="#1d4e89";
+  ctx.fillText("L = "+cols+" m", GX+cols*GRID/2-30, GY-12);
+  ctx.save(); ctx.translate(GX-16,GY+rows*GRID/2+30); ctx.rotate(-Math.PI/2);
+  ctx.fillText("l = "+rows+" m", 0, 0); ctx.restore();
+}
+
+/* explorare */
+const lab=document.getElementById("lab");
+const lctx=lab.getContext("2d");
+let lw=6, lh=4;
+const labCorner={ C:{x:GX+6*GRID, y:GY+4*GRID} };
+function drawLab(){
+  lw=clamp(Math.round((labCorner.C.x-GX)/GRID),2,13);
+  lh=clamp(Math.round((labCorner.C.y-GY)/GRID),2,7);
+  labCorner.C.x=GX+lw*GRID; labCorner.C.y=GY+lh*GRID;
+  drawGarden(lctx,lw,lh,false);
+  drawPoint(lctx,labCorner.C,"","#e08a1e");
+  const P=2*(lw+lh);
+  document.getElementById("lab-status").textContent=`P = 2 × (${lw} + ${lh}) = ${P} m de gard`;
+}
+enableDrag(lab, ()=>labCorner, drawLab, -2000);
+
+/* ---------- quiz ---------- */
+function figRect(L,l,unit){
+  const w=Math.min(L*30,300), h=Math.min(l*30,140);
+  return `<svg class="svg-fig" width="100%" height="${h+60}" viewBox="0 0 400 ${h+60}">
+    <rect x="60" y="30" width="${w}" height="${h}" fill="#d8f7dd" stroke="#35b653" stroke-width="3"/>
+    <text x="${60+w/2-25}" y="20" font-size="15" font-weight="bold" fill="#1b6b2e">${L} ${unit}</text>
+    <text x="15" y="${30+h/2+5}" font-size="15" font-weight="bold" fill="#1b6b2e">${l} ${unit}</text>
+  </svg>`;
+}
+const questions = [
+  { title:"O grădină dreptunghiulară are L = 5 m și l = 3 m. Cât gard trebuie?",
+    fig:()=>figRect(5,3,"m"),
+    choices:["8 m","15 m","16 m"], correct:2,
+    hint:"Sunt DOUĂ lungimi și DOUĂ lățimi: 5+3+5+3…",
+    explain:"P = 2 × (5+3) = 16 m. Gardul înconjoară toată grădina: 5+3+5+3 = 16." },
+  { title:"Un pătrat are latura de 6 cm. Care e perimetrul lui?",
+    fig:()=>figRect(6,6,"cm"),
+    choices:["12 cm","24 cm","36 cm"], correct:1,
+    hint:"Pătratul are 4 laturi egale.",
+    explain:"P = 4 × 6 = 24 cm. Patru laturi, toate de 6 cm." },
+  { title:"Ce este perimetrul unei figuri?",
+    fig:null,
+    choices:["Suma lungimilor tuturor laturilor","Numărul de colțuri","Latura cea mai lungă"], correct:0,
+    hint:"Gândește-te la gardul care înconjoară grădina…",
+    explain:"Perimetrul = lungimea totală a conturului, adică suma tuturor laturilor." },
+  { title:"Un triunghi are laturile de 3 cm, 4 cm și 5 cm. Perimetrul?",
+    fig:null,
+    choices:["12 cm","60 cm","10 cm"], correct:0,
+    hint:"Adună cele trei laturi.",
+    explain:"P = 3+4+5 = 12 cm. La orice figură, perimetrul e suma laturilor!" },
+  { title:"Robotul Bip calculează perimetrul unui dreptunghi cu L=5 și l=3 așa: „5+3=8 m”. Ce a greșit?",
+    fig:()=>figRect(5,3,"m"),
+    choices:["Nimic, e corect","A adunat doar DOUĂ laturi din patru","Trebuia să înmulțească 5×3"], correct:1,
+    hint:"Câte laturi are dreptunghiul? Câte a adunat Bip?",
+    explain:"Bip a uitat că dreptunghiul are 4 laturi! Corect: 5+3+5+3 = 16 m. (5×3 ar fi aria — o descoperim la nivelul următor!)" },
+  { title:"Un pătrat are perimetrul de 20 cm. Cât are o latură?",
+    fig:null,
+    choices:["4 cm","5 cm","16 cm"], correct:1,
+    hint:"Împarte perimetrul la numărul de laturi.",
+    explain:"20 : 4 = 5 cm. Mergem „înapoi”: din perimetru aflăm latura împărțind la 4." },
+  { title:"În ce unități se măsoară perimetrul?",
+    fig:null,
+    choices:["În metri, centimetri… (unități de lungime)","În metri pătrați (m²)","În grade (°)"], correct:0,
+    hint:"Perimetrul e o LUNGIME — a gardului…",
+    explain:"Perimetrul e o lungime, deci se măsoară în m, cm, km. M² e pentru arii, gradele pentru unghiuri!" },
+  { title:"Terenul de fotbal al școlii are 40 m lungime și 20 m lățime. Cât aleargă Vlad dacă face un tur complet pe margine?",
+    fig:()=>figRect(8,4,"×5 m"),
+    choices:["60 m","120 m","800 m"], correct:1,
+    hint:"Un tur complet = tot perimetrul.",
+    explain:"P = 2 × (40+20) = 120 m. Un tur pe margine înseamnă exact perimetrul terenului." },
+];
+
+/* ---------- provocarea ---------- */
+const ch=document.getElementById("challenge");
+const cctx=ch.getContext("2d");
+const chCorner={ C:{x:GX+4*GRID, y:GY+3*GRID} };
+let chSolved=false;
+function drawChallenge(){
+  const w=clamp(Math.round((chCorner.C.x-GX)/GRID),2,13);
+  const h=clamp(Math.round((chCorner.C.y-GY)/GRID),2,7);
+  chCorner.C.x=GX+w*GRID; chCorner.C.y=GY+h*GRID;
+  const P=2*(w+h);
+  const ok = P===20;
+  drawGarden(cctx,w,h,ok);
+  if(!chSolved) drawPoint(cctx,chCorner.C,"","#e08a1e");
+  cctx.font="bold 22px Segoe UI"; cctx.fillStyle= ok?"#1b6b2e":"#1d4e89";
+  cctx.fillText("P = "+P+" m  (ținta: 20 m)", 500, 400);
+  const fb=document.getElementById("ch-feedback");
+  if(ok && !chSolved){
+    chSolved=true;
+    fb.innerHTML=`<div class="feedback good">🌻 Exact 20 m — bunicul folosește tot gardul, fără să-i rămână sau să-i lipsească! (Știai că și alte forme aveau P=20? De exemplu ${w===6?"7×3":"6×4"}!)</div>`;
+    document.getElementById("ch-next-wrap").classList.remove("hidden");
+  } else if(!chSolved){
+    fb.innerHTML=`<div class="feedback hint">${P>20?"Prea mult gard — micșorează grădina!":"Mai e gard nefolosit — mărește grădina!"} Caută L și l cu 2×(L+l)=20.</div>`;
+  }
+}
+enableDrag(ch, ()=> chSolved ? {} : chCorner, drawChallenge, -2000);
+
+window.onShow=function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+};
+</script>
+</body>
+</html>

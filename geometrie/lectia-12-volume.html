@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 12 – Volumul cubului și al paralelipipedului dreptunghic</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">📦</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 12: Depozitul tridimensional</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Până acum am stat pe hârtie — în două dimensiuni. Dar cutiile, camerele și piscinele
+      au și <em>înălțime</em>! Câte cuburi de gheață încap într-o cutie? Asta ne spune
+      <strong>volumul</strong>. Bine ai venit în lumea 3D!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 La depozit!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Constructorul de cutii</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Apasă pe butoanele <strong>+</strong> și <strong>−</strong> și construiește cutia din cuburi de 1 cm³.
+      Observă trucul: un strat are L × l cuburi, iar straturile se pun unul peste altul!</p>
+    </div>
+    <div class="dim-controls">
+      <span class="lbl">Lungime:</span>
+      <button class="btn-small" onclick="dim(0,-1)">−</button><span class="val" id="v0">3</span><button class="btn-small" onclick="dim(0,1)">+</button>
+    </div>
+    <div class="dim-controls">
+      <span class="lbl">Lățime:</span>
+      <button class="btn-small" onclick="dim(1,-1)">−</button><span class="val" id="v1">2</span><button class="btn-small" onclick="dim(1,1)">+</button>
+    </div>
+    <div class="dim-controls">
+      <span class="lbl">Înălțime:</span>
+      <button class="btn-small" onclick="dim(2,-1)">−</button><span class="val" id="v2">2</span><button class="btn-small" onclick="dim(2,1)">+</button>
+    </div>
+    <canvas id="lab" width="800" height="400"></canvas>
+    <div class="center"><span class="status-badge warn" id="lab-status">…</span></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am prins trucul! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Formulele volumului</h2>
+    <div class="guide"><div class="face">🦊</div><p>Volumul = numărul de cuburi cu latura 1 care umplu corpul:</p></div>
+    <div class="learned">
+      <ul>
+        <li>📦 <strong>Paralelipiped dreptunghic</strong> (cutia): V = L × l × h.</li>
+        <li>🎲 <strong>Cub</strong>: toate muchiile egale, V = l × l × l.</li>
+        <li>📐 Unități: <strong>cm³, m³</strong> — „la cub”, pentru că spațiul are 3 dimensiuni!</li>
+        <li>🧠 Truc: un strat are L × l cuburi; înmulțești cu numărul de straturi (h).</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Comanda depozitului!</h2>
+    <div class="guide">
+      <div class="face">📦</div>
+      <p>Șeful depozitului are <strong>exact 36 de cutii-cub</strong> și vrea un raft în care să încapă
+      toate, fără loc gol. Reglează dimensiunile ca volumul să fie exact <strong>36</strong>!</p>
+    </div>
+    <div class="dim-controls">
+      <span class="lbl">Lungime:</span>
+      <button class="btn-small" onclick="cdim(0,-1)">−</button><span class="val" id="c0">2</span><button class="btn-small" onclick="cdim(0,1)">+</button>
+    </div>
+    <div class="dim-controls">
+      <span class="lbl">Lățime:</span>
+      <button class="btn-small" onclick="cdim(1,-1)">−</button><span class="val" id="c1">2</span><button class="btn-small" onclick="cdim(1,1)">+</button>
+    </div>
+    <div class="dim-controls">
+      <span class="lbl">Înălțime:</span>
+      <button class="btn-small" onclick="cdim(2,-1)">−</button><span class="val" id="c2">2</span><button class="btn-small" onclick="cdim(2,1)">+</button>
+    </div>
+    <canvas id="challenge" width="800" height="400"></canvas>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Raftul e plin! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 12!</h1>
+      <p>A douăsprezecea piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>📦 <strong>Volumul</strong> — câte cuburi de 1×1×1 umplu corpul.</li>
+        <li>V = L × l × h pentru cutie; V = l³ pentru cub.</li>
+        <li>📐 Unități: cm³, m³ — mereu „la cub”!</li>
+        <li>🧠 Strat cu strat: (L × l) cuburi pe strat × h straturi.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta practică:</strong> ia o cutie de pantofi și un cub (un zar sau un cub Rubik).
+      Estimează: câte zaruri ar încăpea pe fundul cutiei? Câte straturi? Câte în total?
+      Apoi caută pe o sticlă de apă scris „1 L” — știai că 1 litru = 1000 cm³, adică un cub de 10×10×10 cm?</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-13-unitati-masura.html" class="btn-primary">Nivelul 13 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 12 · Geometrie clasa a V-a · Volumul cubului și al paralelipipedului dreptunghic</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l12";
+
+/* ---------- desen cutie din cuburi (proiecție oblică) ---------- */
+function drawBox(ctx, L, W, H, ok){
+  ctx.clearRect(0,0,800,400);
+  const s=52, dx=22, dy=13;
+  const ox=250, oy=340;
+  for(let j=W-1;j>=0;j--){
+    for(let i=0;i<L;i++){
+      for(let k=0;k<H;k++){
+        const x=ox+i*s+j*dx, y=oy-k*s-j*dy;
+        // fața de sus
+        ctx.fillStyle= ok ? "#bce8c4" : "#cfe3f7";
+        ctx.beginPath();
+        ctx.moveTo(x,y-s); ctx.lineTo(x+dx,y-s-dy); ctx.lineTo(x+s+dx,y-s-dy); ctx.lineTo(x+s,y-s);
+        ctx.closePath(); ctx.fill(); ctx.strokeStyle="#6b93bb"; ctx.lineWidth=1.5; ctx.stroke();
+        // fața laterală
+        ctx.fillStyle= ok ? "#8fd19c" : "#a5c8ea";
+        ctx.beginPath();
+        ctx.moveTo(x+s,y); ctx.lineTo(x+s+dx,y-dy); ctx.lineTo(x+s+dx,y-s-dy); ctx.lineTo(x+s,y-s);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+        // fața din față
+        ctx.fillStyle= ok ? "#a9dcb3" : "#bcd7f2";
+        ctx.fillRect(x,y-s,s,s); ctx.strokeRect(x,y-s,s,s);
+      }
+    }
+  }
+  ctx.font="bold 18px Segoe UI"; ctx.fillStyle="#1d4e89";
+  ctx.fillText("L = "+L, ox+L*s/2-20, oy+30);
+  ctx.fillText("h = "+H, ox-55, oy-H*s/2);
+  ctx.fillText("l = "+W, ox+L*s+W*dx+15, oy-W*dy-10);
+}
+
+/* explorare */
+const lab=document.getElementById("lab");
+const lctx=lab.getContext("2d");
+const dims=[3,2,2];
+function dim(i,d){
+  dims[i]=clamp(dims[i]+d,1,5);
+  document.getElementById("v"+i).textContent=dims[i];
+  drawLab();
+}
+function drawLab(){
+  drawBox(lctx,dims[0],dims[1],dims[2],false);
+  const [L,W,H]=dims;
+  document.getElementById("lab-status").textContent=
+    `Un strat: ${L} × ${W} = ${L*W} cuburi · ${H} straturi · V = ${L} × ${W} × ${H} = ${L*W*H} cm³`;
+}
+
+/* quiz */
+const questions = [
+  { title:"Un cub cu latura de 2 cm. Câte cubulețe de 1 cm³ îl umplu?",
+    fig:null,
+    choices:["4","6","8"], correct:2,
+    hint:"2 × 2 × 2…",
+    explain:"V = 2 × 2 × 2 = 8 cm³. Două straturi a câte 4 cubulețe!" },
+  { title:"O cutie de 4 × 3 × 2. Ce volum are?",
+    fig:null,
+    choices:["9","24","12"], correct:1,
+    hint:"L × l × h = 4 × 3 × 2.",
+    explain:"V = 4 × 3 × 2 = 24. Un strat are 4×3=12 cuburi, și sunt 2 straturi: 24!" },
+  { title:"În ce unități se măsoară volumul?",
+    fig:null,
+    choices:["cm²","cm³","cm"], correct:1,
+    hint:"Trei dimensiuni → „la…”",
+    explain:"Volumul se măsoară în unități CUBICE: cm³, m³. Lungime → cm, arie → cm², volum → cm³!" },
+  { title:"Un cub cu latura de 3 m. Volumul?",
+    fig:null,
+    choices:["9 m³","27 m³","6 m³"], correct:1,
+    hint:"3 × 3 × 3…",
+    explain:"V = 3 × 3 × 3 = 27 m³. (9 ar fi doar 3×3 — un singur strat!)" },
+  { title:"Pe fundul unei cutii încap 5 × 2 = 10 cuburi, iar cutia are 3 straturi. Volumul?",
+    fig:null,
+    choices:["30","15","13"], correct:0,
+    hint:"10 cuburi pe strat × 3 straturi.",
+    explain:"V = 10 × 3 = 30 de cuburi. Exact așa funcționează formula L × l × h!" },
+  { title:"Robotul Bip spune: „O cutie 6×2×2 și una 4×3×2 au același volum.” Are dreptate?",
+    fig:null,
+    choices:["Da — amândouă au 24","Nu, sunt diferite"], correct:0,
+    hint:"Calculează amândouă volumele.",
+    explain:"Bip are dreptate! 6×2×2 = 24 și 4×3×2 = 24. Forme diferite pot avea același volum — ca la arii!" },
+  { title:"O cutie are volumul 30 cm³, lungimea 5 cm și lățimea 3 cm. Ce înălțime are?",
+    fig:null,
+    choices:["2 cm","6 cm","22 cm"], correct:0,
+    hint:"5 × 3 × h = 30. Un strat are 15…",
+    explain:"5 × 3 = 15 cuburi pe strat. 30 : 15 = 2 straturi, deci h = 2 cm." },
+  { title:"Care cutie ține mai multe cuburi: 5 × 2 × 2 sau cubul de 3 × 3 × 3?",
+    fig:null,
+    choices:["5 × 2 × 2","Cubul 3 × 3 × 3","Sunt la fel"], correct:1,
+    hint:"20 sau 27?",
+    explain:"5×2×2 = 20, dar 3×3×3 = 27. Cubul câștigă, chiar dacă pare mai mic! Volumul poate păcăli ochiul." },
+];
+
+/* provocarea */
+const ch=document.getElementById("challenge");
+const cctx=ch.getContext("2d");
+const cdims=[2,2,2];
+let chSolved=false;
+function cdim(i,d){
+  if(chSolved) return;
+  cdims[i]=clamp(cdims[i]+d,1,6);
+  document.getElementById("c"+i).textContent=cdims[i];
+  drawChallenge();
+}
+function drawChallenge(){
+  const [L,W,H]=cdims;
+  const V=L*W*H, ok=V===36;
+  drawBox(cctx,L,W,H,ok);
+  cctx.font="bold 22px Segoe UI"; cctx.fillStyle= ok?"#1b6b2e":"#1d4e89";
+  cctx.fillText("V = "+L+" × "+W+" × "+H+" = "+V+"  (ținta: 36)", 40, 40);
+  const fb=document.getElementById("ch-feedback");
+  if(ok && !chSolved){
+    chSolved=true;
+    fb.innerHTML=`<div class="feedback good">📦 Exact 36 de cutii, fără niciun loc gol! Există mai multe soluții: 6×3×2, 4×3×3, 6×6×1… Le găsești și pe celelalte?</div>`;
+    document.getElementById("ch-next-wrap").classList.remove("hidden");
+  } else if(!chSolved){
+    fb.innerHTML=`<div class="feedback hint">${V>36?"Prea mare — raftul are loc gol!":"Prea mic — nu încap toate cutiile!"} Caută L × l × h = 36.</div>`;
+  }
+}
+
+window.onShow=function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+};
+</script>
+</body>
+</html>

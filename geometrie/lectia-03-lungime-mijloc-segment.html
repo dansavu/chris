@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 3 – Lungimea și mijlocul segmentului</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🏴‍☠️</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 3: Secretul mijlocului</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Doi pirați au îngropat o comoară <em>exact la jumătatea drumului</em> dintre doi palmieri.
+      Dar unde e „exact la jumătate”? Astăzi înveți să măsori distanțe și să găsești
+      <strong>mijlocul</strong> oricărui segment!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 La drum!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Laboratorul măsurătorilor</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Trage punctul <strong>M</strong> de-a lungul segmentului și privește lungimile.
+      Poți să-l așezi <em>exact</em> la mijloc? Poți muta și capetele A și B!</p>
+    </div>
+    <canvas id="lab" width="800" height="300"></canvas>
+    <div class="center"><span class="status-badge no" id="lab-status">…</span></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am reușit! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Cum le numim și le scriem</h2>
+    <div class="guide"><div class="face">🦊</div><p>Numele oficiale pentru ce tocmai ai descoperit:</p></div>
+    <svg class="svg-fig" width="100%" height="230" viewBox="0 0 700 230">
+      <line x1="80" y1="50" x2="400" y2="50" stroke="#e08a1e" stroke-width="4"/>
+      <circle cx="80" cy="50" r="6" fill="#333"/><text x="72" y="36" font-size="17" font-weight="bold">A</text>
+      <circle cx="400" cy="50" r="6" fill="#333"/><text x="392" y="36" font-size="17" font-weight="bold">B</text>
+      <text x="200" y="80" font-size="16" fill="#a05a00">6 cm</text>
+      <text x="440" y="45" font-size="18" fill="#333"><tspan font-weight="bold">Lungimea segmentului</tspan>: scriem</text>
+      <text x="440" y="67" font-size="18" fill="#333">AB = 6 cm. Aceasta este și <tspan font-weight="bold">distanța</tspan></text>
+      <text x="440" y="89" font-size="18" fill="#333">dintre punctele A și B.</text>
+
+      <line x1="80" y1="160" x2="400" y2="160" stroke="#1d8fe1" stroke-width="4"/>
+      <circle cx="80" cy="160" r="6" fill="#333"/><text x="72" y="146" font-size="17" font-weight="bold">A</text>
+      <circle cx="240" cy="160" r="7" fill="#35b653"/><text x="232" y="146" font-size="17" font-weight="bold">M</text>
+      <circle cx="400" cy="160" r="6" fill="#333"/><text x="392" y="146" font-size="17" font-weight="bold">B</text>
+      <text x="140" y="190" font-size="15" fill="#1b6b2e">3 cm</text>
+      <text x="300" y="190" font-size="15" fill="#1b6b2e">3 cm</text>
+      <text x="440" y="155" font-size="18" fill="#333"><tspan font-weight="bold">Mijlocul segmentului</tspan>: punctul M</text>
+      <text x="440" y="177" font-size="18" fill="#333">cu AM = MB. Fiecare jumătate are</text>
+      <text x="440" y="199" font-size="18" fill="#333">AB : 2 = 3 cm.</text>
+    </svg>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Comoara piraților!</h2>
+    <div class="guide">
+      <div class="face">🏴‍☠️</div>
+      <p>Comoara trebuie îngropată <strong>exact la mijloc</strong>, între cei doi palmieri.
+      <strong>Trage cufărul</strong> până când cele două distanțe devin egale!</p>
+    </div>
+    <canvas id="challenge" width="800" height="300"></canvas>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Comoara e a mea! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 3!</h1>
+      <p>A treia piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>📏 <strong>Lungimea segmentului</strong> — o măsurăm cu rigla și scriem AB = 6 cm.</li>
+        <li>🚶 <strong>Distanța dintre două puncte</strong> — este chiar lungimea segmentului dintre ele.</li>
+        <li>🎯 <strong>Mijlocul segmentului</strong> — punctul M de pe segment cu AM = MB.</li>
+        <li>➗ Fiecare jumătate are lungimea AB : 2.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> desenează cu rigla un segment AB de 8 cm.
+      Găsește și marchează mijlocul M. Verifică: AM și MB au fiecare 4 cm?
+      Apoi găsește mijlocul unei margini a mesei folosind un metru sau o sfoară!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-04-congruente-simetric.html" class="btn-primary">Nivelul 4 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 3 · Geometrie clasa a V-a · Lungimea și mijlocul segmentului</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l03";
+
+/* ---------- explorare: segment cu punct mobil ---------- */
+const lab = document.getElementById("lab");
+const lctx = lab.getContext("2d");
+const seg = { A:{x:130,y:150}, B:{x:670,y:150} };
+let t = 0.3; // poziția lui M pe segment (0..1)
+const SCALE = 60; // px per "cm"
+
+function mPos(){ return { x: seg.A.x + t*(seg.B.x-seg.A.x), y: seg.A.y + t*(seg.B.y-seg.A.y) }; }
+function drawLab(){
+  lctx.clearRect(0,0,lab.width,lab.height);
+  const M = mPos();
+  const am = Math.hypot(M.x-seg.A.x,M.y-seg.A.y)/SCALE;
+  const mb = Math.hypot(seg.B.x-M.x,seg.B.y-M.y)/SCALE;
+  const mid = Math.abs(am-mb) < 0.07;
+  lctx.strokeStyle="#e08a1e"; lctx.lineWidth=4; lctx.lineCap="round";
+  lctx.beginPath(); lctx.moveTo(seg.A.x,seg.A.y); lctx.lineTo(seg.B.x,seg.B.y); lctx.stroke();
+  drawPoint(lctx,seg.A,"A","#e05555");
+  drawPoint(lctx,seg.B,"B","#e05555");
+  drawPoint(lctx,M,"M", mid ? "#35b653" : "#1d8fe1");
+  lctx.font="bold 19px Segoe UI";
+  lctx.fillStyle="#1d4e89";
+  const mid1={x:(seg.A.x+M.x)/2,y:(seg.A.y+M.y)/2}, mid2={x:(M.x+seg.B.x)/2,y:(M.y+seg.B.y)/2};
+  lctx.fillText("AM = "+am.toFixed(1), mid1.x-40, mid1.y+40);
+  lctx.fillText("MB = "+mb.toFixed(1), mid2.x-40, mid2.y+40);
+  const badge = document.getElementById("lab-status");
+  badge.textContent = mid ? "🎯 M este MIJLOCUL: AM = MB!" : "M nu e încă la mijloc — AM ≠ MB";
+  badge.className = "status-badge " + (mid?"ok":"no");
+}
+// drag dedicat pentru M (parametric pe segment)
+(function(){
+  let dragM=false, dragKey=null;
+  function down(ev){
+    const p=canvasPos(lab,ev), M=mPos();
+    if(Math.hypot(p.x-M.x,p.y-M.y)<34){ dragM=true; ev.preventDefault(); return; }
+    for(const k of ["A","B"]){
+      if(Math.hypot(p.x-seg[k].x,p.y-seg[k].y)<34){ dragKey=k; ev.preventDefault(); return; }
+    }
+  }
+  function move(ev){
+    const p=canvasPos(lab,ev);
+    if(dragM){
+      const dx=seg.B.x-seg.A.x, dy=seg.B.y-seg.A.y;
+      const len2=dx*dx+dy*dy||1;
+      t = clamp(((p.x-seg.A.x)*dx+(p.y-seg.A.y)*dy)/len2, 0.02, 0.98);
+      drawLab(); ev.preventDefault();
+    } else if(dragKey){
+      seg[dragKey]={x:clamp(p.x,20,lab.width-20), y:clamp(p.y,20,lab.height-20)};
+      drawLab(); ev.preventDefault();
+    }
+  }
+  function up(){ dragM=false; dragKey=null; }
+  lab.addEventListener("mousedown",down); lab.addEventListener("mousemove",move);
+  addEventListener("mouseup",up);
+  lab.addEventListener("touchstart",down,{passive:false});
+  lab.addEventListener("touchmove",move,{passive:false});
+  lab.addEventListener("touchend",up);
+})();
+
+/* ---------- figuri quiz ---------- */
+function figSeg(am, mb, showM){
+  const x1=60, x2=340, total=(am+mb);
+  const xm = x1 + (x2-x1)*am/total;
+  return `<svg class="svg-fig" width="100%" height="110" viewBox="0 0 400 110">
+    <line x1="${x1}" y1="55" x2="${x2}" y2="55" stroke="#e08a1e" stroke-width="4"/>
+    <circle cx="${x1}" cy="55" r="6" fill="#333"/><text x="${x1-8}" y="40" font-size="17" font-weight="bold">A</text>
+    <circle cx="${x2}" cy="55" r="6" fill="#333"/><text x="${x2-8}" y="40" font-size="17" font-weight="bold">B</text>
+    ${showM?`<circle cx="${xm}" cy="55" r="7" fill="#35b653"/><text x="${xm-8}" y="40" font-size="17" font-weight="bold">M</text>
+    <text x="${(x1+xm)/2-20}" y="85" font-size="15" fill="#1b6b2e">${am} cm</text>
+    <text x="${(xm+x2)/2-20}" y="85" font-size="15" fill="#1b6b2e">${mb} cm</text>`:
+    `<text x="${(x1+x2)/2-25}" y="85" font-size="15" fill="#a05a00">${total} cm</text>`}
+  </svg>`;
+}
+
+const questions = [
+  { title:"Segmentul AB are 8 cm, iar M este mijlocul lui. Cât are AM?",
+    fig:()=>figSeg(4,4,true),
+    choices:["8 cm","4 cm","2 cm"], correct:1,
+    hint:"Mijlocul împarte segmentul în două părți egale…",
+    explain:"M împarte segmentul în două jumătăți egale: AM = MB = 8 : 2 = 4 cm." },
+  { title:"M este mijlocul segmentului AB și AM = 3 cm. Cât are tot segmentul AB?",
+    fig:()=>figSeg(3,3,true),
+    choices:["3 cm","6 cm","9 cm"], correct:1,
+    hint:"Dacă o jumătate are 3 cm, întregul are…",
+    explain:"AB = AM + MB = 3 + 3 = 6 cm. Întregul este dublul jumătății!" },
+  { title:"Ce este distanța dintre punctele A și B?",
+    fig:null,
+    choices:["Orice drum care leagă A de B","Lungimea segmentului AB — drumul cel mai scurt","Dreapta AB"], correct:1,
+    hint:"Dintre toate drumurile de la A la B, care e cel mai scurt?",
+    explain:"Distanța dintre două puncte este lungimea segmentului care le unește — cel mai scurt drum dintre ele." },
+  { title:"Punctul M este pe segmentul AB, cu AM = 2 cm și MB = 6 cm. Este M mijlocul segmentului?",
+    fig:()=>figSeg(2,6,true),
+    choices:["Da, e pe segment, deci e mijloc","Nu, pentru că AM ≠ MB"], correct:1,
+    hint:"Compară cele două bucăți: sunt egale?",
+    explain:"Nu e suficient să fie pe segment! Mijlocul trebuie să împartă segmentul în două părți EGALE, dar 2 ≠ 6." },
+  { title:"Cu ce instrument măsurăm lungimea unui segment?",
+    fig:null,
+    choices:["Cu raportorul","Cu rigla (gradată)","Cu compasul"], correct:1,
+    hint:"Instrumentul cu centimetri scriși pe el…",
+    explain:"Rigla gradată măsoară lungimi în centimetri. Raportorul e pentru unghiuri — îl vom folosi în curând!" },
+  { title:"Cum scriem corect că segmentul AB are lungimea de 5 centimetri?",
+    fig:()=>figSeg(2.5,2.5,false),
+    choices:["AB = 5 cm","AB = 5","A + B = 5 cm"], correct:0,
+    hint:"Nu uita unitatea de măsură!",
+    explain:"Scriem AB = 5 cm. Numărul fără unitate de măsură (cm, m…) nu ne spune destul!" },
+  { title:"Robotul Bip spune: „Mijlocul segmentului e punctul cel mai apropiat de A.” Are dreptate?",
+    fig:null,
+    choices:["Da","Nu — mijlocul e la fel de departe de A și de B"], correct:1,
+    hint:"Gândește-te la comoara piraților: unde era îngropată?",
+    explain:"Bip greșește! Mijlocul este la distanțe EGALE de ambele capete: AM = MB." },
+  { title:"Un gard are 10 m. Stâlpul din mijloc se pune la…",
+    fig:()=>figSeg(5,5,true),
+    choices:["3 m de un capăt","5 m de fiecare capăt","10 m de fiecare capăt"], correct:1,
+    hint:"Împarte 10 la 2.",
+    explain:"10 : 2 = 5. Stâlpul din mijloc e la 5 m de fiecare capăt al gardului — exact ca mijlocul unui segment!" },
+];
+
+/* ---------- provocarea: comoara ---------- */
+const ch = document.getElementById("challenge");
+const cctx = ch.getContext("2d");
+const palm1={x:100,y:170}, palm2={x:700,y:170};
+let chest={x:250,y:170}, chSolved=false;
+function drawChallenge(){
+  cctx.clearRect(0,0,ch.width,ch.height);
+  cctx.strokeStyle="#c9b17e"; cctx.lineWidth=3; cctx.setLineDash([8,8]);
+  cctx.beginPath(); cctx.moveTo(palm1.x,palm1.y); cctx.lineTo(palm2.x,palm2.y); cctx.stroke();
+  cctx.setLineDash([]);
+  cctx.font="44px Segoe UI";
+  cctx.fillText("🌴",palm1.x-22,palm1.y+14);
+  cctx.fillText("🌴",palm2.x-22,palm2.y+14);
+  cctx.fillText("🧰",chest.x-22,chest.y+14);
+  const d1=Math.hypot(chest.x-palm1.x,chest.y-palm1.y);
+  const d2=Math.hypot(chest.x-palm2.x,chest.y-palm2.y);
+  cctx.font="bold 20px Segoe UI"; cctx.fillStyle="#1d4e89";
+  cctx.fillText(Math.round(d1/6)+" pași", (palm1.x+chest.x)/2-35, 120);
+  cctx.fillText(Math.round(d2/6)+" pași", (chest.x+palm2.x)/2-35, 120);
+  const fb=document.getElementById("ch-feedback");
+  if(!chSolved){
+    if(Math.abs(d1-d2)<9 && d1>100){
+      chSolved=true;
+      fb.innerHTML=`<div class="feedback good">💎 Ai găsit mijlocul! Distanțele sunt egale — sapă aici!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else if(Math.abs(d1-d2)<40){
+      fb.innerHTML=`<div class="feedback hint">Foarte aproape! Mai mută puțin cufărul…</div>`;
+    } else {
+      fb.innerHTML=`<div class="feedback hint">Compară numărul de pași din stânga și din dreapta — trebuie să fie egale.</div>`;
+    }
+  }
+}
+(function(){
+  let drag=false;
+  function down(ev){
+    const p=canvasPos(ch,ev);
+    if(Math.hypot(p.x-chest.x,p.y-chest.y)<40){ drag=true; ev.preventDefault(); }
+  }
+  function move(ev){
+    if(!drag||chSolved) return;
+    const p=canvasPos(ch,ev);
+    // cufărul alunecă pe linia dintre palmieri
+    chest.x=clamp(p.x,palm1.x+30,palm2.x-30);
+    drawChallenge(); ev.preventDefault();
+  }
+  ch.addEventListener("mousedown",down); ch.addEventListener("mousemove",move);
+  addEventListener("mouseup",()=>drag=false);
+  ch.addEventListener("touchstart",down,{passive:false});
+  ch.addEventListener("touchmove",move,{passive:false});
+  ch.addEventListener("touchend",()=>drag=false);
+})();
+
+window.onShow = function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 7 – Unghi drept, ascuțit, obtuz, nul și alungit</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">👨‍👩‍👧‍👦</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 7: Familia unghiurilor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Unghiurile sunt o familie mare! Unele sunt <em>ascuțite</em> ca un cioc de pasăre,
+      altele <em>drepte</em> ca un colț de caiet, altele <em>obtuze</em> — largi și leneșe.
+      Hai să-i cunoaștem pe toți membrii familiei!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 Să-i cunoaștem!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Morișca unghiurilor</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Rotește brațul albastru și privește cum unghiul își schimbă <em>numele</em>.
+      Găsește toate cele 5 tipuri!</p>
+    </div>
+    <canvas id="lab" width="800" height="420"></canvas>
+    <div class="center"><span class="status-badge warn" id="lab-status">…</span></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Le-am găsit! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Familia completă</h2>
+    <div class="guide"><div class="face">🦊</div><p>Fiecare membru, după măsura lui:</p></div>
+    <div class="learned">
+      <ul>
+        <li>😴 <strong>Unghi nul</strong> — 0°: laturile stau una peste alta.</li>
+        <li>🐤 <strong>Unghi ascuțit</strong> — între 0° și 90°: mic și „ascuțit”.</li>
+        <li>📐 <strong>Unghi drept</strong> — exact 90°: colțul caietului! Se marchează cu un pătrățel.</li>
+        <li>🛋️ <strong>Unghi obtuz</strong> — între 90° și 180°: larg, mai deschis decât cel drept.</li>
+        <li>🌅 <strong>Unghi alungit</strong> — exact 180°: laturile formează o linie dreaptă.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Comanda bucătarului!</h2>
+    <div class="guide">
+      <div class="face">👨‍🍳</div>
+      <p>Bucătarul-șef taie felii de pizza după comandă! Rotește brațul la tipul de unghi cerut,
+      apoi apasă <strong>Taie felia!</strong></p>
+    </div>
+    <p class="center" style="font-size:1.2rem;font-weight:700;color:#1d4e89;" id="ch-target"></p>
+    <canvas id="challenge" width="800" height="420"></canvas>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" id="ch-fire" onclick="cutSlice()">🍕 Taie felia!</button>
+    </div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Comanda e gata! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 7!</h1>
+      <p>A șaptea piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>😴 nul = 0° · 🐤 ascuțit &lt; 90° · 📐 drept = 90° · 🛋️ obtuz între 90° și 180° · 🌅 alungit = 180°</li>
+        <li>📐 Unghiul drept se marchează cu un pătrățel în colț.</li>
+        <li>👀 Poți recunoaște tipul unghiului chiar și fără raportor, comparându-l cu un colț de caiet!</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> desenează cu echerul un unghi drept, apoi un unghi
+      ascuțit și unul obtuz. Verifică-le cu raportorul. Apoi caută prin casă: găsește un unghi drept
+      (ușor!), unul ascuțit și unul obtuz (indiciu: fotoliul înclinat, acoperișul, foarfeca...).</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-08-grade-minute.html" class="btn-primary">Nivelul 8 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 7 · Geometrie clasa a V-a · Unghi drept, ascuțit, obtuz, nul și alungit</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l07";
+
+function classify(deg){
+  if(deg<=2) return {n:"NUL", d:"0° — laturile stau una peste alta", c:"warn"};
+  if(deg<88) return {n:"ASCUȚIT", d:deg+"° — mai mic decât 90°", c:"ok"};
+  if(deg<=92) return {n:"DREPT", d:"90° — exact ca un colț de caiet!", c:"ok"};
+  if(deg<178) return {n:"OBTUZ", d:deg+"° — între 90° și 180°", c:"ok"};
+  return {n:"ALUNGIT", d:"180° — laturile formează o dreaptă", c:"warn"};
+}
+function drawAngleDial(ctx, cx, cy, R, deg, color){
+  const a = deg*Math.PI/180;
+  // brațul fix
+  ctx.strokeStyle="#e08a1e"; ctx.lineWidth=5; ctx.lineCap="round";
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+R,cy); ctx.stroke();
+  // brațul mobil
+  ctx.strokeStyle=color||"#1d8fe1";
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(a)*R, cy-Math.sin(a)*R); ctx.stroke();
+  // arc / pătrățel pentru drept
+  if(deg>=88 && deg<=92){
+    ctx.strokeStyle="#e05555"; ctx.lineWidth=3;
+    ctx.strokeRect(cx,cy-26,26,26);
+  } else if(deg>2){
+    ctx.beginPath(); ctx.arc(cx,cy,42,-a,0);
+    ctx.strokeStyle="#e05555"; ctx.lineWidth=3; ctx.stroke();
+  }
+  ctx.beginPath(); ctx.arc(cx,cy,6,0,7); ctx.fillStyle="#333"; ctx.fill();
+}
+
+/* ---------- explorare ---------- */
+const lab=document.getElementById("lab");
+const lctx=lab.getContext("2d");
+const LCX=400, LCY=340, LR=270;
+const labH={ H:{x:590,y:150} };
+function labDeg(){ return clamp(Math.round(Math.atan2(LCY-labH.H.y, labH.H.x-LCX)*180/Math.PI),0,180); }
+function drawLab(){
+  lctx.clearRect(0,0,lab.width,lab.height);
+  const deg=labDeg();
+  const cls=classify(deg);
+  drawAngleDial(lctx,LCX,LCY,LR,deg);
+  const a=deg*Math.PI/180;
+  labH.H.x=LCX+Math.cos(a)*(LR-40); labH.H.y=LCY-Math.sin(a)*(LR-40);
+  drawPoint(lctx,labH.H,"","#1d8fe1");
+  lctx.font="bold 26px Segoe UI"; lctx.fillStyle="#1d4e89";
+  lctx.fillText(deg+"°", 40, 60);
+  document.getElementById("lab-status").textContent = "Unghi "+cls.n+" — "+cls.d;
+  document.getElementById("lab-status").className = "status-badge "+cls.c;
+}
+enableDrag(lab, ()=>labH, drawLab, -2000);
+
+/* ---------- figuri quiz ---------- */
+function figAngleDeg(deg){
+  const cx=110, cy=150, R=140, a=deg*Math.PI/180;
+  return `<svg class="svg-fig" width="100%" height="170" viewBox="0 0 400 170">
+    <line x1="${cx}" y1="${cy}" x2="${cx+R}" y2="${cy}" stroke="#e08a1e" stroke-width="4" stroke-linecap="round"/>
+    <line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*R}" y2="${cy-Math.sin(a)*R}" stroke="#1d8fe1" stroke-width="4" stroke-linecap="round"/>
+    ${deg>=88&&deg<=92 ? `<rect x="${cx}" y="${cy-22}" width="22" height="22" fill="none" stroke="#e05555" stroke-width="2.5"/>`
+      : `<path d="M ${cx+36} ${cy} A 36 36 0 0 0 ${cx+Math.cos(a)*36} ${cy-Math.sin(a)*36}" fill="none" stroke="#e05555" stroke-width="2.5"/>`}
+    <circle cx="${cx}" cy="${cy}" r="5" fill="#333"/>
+  </svg>`;
+}
+
+const questions = [
+  { title:"Un unghi de 35°. Din ce ramură a familiei face parte?",
+    fig:()=>figAngleDeg(35),
+    choices:["Ascuțit","Drept","Obtuz"], correct:0,
+    hint:"E mai mic sau mai mare decât 90°?",
+    explain:"35° < 90°, deci unghiul este ascuțit — mic și „înțepător” ca un cioc de pasăre." },
+  { title:"Un unghi de exact 90°?",
+    fig:()=>figAngleDeg(90),
+    choices:["Ascuțit","Drept","Alungit"], correct:1,
+    hint:"Vezi pătrățelul roșu din colț? El e semnul special al acestui unghi.",
+    explain:"90° = unghi drept. Îl recunoști după pătrățelul din colț și îl găsești în orice colț de caiet!" },
+  { title:"Un unghi de 125°?",
+    fig:()=>figAngleDeg(125),
+    choices:["Ascuțit","Drept","Obtuz"], correct:2,
+    hint:"E mai deschis decât un colț de caiet…",
+    explain:"125° este între 90° și 180°, deci unghiul e obtuz — larg și leneș ca un șezlong." },
+  { title:"Un unghi de exact 180°?",
+    fig:()=>figAngleDeg(180),
+    choices:["Obtuz","Alungit","Nul"], correct:1,
+    hint:"Laturile lui formează o linie perfect dreaptă.",
+    explain:"180° = unghi alungit. Cele două laturi sunt în prelungire — împreună formează o dreaptă!" },
+  { title:"Colțul unei foi de caiet este un unghi…",
+    fig:null,
+    choices:["ascuțit","drept","obtuz"], correct:1,
+    hint:"Ce unghi are exact 90°?",
+    explain:"Colțurile foii sunt unghiuri drepte, de 90°. De aceea folosim colțul caietului ca „instrument de verificare” rapid!" },
+  { title:"Robotul Bip spune: „Un unghi de 91° este drept, că doar e aproape 90.” Are dreptate?",
+    fig:()=>figAngleDeg(91),
+    choices:["Da, e destul de aproape","Nu — dreptul are EXACT 90°; 91° este obtuz"], correct:1,
+    hint:"În geometrie, „aproape” nu există…",
+    explain:"Bip greșește! Unghiul drept are exact 90°. Chiar și 91° este deja un unghi obtuz (e între 90° și 180°)." },
+  { title:"Care unghi este mai mare: unul obtuz sau unul ascuțit?",
+    fig:null,
+    choices:["Cel ascuțit","Cel obtuz","Sunt egale"], correct:1,
+    hint:"Ascuțit < 90° < obtuz…",
+    explain:"Orice unghi obtuz (peste 90°) este mai mare decât orice unghi ascuțit (sub 90°)." },
+  { title:"Când laturile unghiului stau exact una peste alta, unghiul este…",
+    fig:()=>figAngleDeg(0),
+    choices:["nul (0°)","alungit (180°)","drept (90°)"], correct:0,
+    hint:"Unghiul „doarme” — nu s-a deschis deloc.",
+    explain:"Unghiul nul are 0° — laturile sunt suprapuse, unghiul nu s-a deschis deloc." },
+];
+
+/* ---------- provocarea: feliile de pizza ---------- */
+const ch=document.getElementById("challenge");
+const cctx=ch.getContext("2d");
+const CCX=400, CCY=340, CR=270;
+const chH={ H:{x:600,y:170} };
+const orders=[
+  {label:"un unghi DREPT (exact 90°)", check:d=>d>=88&&d<=92},
+  {label:"un unghi ASCUȚIT (îți alegi tu măsura, sub 90°)", check:d=>d>=10&&d<88},
+  {label:"un unghi OBTUZ (peste 90°, sub 180°)", check:d=>d>92&&d<=170},
+];
+let oIdx=0, chSolved=false;
+function chDeg(){ return clamp(Math.round(Math.atan2(CCY-chH.H.y, chH.H.x-CCX)*180/Math.PI),0,180); }
+function drawChallenge(){
+  cctx.clearRect(0,0,ch.width,ch.height);
+  const deg=chDeg();
+  // pizza: sectorul dintre brațe
+  const a=deg*Math.PI/180;
+  cctx.beginPath(); cctx.moveTo(CCX,CCY);
+  cctx.arc(CCX,CCY,CR-60,-a,0); cctx.closePath();
+  cctx.fillStyle="rgba(255,180,60,.5)"; cctx.fill();
+  drawAngleDial(cctx,CCX,CCY,CR,deg);
+  chH.H.x=CCX+Math.cos(a)*(CR-30); chH.H.y=CCY-Math.sin(a)*(CR-30);
+  drawPoint(cctx,chH.H,"","#1d8fe1");
+  cctx.font="bold 26px Segoe UI"; cctx.fillStyle="#1d4e89";
+  cctx.fillText(deg+"°", 40, 60);
+  cctx.font="30px Segoe UI"; cctx.fillText("🍕", CCX+90, CCY-40);
+  if(!chSolved) document.getElementById("ch-target").textContent=`Comanda ${oIdx+1} din ${orders.length}: taie ${orders[oIdx].label}`;
+}
+function cutSlice(){
+  if(chSolved) return;
+  const deg=chDeg(), fb=document.getElementById("ch-feedback");
+  if(orders[oIdx].check(deg)){
+    oIdx++;
+    if(oIdx>=orders.length){
+      chSolved=true;
+      document.getElementById("ch-target").textContent="Toate comenzile servite!";
+      document.getElementById("ch-fire").classList.add("hidden");
+      fb.innerHTML=`<div class="feedback good">🍕 Felie perfectă! Toate comenzile sunt servite — bucătarul te aplaudă!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else {
+      fb.innerHTML=`<div class="feedback good">🍕 Excelent, felia de ${deg}° e exact ce trebuia! Următoarea comandă…</div>`;
+    }
+  } else {
+    const cls=classify(deg);
+    fb.innerHTML=`<div class="feedback hint">Ai tăiat un unghi ${cls.n} (${deg}°), dar comanda cere ${orders[oIdx].label}. Mai rotește brațul!</div>`;
+  }
+  drawChallenge();
+}
+enableDrag(ch, ()=> chSolved ? {} : chH, drawChallenge, -2000);
+
+window.onShow=function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+};
+</script>
+</body>
+</html>

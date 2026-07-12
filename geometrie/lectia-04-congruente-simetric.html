@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 4 – Segmente congruente și simetricul unui punct</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">👯</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 4: Gemenii geometrici</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Ai văzut vreodată doi gemeni identici? În geometrie există și „segmente gemene” —
+      au exact aceeași lungime! Și mai există un truc de magie: <em>oglindirea unui punct</em>
+      prin alt punct. Hai să le descoperim!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 Începem!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Laboratorul gemenilor</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p id="tab-desc">Trage capetele segmentului albastru CD până devine „geamăn” cu segmentul portocaliu AB — adică la fel de lung!</p>
+    </div>
+    <div style="margin-bottom:10px;">
+      <button class="btn-tab active" id="tab-congr" onclick="setTab('congr')">Segmente gemene</button>
+      <button class="btn-tab" id="tab-sim" onclick="setTab('sim')">Punctul oglindit</button>
+    </div>
+    <canvas id="lab" width="800" height="340"></canvas>
+    <div class="center"><span class="status-badge no" id="lab-status">…</span></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am reușit! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Cum le numim și le scriem</h2>
+    <div class="guide"><div class="face">🦊</div><p>Numele oficiale:</p></div>
+    <svg class="svg-fig" width="100%" height="260" viewBox="0 0 700 260">
+      <line x1="60" y1="40" x2="280" y2="40" stroke="#e08a1e" stroke-width="4"/>
+      <circle cx="60" cy="40" r="6" fill="#333"/><text x="52" y="26" font-size="16" font-weight="bold">A</text>
+      <circle cx="280" cy="40" r="6" fill="#333"/><text x="272" y="26" font-size="16" font-weight="bold">B</text>
+      <line x1="60" y1="85" x2="280" y2="85" stroke="#1d8fe1" stroke-width="4"/>
+      <circle cx="60" cy="85" r="6" fill="#333"/><text x="52" y="115" font-size="16" font-weight="bold">C</text>
+      <circle cx="280" cy="85" r="6" fill="#333"/><text x="272" y="115" font-size="16" font-weight="bold">D</text>
+      <text x="330" y="52" font-size="18" fill="#333"><tspan font-weight="bold">Segmente congruente</tspan> — au aceeași</text>
+      <text x="330" y="74" font-size="18" fill="#333">lungime. Scriem: <tspan font-weight="bold">AB ≡ CD</tspan></text>
+      <text x="330" y="96" font-size="18" fill="#333">(se citește „AB congruent cu CD”)</text>
+
+      <line x1="60" y1="200" x2="300" y2="200" stroke="#7a4de0" stroke-width="3" stroke-dasharray="7 5"/>
+      <circle cx="60" cy="200" r="7" fill="#e05555"/><text x="52" y="186" font-size="16" font-weight="bold">A</text>
+      <circle cx="180" cy="200" r="7" fill="#333"/><text x="172" y="186" font-size="16" font-weight="bold">O</text>
+      <circle cx="300" cy="200" r="7" fill="#35b653"/><text x="290" y="186" font-size="16" font-weight="bold">A′</text>
+      <text x="105" y="228" font-size="14" fill="#7a4de0">3 cm</text>
+      <text x="225" y="228" font-size="14" fill="#7a4de0">3 cm</text>
+      <text x="330" y="185" font-size="18" fill="#333"><tspan font-weight="bold">Simetricul punctului A față de O</tspan></text>
+      <text x="330" y="207" font-size="18" fill="#333">este punctul A′ pentru care O este</text>
+      <text x="330" y="229" font-size="18" fill="#333">mijlocul segmentului AA′ (OA = OA′).</text>
+    </svg>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Steaua oglindită!</h2>
+    <div class="guide">
+      <div class="face">🪄</div>
+      <p>Vrăjitorul a pus o stea ⭐ și o oglindă magică în punctul <strong>O</strong>.
+      <strong>Trage steaua albastră</strong> exact acolo unde ar apărea imaginea oglindită —
+      astfel încât O să fie la mijloc, pe aceeași linie!</p>
+    </div>
+    <canvas id="challenge" width="800" height="360"></canvas>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Magie reușită! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 4!</h1>
+      <p>A patra piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>👯 <strong>Segmente congruente</strong> — au aceeași lungime; scriem AB ≡ CD.</li>
+        <li>🪞 <strong>Simetricul lui A față de O</strong> — punctul A′ aflat pe dreapta AO, de cealaltă parte, cu OA = OA′.</li>
+        <li>🎯 O este chiar <strong>mijlocul</strong> segmentului AA′ — cunoștințele de la Nivelul 3 ne-au ajutat!</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> desenează un punct A și un punct O. Cu rigla,
+      prelungește dreapta AO dincolo de O și măsoară distanța OA. Marchează A′ la aceeași distanță.
+      Felicitări — ai construit un simetric fără nicio aplicație!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-05-unghiul.html" class="btn-primary">Nivelul 5 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 4 · Geometrie clasa a V-a · Segmente congruente și simetricul unui punct</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l04";
+
+/* ---------- explorare ---------- */
+const lab = document.getElementById("lab");
+const lctx = lab.getContext("2d");
+let tab = "congr";
+const AB = { p1:{x:150,y:100}, p2:{x:450,y:100} }; // fix
+const CD = { p1:{x:150,y:230}, p2:{x:600,y:260} }; // mobil
+const simO = {x:400,y:170}, simP = {x:200,y:100};
+let simP2 = {x:550,y:280};
+
+const tabDescs = {
+  congr:"Trage capetele segmentului albastru CD până devine „geamăn” cu segmentul portocaliu AB — adică la fel de lung!",
+  sim:"Punctul roșu P se oglindește prin punctul O. Trage punctul verde P′ exact în locul imaginii oglindite: pe aceeași linie, la aceeași distanță!"
+};
+function setTab(t){
+  tab = t;
+  document.getElementById("tab-congr").classList.toggle("active", t==="congr");
+  document.getElementById("tab-sim").classList.toggle("active", t==="sim");
+  document.getElementById("tab-desc").textContent = tabDescs[t];
+  drawLab();
+}
+function drawLab(){
+  lctx.clearRect(0,0,lab.width,lab.height);
+  const badge = document.getElementById("lab-status");
+  if(tab==="congr"){
+    const lAB = Math.hypot(AB.p2.x-AB.p1.x, AB.p2.y-AB.p1.y);
+    const lCD = Math.hypot(CD.p2.x-CD.p1.x, CD.p2.y-CD.p1.y);
+    const eq = Math.abs(lAB-lCD) < 8;
+    lctx.lineWidth=4; lctx.lineCap="round";
+    lctx.strokeStyle="#e08a1e";
+    lctx.beginPath(); lctx.moveTo(AB.p1.x,AB.p1.y); lctx.lineTo(AB.p2.x,AB.p2.y); lctx.stroke();
+    lctx.strokeStyle= eq ? "#35b653" : "#1d8fe1";
+    lctx.beginPath(); lctx.moveTo(CD.p1.x,CD.p1.y); lctx.lineTo(CD.p2.x,CD.p2.y); lctx.stroke();
+    drawPoint(lctx,AB.p1,"A","#e08a1e"); drawPoint(lctx,AB.p2,"B","#e08a1e");
+    drawPoint(lctx,CD.p1,"C", eq?"#35b653":"#1d8fe1"); drawPoint(lctx,CD.p2,"D", eq?"#35b653":"#1d8fe1");
+    lctx.font="bold 18px Segoe UI"; lctx.fillStyle="#444";
+    lctx.fillText("AB = "+(lAB/60).toFixed(1), 620, 100);
+    lctx.fillText("CD = "+(lCD/60).toFixed(1), 620, 250);
+    badge.textContent = eq ? "CONGRUENTE: AB ≡ CD — aceeași lungime! 👯" : "Nu sunt încă congruente — lungimi diferite";
+    badge.className = "status-badge " + (eq?"ok":"no");
+  } else {
+    const target = { x: 2*simO.x - simP.x, y: 2*simO.y - simP.y };
+    const good = Math.hypot(simP2.x-target.x, simP2.y-target.y) < 16;
+    lctx.strokeStyle="#b9a6ea"; lctx.lineWidth=2; lctx.setLineDash([7,6]);
+    const [s,e]=extendLine(simP,simO,true);
+    lctx.beginPath(); lctx.moveTo(s.x,s.y); lctx.lineTo(e.x,e.y); lctx.stroke();
+    lctx.setLineDash([]);
+    drawPoint(lctx,simP,"P","#e05555");
+    drawPoint(lctx,simO,"O","#333");
+    drawPoint(lctx,simP2,"P′", good?"#35b653":"#1d8fe1");
+    lctx.font="bold 17px Segoe UI"; lctx.fillStyle="#7a4de0";
+    lctx.fillText("OP = "+(Math.hypot(simP.x-simO.x,simP.y-simO.y)/60).toFixed(1), 30, 40);
+    lctx.fillText("OP′ = "+(Math.hypot(simP2.x-simO.x,simP2.y-simO.y)/60).toFixed(1), 30, 70);
+    badge.textContent = good ? "🪞 P′ este SIMETRICUL lui P față de O!" : "P′ nu e încă simetricul — pe linie, la distanță egală!";
+    badge.className = "status-badge " + (good?"ok":"no");
+  }
+}
+enableDrag(lab, ()=> tab==="congr" ? {p1:CD.p1, p2:CD.p2} : {P2:simP2}, drawLab);
+
+/* ---------- figuri quiz ---------- */
+function figTwoSegs(l1,l2){
+  return `<svg class="svg-fig" width="100%" height="120" viewBox="0 0 400 120">
+    <line x1="40" y1="40" x2="${40+l1*40}" y2="40" stroke="#e08a1e" stroke-width="4"/>
+    <circle cx="40" cy="40" r="5" fill="#333"/><circle cx="${40+l1*40}" cy="40" r="5" fill="#333"/>
+    <text x="30" y="26" font-size="15" font-weight="bold">A</text><text x="${34+l1*40}" y="26" font-size="15" font-weight="bold">B</text>
+    <text x="${40+l1*20-15}" y="65" font-size="14" fill="#a05a00">${l1} cm</text>
+    <line x1="40" y1="95" x2="${40+l2*40}" y2="95" stroke="#1d8fe1" stroke-width="4"/>
+    <circle cx="40" cy="95" r="5" fill="#333"/><circle cx="${40+l2*40}" cy="95" r="5" fill="#333"/>
+    <text x="30" y="81" font-size="15" font-weight="bold">C</text><text x="${34+l2*40}" y="81" font-size="15" font-weight="bold">D</text>
+    <text x="${40+l2*20-15}" y="118" font-size="14" fill="#156bb0">${l2} cm</text>
+  </svg>`;
+}
+function figSim(){
+  return `<svg class="svg-fig" width="100%" height="90" viewBox="0 0 400 90">
+    <line x1="50" y1="45" x2="350" y2="45" stroke="#7a4de0" stroke-width="2" stroke-dasharray="7 5"/>
+    <circle cx="80" cy="45" r="7" fill="#e05555"/><text x="72" y="30" font-size="16" font-weight="bold">A</text>
+    <circle cx="200" cy="45" r="7" fill="#333"/><text x="192" y="30" font-size="16" font-weight="bold">O</text>
+    <circle cx="320" cy="45" r="7" fill="#35b653"/><text x="310" y="30" font-size="16" font-weight="bold">A′</text>
+    <text x="125" y="72" font-size="14" fill="#7a4de0">3 cm</text>
+    <text x="245" y="72" font-size="14" fill="#7a4de0">3 cm</text>
+  </svg>`;
+}
+
+const questions = [
+  { title:"AB = 5 cm și CD = 5 cm. Cum sunt cele două segmente?",
+    fig:()=>figTwoSegs(5,5),
+    choices:["Congruente","Paralele","Coliniare"], correct:0,
+    hint:"Compară lungimile lor…",
+    explain:"Au aceeași lungime (5 cm = 5 cm), deci sunt congruente. Scriem AB ≡ CD." },
+  { title:"AB = 4 cm și CD = 6 cm. Sunt congruente?",
+    fig:()=>figTwoSegs(4,6),
+    choices:["Da","Nu — au lungimi diferite"], correct:1,
+    hint:"Congruent înseamnă „geamăn” — la fel de lung.",
+    explain:"4 cm ≠ 6 cm, deci segmentele NU sunt congruente. Gemenii trebuie să fie identici!" },
+  { title:"Ce semn folosim pentru segmente congruente?",
+    fig:null,
+    choices:["AB ∥ CD","AB ≡ CD","AB × CD"], correct:1,
+    hint:"Semnul are trei liniuțe, ca un egal întărit.",
+    explain:"Scriem AB ≡ CD. Semnul ≡ înseamnă „congruent” — un fel de „egal geometric”." },
+  { title:"A′ este simetricul lui A față de O, iar OA = 3 cm. Cât are OA′?",
+    fig:figSim,
+    choices:["3 cm","6 cm","Nu putem ști"], correct:0,
+    hint:"Oglinda păstrează distanțele egale…",
+    explain:"Simetricul e la aceeași distanță de O: OA′ = OA = 3 cm." },
+  { title:"Același desen: cât are tot segmentul AA′?",
+    fig:figSim,
+    choices:["3 cm","6 cm","9 cm"], correct:1,
+    hint:"Adună cele două jumătăți.",
+    explain:"AA′ = AO + OA′ = 3 + 3 = 6 cm. Iar O este mijlocul segmentului AA′!" },
+  { title:"A′ este simetricul lui A față de O. Ce rol joacă punctul O pe segmentul AA′?",
+    fig:figSim,
+    choices:["Este un capăt al segmentului","Este mijlocul segmentului AA′","Este în afara segmentului"], correct:1,
+    hint:"OA = OA′ … unde am mai întâlnit distanțe egale față de capete?",
+    explain:"O este exact mijlocul segmentului AA′ — la distanțe egale de A și A′. Secretul mijlocului, din nou!" },
+  { title:"Robotul Bip spune: „Segmentele congruente sunt segmentele paralele.” Are dreptate?",
+    fig:null,
+    choices:["Da","Nu — congruent înseamnă aceeași LUNGIME, nu aceeași direcție"], correct:1,
+    hint:"Două segmente pot fi la fel de lungi chiar dacă sunt înclinate diferit…",
+    explain:"Bip a încurcat noțiunile! Congruența e despre lungimi egale. Paralelismul e despre direcție. Un segment vertical și unul orizontal pot fi congruente!" },
+  { title:"AA′ = 10 cm, iar A′ e simetricul lui A față de O. Cât are OA?",
+    fig:null,
+    choices:["10 cm","5 cm","20 cm"], correct:1,
+    hint:"O e la mijloc — împarte la 2.",
+    explain:"O este mijlocul lui AA′, deci OA = 10 : 2 = 5 cm." },
+];
+
+/* ---------- provocarea: steaua oglindită ---------- */
+const ch = document.getElementById("challenge");
+const cctx = ch.getContext("2d");
+const star = {x:200,y:120}, mirrorO = {x:420,y:190};
+const ghost = { G:{x:600,y:320} };
+let chSolved = false;
+function drawChallenge(){
+  cctx.clearRect(0,0,ch.width,ch.height);
+  const target = { x:2*mirrorO.x-star.x, y:2*mirrorO.y-star.y };
+  const good = Math.hypot(ghost.G.x-target.x, ghost.G.y-target.y) < 18;
+  cctx.strokeStyle="#d9cff2"; cctx.lineWidth=2; cctx.setLineDash([7,6]);
+  const [s,e]=extendLine(star,mirrorO,true);
+  cctx.beginPath(); cctx.moveTo(s.x,s.y); cctx.lineTo(e.x,e.y); cctx.stroke();
+  cctx.setLineDash([]);
+  cctx.font="40px Segoe UI";
+  cctx.fillText("⭐", star.x-20, star.y+14);
+  cctx.fillText("🔮", mirrorO.x-20, mirrorO.y+14);
+  cctx.save();
+  if(!good) cctx.globalAlpha=.75;
+  cctx.fillText(good?"🌟":"💫", ghost.G.x-20, ghost.G.y+14);
+  cctx.restore();
+  cctx.font="bold 18px Segoe UI"; cctx.fillStyle="#1d4e89";
+  cctx.fillText("O", mirrorO.x+22, mirrorO.y-14);
+  const d1=(Math.hypot(star.x-mirrorO.x,star.y-mirrorO.y)/60).toFixed(1);
+  const d2=(Math.hypot(ghost.G.x-mirrorO.x,ghost.G.y-mirrorO.y)/60).toFixed(1);
+  cctx.fillText("distanța stea → O: "+d1, 30, 40);
+  cctx.fillText("distanța O → steaua ta: "+d2, 30, 68);
+  const fb=document.getElementById("ch-feedback");
+  if(good && !chSolved){
+    chSolved = true;
+    fb.innerHTML=`<div class="feedback good">🌟 Perfect! Steaua ta e exact simetricul: pe aceeași dreaptă cu O, la distanță egală. Ești magician geometric!</div>`;
+    document.getElementById("ch-next-wrap").classList.remove("hidden");
+  } else if(!chSolved){
+    fb.innerHTML=`<div class="feedback hint">Steaua oglindită trebuie să fie pe linia punctată ȘI la aceeași distanță de O ca steaua originală.</div>`;
+  }
+}
+enableDrag(ch, ()=> chSolved ? {} : ghost, drawChallenge);
+
+window.onShow = function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+};
+</script>
+</body>
+</html>

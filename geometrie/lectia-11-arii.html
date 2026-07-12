@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 11 – Aria pătratului și a dreptunghiului</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🏗️</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 11: Arhitectul suprafețelor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Renovăm camera! Câte plăci de parchet ne trebuie pentru podea?
+      Ca să aflăm, măsurăm <em>cât de întinsă</em> e suprafața — adică <strong>aria</strong>.
+      Nu conturul (ăla era perimetrul!), ci tot ce e <em>înăuntru</em>.</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 La renovat!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Podeaua cu plăci</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Trage de colțul camerei și numără plăcile de parchet (fiecare are 1 m²).
+      Observă trucul: nu trebuie să le numeri una câte una — <em>rânduri × coloane</em>!</p>
+    </div>
+    <canvas id="lab" width="800" height="420"></canvas>
+    <div class="center"><span class="status-badge warn" id="lab-status">…</span></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am prins trucul! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Formulele ariei</h2>
+    <div class="guide"><div class="face">🦊</div><p>Aria = numărul de pătrățele cu latura 1 care acoperă figura:</p></div>
+    <div class="learned">
+      <ul>
+        <li>▭ <strong>Dreptunghi:</strong> A = L × l (rânduri × coloane de pătrățele).</li>
+        <li>⬜ <strong>Pătrat:</strong> A = l × l.</li>
+        <li>📐 Aria se măsoară în <strong>unități pătrate</strong>: cm², m², km²…</li>
+        <li>⚠️ Nu confunda: <strong>perimetrul</strong> = gardul din jur; <strong>aria</strong> = iarba dinăuntru!</li>
+      </ul>
+    </div>
+    <svg class="svg-fig" width="100%" height="190" viewBox="0 0 700 190">
+      <rect x="60" y="30" width="200" height="150" fill="#ffe9c7" stroke="#e08a1e" stroke-width="3"/>
+      <line x1="110" y1="30" x2="110" y2="180" stroke="#e08a1e" stroke-width="1"/>
+      <line x1="160" y1="30" x2="160" y2="180" stroke="#e08a1e" stroke-width="1"/>
+      <line x1="210" y1="30" x2="210" y2="180" stroke="#e08a1e" stroke-width="1"/>
+      <line x1="60" y1="80" x2="260" y2="80" stroke="#e08a1e" stroke-width="1"/>
+      <line x1="60" y1="130" x2="260" y2="130" stroke="#e08a1e" stroke-width="1"/>
+      <text x="120" y="20" font-size="16" font-weight="bold" fill="#a05a00">L = 4 m</text>
+      <text x="10" y="110" font-size="16" font-weight="bold" fill="#a05a00">l = 3 m</text>
+      <text x="330" y="80" font-size="19" fill="#333">4 coloane × 3 rânduri =</text>
+      <text x="330" y="110" font-size="21" font-weight="bold" fill="#a05a00">A = 4 × 3 = 12 m²</text>
+      <text x="330" y="150" font-size="16" fill="#666">12 plăci de câte 1 metru pătrat</text>
+    </svg>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Camera de 24 m²!</h2>
+    <div class="guide">
+      <div class="face">👷</div>
+      <p>Arhitectul-șef a comandat <strong>exact 24 de plăci</strong> de parchet de 1 m².
+      <strong>Trage de colțul camerei</strong> ca aria să fie exact 24 m² — nici o placă în plus sau în minus!</p>
+    </div>
+    <canvas id="challenge" width="800" height="420"></canvas>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Parchetul e pus! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 11!</h1>
+      <p>A unsprezecea piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>🟧 <strong>Aria</strong> — câte pătrățele de 1×1 acoperă suprafața.</li>
+        <li>▭ Dreptunghi: A = L × l · ⬜ Pătrat: A = l × l.</li>
+        <li>📐 Unități: cm², m², km² — mereu „la pătrat”!</li>
+        <li>⚠️ Perimetrul = conturul; aria = interiorul. Nu-i mai confunzi niciodată!</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> desenează pe caietul de matematică (cu pătrățele!)
+      un dreptunghi de 6 × 4 pătrățele. Numără pătrățelele dinăuntru. Sunt 24? Verifică cu formula!
+      Apoi măsoară cu pasul camera ta: cam câți „pași pătrați” are podeaua?</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-12-volume.html" class="btn-primary">Nivelul 12 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 11 · Geometrie clasa a V-a · Aria pătratului și a dreptunghiului</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l11";
+
+const GRID=45, GX=80, GY=40;
+function drawRoom(ctx, cols, rows, ok){
+  ctx.clearRect(0,0,800,420);
+  ctx.strokeStyle="#e3ecf5"; ctx.lineWidth=1;
+  for(let x=GX; x<=GX+13*GRID; x+=GRID){ ctx.beginPath(); ctx.moveTo(x,GY); ctx.lineTo(x,GY+7*GRID); ctx.stroke(); }
+  for(let y=GY; y<=GY+7*GRID; y+=GRID){ ctx.beginPath(); ctx.moveTo(GX,y); ctx.lineTo(GX+13*GRID,y); ctx.stroke(); }
+  for(let c=0;c<cols;c++) for(let r=0;r<rows;r++){
+    ctx.fillStyle = (c+r)%2 ? "#f2d3a0" : "#e8bd80";
+    ctx.fillRect(GX+c*GRID+1, GY+r*GRID+1, GRID-2, GRID-2);
+  }
+  ctx.strokeStyle= ok ? "#35b653" : "#8a6b3d"; ctx.lineWidth=5;
+  ctx.strokeRect(GX,GY,cols*GRID,rows*GRID);
+  ctx.font="bold 19px Segoe UI"; ctx.fillStyle="#1d4e89";
+  ctx.fillText("L = "+cols+" m", GX+cols*GRID/2-30, GY-12);
+  ctx.save(); ctx.translate(GX-16,GY+rows*GRID/2+30); ctx.rotate(-Math.PI/2);
+  ctx.fillText("l = "+rows+" m", 0, 0); ctx.restore();
+}
+
+/* explorare */
+const lab=document.getElementById("lab");
+const lctx=lab.getContext("2d");
+const labCorner={ C:{x:GX+5*GRID, y:GY+3*GRID} };
+function drawLab(){
+  const w=clamp(Math.round((labCorner.C.x-GX)/GRID),1,13);
+  const h=clamp(Math.round((labCorner.C.y-GY)/GRID),1,7);
+  labCorner.C.x=GX+w*GRID; labCorner.C.y=GY+h*GRID;
+  drawRoom(lctx,w,h,false);
+  drawPoint(lctx,labCorner.C,"","#e08a1e");
+  document.getElementById("lab-status").textContent=`A = ${w} × ${h} = ${w*h} plăci, adică ${w*h} m²`;
+}
+enableDrag(lab, ()=>labCorner, drawLab, -2000);
+
+/* quiz */
+function figRectA(L,l,unit){
+  const w=Math.min(L*30,300), h=Math.min(l*30,140);
+  return `<svg class="svg-fig" width="100%" height="${h+60}" viewBox="0 0 400 ${h+60}">
+    <rect x="60" y="30" width="${w}" height="${h}" fill="#ffe9c7" stroke="#e08a1e" stroke-width="3"/>
+    <text x="${60+w/2-25}" y="20" font-size="15" font-weight="bold" fill="#a05a00">${L} ${unit}</text>
+    <text x="15" y="${30+h/2+5}" font-size="15" font-weight="bold" fill="#a05a00">${l} ${unit}</text>
+  </svg>`;
+}
+const questions = [
+  { title:"O podea de 4 m pe 3 m. Câte plăci de 1 m² încap?",
+    fig:()=>figRectA(4,3,"m"),
+    choices:["7 plăci","12 plăci","14 plăci"], correct:1,
+    hint:"Rânduri × coloane: 4 × 3…",
+    explain:"A = 4 × 3 = 12 m², deci 12 plăci. Trei rânduri a câte 4 plăci fiecare!" },
+  { title:"Un pătrat cu latura de 5 cm. Ce arie are?",
+    fig:()=>figRectA(5,5,"cm"),
+    choices:["20 cm²","25 cm²","10 cm²"], correct:1,
+    hint:"l × l = 5 × 5…",
+    explain:"A = 5 × 5 = 25 cm². (20 ar fi perimetrul — 4×5!)" },
+  { title:"În ce unități se măsoară aria?",
+    fig:null,
+    choices:["m, cm, km","m², cm², km²","grade"], correct:1,
+    hint:"Aria se măsoară în pătrățele… deci unitatea e „la pătrat”.",
+    explain:"Aria = unități PĂTRATE: m², cm², km². Pătrățelul mic de 1cm × 1cm este 1 cm²!" },
+  { title:"Camera lui Vlad are 6 m lungime și 4 m lățime. Ce arie are podeaua?",
+    fig:()=>figRectA(6,4,"m"),
+    choices:["10 m²","20 m²","24 m²"], correct:2,
+    hint:"L × l.",
+    explain:"A = 6 × 4 = 24 m². Atâta parchet trebuie cumpărat!" },
+  { title:"Robotul Bip vrea să știe cât GARD îi trebuie grădinii, dar calculează 8 × 5 = 40. Ce a încurcat?",
+    fig:()=>figRectA(8,5,"m"),
+    choices:["Nimic","A calculat ARIA în loc de PERIMETRU","Trebuia 8 + 5"], correct:1,
+    hint:"Înmulțirea L × l dă aria. Gardul e conturul…",
+    explain:"Bip a calculat aria (40 m²)! Pentru gard trebuia perimetrul: 2×(8+5) = 26 m. Gard = contur, arie = interior!" },
+  { title:"Un dreptunghi are aria 18 cm² și lungimea 6 cm. Cât e lățimea?",
+    fig:null,
+    choices:["3 cm","12 cm","108 cm"], correct:0,
+    hint:"L × l = 18, iar L = 6. Ce număr înmulțit cu 6 dă 18?",
+    explain:"l = 18 : 6 = 3 cm. Mergem înapoi prin împărțire!" },
+  { title:"Un pătrat are aria 16 m². Cât are latura?",
+    fig:null,
+    choices:["4 m","8 m","2 m"], correct:0,
+    hint:"Ce număr înmulțit cu el însuși dă 16?",
+    explain:"4 × 4 = 16, deci latura are 4 m." },
+  { title:"Ce se întâmplă cu aria unui dreptunghi dacă îi dublăm lungimea (lățimea rămâne la fel)?",
+    fig:null,
+    choices:["Rămâne la fel","Se dublează","Se face de 4 ori mai mare"], correct:1,
+    hint:"Compară 4×3 cu 8×3…",
+    explain:"Se dublează! De exemplu: 4×3=12, iar 8×3=24. De două ori mai multe coloane de plăci." },
+];
+
+/* provocarea */
+const ch=document.getElementById("challenge");
+const cctx=ch.getContext("2d");
+const chCorner={ C:{x:GX+5*GRID, y:GY+3*GRID} };
+let chSolved=false;
+function drawChallenge(){
+  const w=clamp(Math.round((chCorner.C.x-GX)/GRID),1,13);
+  const h=clamp(Math.round((chCorner.C.y-GY)/GRID),1,7);
+  chCorner.C.x=GX+w*GRID; chCorner.C.y=GY+h*GRID;
+  const A=w*h, ok=A===24;
+  drawRoom(cctx,w,h,ok);
+  if(!chSolved) drawPoint(cctx,chCorner.C,"","#e08a1e");
+  cctx.font="bold 22px Segoe UI"; cctx.fillStyle= ok?"#1b6b2e":"#1d4e89";
+  cctx.fillText("A = "+A+" m²  (ținta: 24 m²)", 500, 400);
+  const fb=document.getElementById("ch-feedback");
+  if(ok && !chSolved){
+    chSolved=true;
+    fb.innerHTML=`<div class="feedback good">🏆 Exact 24 de plăci! Știai că merge și altfel? ${w}×${h}, dar și ${w===6?"8×3 sau 12×2":"6×4 sau 12×2"} — aceeași arie, forme diferite!</div>`;
+    document.getElementById("ch-next-wrap").classList.remove("hidden");
+  } else if(!chSolved){
+    fb.innerHTML=`<div class="feedback hint">${A>24?"Prea multe plăci — micșorează camera!":"Mai încap plăci — mărește camera!"} Caută L × l = 24.</div>`;
+  }
+}
+enableDrag(ch, ()=> chSolved ? {} : chCorner, drawChallenge, -2000);
+
+window.onShow=function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+};
+</script>
+</body>
+</html>

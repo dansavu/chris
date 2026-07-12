@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 8 – Calcule cu grade și minute</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🔬</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 8: Atelierul calculelor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Uneori un grad e prea mare pentru măsurători fine! De aceea, fiecare grad se împarte
+      în 60 de bucățele numite <strong>minute</strong>. Exact ca ora: 1 oră = 60 de minute,
+      1 grad = 60 de minute de arc. Scriem: <strong>1° = 60′</strong>.</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 La atelier!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Lupa care mărește gradele</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Privește: sub lupă, UN singur grad se desface în 60 de minute!
+      Apoi urmărește pas cu pas o adunare cu grade și minute.</p>
+    </div>
+    <svg class="svg-fig" width="100%" height="180" viewBox="0 0 700 180">
+      <path d="M 40 150 A 120 120 0 0 1 280 150" fill="none" stroke="#7aa3cf" stroke-width="2"/>
+      <line x1="152" y1="30" x2="152" y2="45" stroke="#e05555" stroke-width="3"/>
+      <line x1="168" y1="31" x2="166" y2="46" stroke="#e05555" stroke-width="3"/>
+      <text x="130" y="20" font-size="14" fill="#a02525">1 grad</text>
+      <circle cx="160" cy="38" r="26" fill="none" stroke="#e08a1e" stroke-width="3"/>
+      <line x1="182" y1="55" x2="330" y2="110" stroke="#e08a1e" stroke-width="3"/>
+      <rect x="330" y="60" width="330" height="100" rx="12" fill="#fff8e1" stroke="#e08a1e" stroke-width="2"/>
+      <text x="350" y="90" font-size="17" fill="#333">Sub lupă: gradul se împarte în</text>
+      <text x="350" y="115" font-size="19" font-weight="bold" fill="#a05a00">60 de minute:  1° = 60′</text>
+      <text x="350" y="143" font-size="16" fill="#333">Jumătate de grad = 30′</text>
+    </svg>
+    <h2 style="margin-top:10px;">🧮 Adunarea pas cu pas</h2>
+    <p class="center" style="font-size:1.25rem;font-weight:700;color:#1d4e89;">25°40′ + 15°30′ = ?</p>
+    <div id="steps"></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" id="step-btn" onclick="nextStep()">Arată pasul 1 ➜</button>
+      <button class="btn-primary hidden" id="to-quiz" onclick="startQuiz()">Sunt gata de joc! 🎮</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Seiful cavalerului!</h2>
+    <div class="guide">
+      <div class="face">🛡️</div>
+      <p>Cavalerul trebuie să rotească cheia seifului cu <strong>exact 90°</strong>.
+      A rotit-o deja cu <strong>45°30′</strong>. Cât mai are de rotit?</p>
+    </div>
+    <div id="ch-choices">
+      <button class="btn-choice" onclick="chAnswer(0,this)">45°30′</button>
+      <button class="btn-choice" onclick="chAnswer(1,this)">44°30′</button>
+      <button class="btn-choice" onclick="chAnswer(2,this)">55°30′</button>
+    </div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Seiful s-a deschis! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 8!</h1>
+      <p>A opta piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>🔬 <strong>1° = 60′</strong> — gradul se împarte în 60 de minute, ca ora.</li>
+        <li>➕ La adunare: aduni separat gradele și minutele; dacă minutele trec de 60, „schimbi” 60′ într-un grad.</li>
+        <li>➖ La scădere: dacă nu-ți ajung minutele, „împrumuți” un grad = 60′.</li>
+        <li>🤝 90° se poate scrie și 89°60′ — foarte util la scăderi!</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> calculează în caiet: 32°45′ + 27°30′ și 90° − 25°40′.
+      Scrie calculele frumos, unele sub altele, ca la adunările cu numere!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-09-simetrie.html" class="btn-primary">Nivelul 9 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 8 · Geometrie clasa a V-a · Calcule cu grade și minute</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l08";
+
+/* ---------- pașii adunării ---------- */
+const steps = [
+  `<div class="feedback explain"><strong>Pasul 1:</strong> Adunăm minutele: 40′ + 30′ = <strong>70′</strong>. Hmm… 70 e mai mare decât 60!</div>`,
+  `<div class="feedback explain"><strong>Pasul 2:</strong> Schimbăm 60′ într-un grad: 70′ = 60′ + 10′ = <strong>1° și 10′</strong>.</div>`,
+  `<div class="feedback explain"><strong>Pasul 3:</strong> Adunăm gradele: 25° + 15° + 1° (cel primit de la minute) = <strong>41°</strong>.</div>`,
+  `<div class="feedback good"><strong>Rezultat:</strong> 25°40′ + 15°30′ = <strong>41°10′</strong> 🎉</div>`,
+];
+let sIdx = 0;
+function nextStep(){
+  document.getElementById("steps").innerHTML += steps[sIdx];
+  sIdx++;
+  const btn = document.getElementById("step-btn");
+  if(sIdx >= steps.length){
+    btn.classList.add("hidden");
+    document.getElementById("to-quiz").classList.remove("hidden");
+  } else {
+    btn.textContent = "Arată pasul " + (sIdx+1) + " ➜";
+  }
+}
+
+const questions = [
+  { title:"Câte minute are 1 grad?",
+    fig:null,
+    choices:["100′","60′","30′"], correct:1,
+    hint:"Exact ca ora și minutele de la ceas…",
+    explain:"1° = 60′. Gradul se împarte în 60 de minute, la fel cum ora se împarte în 60 de minute." },
+  { title:"Câte minute are 2°?",
+    fig:null,
+    choices:["62′","120′","200′"], correct:1,
+    hint:"2 × 60 = ?",
+    explain:"2° = 2 × 60′ = 120′." },
+  { title:"Jumătate de grad înseamnă…",
+    fig:null,
+    choices:["50′","30′","5′"], correct:1,
+    hint:"Jumătate din 60…",
+    explain:"60′ : 2 = 30′. Jumătate de grad = 30 de minute." },
+  { title:"Calculează: 45°20′ + 30°10′",
+    fig:null,
+    choices:["75°30′","75°10′","76°30′"], correct:0,
+    hint:"Adună gradele între ele și minutele între ele.",
+    explain:"Grade: 45+30=75. Minute: 20+10=30. Rezultat: 75°30′ — de data asta minutele n-au trecut de 60." },
+  { title:"Calculează: 20°50′ + 10°20′",
+    fig:null,
+    choices:["30°70′","31°10′","30°10′"], correct:1,
+    hint:"50+20=70 de minute… dar 70′ e mai mult de 60′!",
+    explain:"Minutele: 50′+20′=70′ = 1°10′. Gradele: 20+10+1 = 31. Rezultat corect: 31°10′. (30°70′ e „nescris frumos” — minutele nu pot depăși 59!)" },
+  { title:"Cât fac 60′ + 60′?",
+    fig:null,
+    choices:["120′, adică 2°","120′, adică 12°","1°20′"], correct:0,
+    hint:"Fiecare 60′ e un grad întreg.",
+    explain:"60′+60′ = 120′ = 2 grade întregi = 2°." },
+  { title:"Robotul Bip spune: „89°60′ este același lucru cu 90°.” Are dreptate?",
+    fig:null,
+    choices:["Da — 60′ înseamnă exact încă un grad","Nu, sunt măsuri diferite"], correct:0,
+    hint:"Ce se întâmplă când minutele ajung la 60?",
+    explain:"Bip are dreptate de data asta! 60′ = 1°, deci 89°60′ = 89°+1° = 90°. Trucul ăsta e de aur la scăderi!" },
+  { title:"Calculează: 90° − 30°15′ (indiciu: scrie 90° ca 89°60′)",
+    fig:null,
+    choices:["60°15′","59°45′","69°45′"], correct:1,
+    hint:"89°60′ − 30°15′: scade separat gradele și minutele.",
+    explain:"90° = 89°60′. Minute: 60′−15′ = 45′. Grade: 89−30 = 59. Rezultat: 59°45′." },
+];
+
+/* ---------- provocarea ---------- */
+let chMistakes = 0;
+function chAnswer(i, btn){
+  const fb = document.getElementById("ch-feedback");
+  if(i === 1){
+    btn.classList.add("correct");
+    document.querySelectorAll("#ch-choices button").forEach(b=>b.disabled=true);
+    fb.innerHTML = `<div class="feedback good">🔓 CLICK! 90° = 89°60′, iar 89°60′ − 45°30′ = 44°30′. Seiful s-a deschis, iar înăuntru… piesa de hartă!</div>`;
+    document.getElementById("ch-next-wrap").classList.remove("hidden");
+  } else {
+    btn.classList.add("wrong"); btn.disabled = true;
+    chMistakes++;
+    if(chMistakes === 1){
+      fb.innerHTML = `<div class="feedback hint">🤔 Indiciu: scrie 90° ca 89°60′, apoi scade 45°30′.</div>`;
+    } else {
+      fb.innerHTML = `<div class="feedback explain">💡 90° = 89°60′. Minute: 60′−30′ = 30′. Grade: 89−45 = 44. Deci mai are de rotit 44°30′. Apasă răspunsul corect!</div>`;
+      document.querySelectorAll("#ch-choices button").forEach((b,bi)=>{ if(bi!==1) b.disabled=true; });
+    }
+  }
+}
+</script>
+</body>
+</html>

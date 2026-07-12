@@ -47,6 +47,7 @@
 </head>
 <body>
 <div class="app">
+  <div class="center" style="margin-bottom:10px;"><a href="index.html" style="display:inline-block;background:#ffffffcc;color:#1d4e89;font-weight:600;text-decoration:none;padding:8px 16px;border-radius:12px;box-shadow:0 2px 8px rgba(30,60,120,.15);">🏠 Meniu</a></div>
 
   <!-- ECRAN 0: START -->
   <div class="card" id="screen-start">
@@ -180,8 +181,10 @@
       Desenează un segment AB de 6 cm, o semidreaptă și o dreaptă.
       Apoi explică-i cuiva din familie: <em>care e diferența dintre ele?</em></p>
     </div>
-    <div class="center">
+    <div class="center" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-02-coliniare-paralele-concurente.html" class="btn-primary" style="display:inline-block;text-decoration:none;">Nivelul 2 ➜</a>
+      <a href="index.html" class="btn-primary" style="display:inline-block;text-decoration:none;background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
     </div>
   </div>
 
@@ -447,6 +450,19 @@ ch.addEventListener("touchmove",chMove,{passive:false});
 ch.addEventListener("touchend",()=>chDragging=false);
 
 function finishLesson(){ show("screen-end"); }
+
+// progres salvat local
+const _show = show;
+show = function(id){
+  _show(id);
+  if(id === "screen-end"){
+    try{
+      const p = JSON.parse(localStorage.getItem("geoProgress")) || {};
+      p.l01 = true;
+      localStorage.setItem("geoProgress", JSON.stringify(p));
+    }catch(e){}
+  }
+};
 </script>
 </body>
 </html>

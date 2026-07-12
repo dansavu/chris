@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 6 – Măsurarea unghiurilor cu raportorul</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🌡️</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 6: Măsurătorii regali</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Lungimile se măsoară cu rigla. Dar cum măsurăm cât de „deschis” e un unghi?
+      Cu un instrument special în formă de semicerc: <strong>raportorul</strong>!
+      Unghiurile se măsoară în <strong>grade</strong> — se scrie cu un cerculeț: 45°.</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 La măsurat!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Raportorul fermecat</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Trage de punctul albastru și rotește brațul unghiului.
+      Privește unde trece brațul pe scala raportorului — acolo citești măsura!</p>
+    </div>
+    <canvas id="lab" width="800" height="420"></canvas>
+    <div class="center"><span class="status-badge warn" id="lab-status">…</span></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am înțeles! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Cei 3 pași ai măsurării</h2>
+    <div class="guide"><div class="face">🦊</div><p>Când măsori cu raportorul adevărat, pe caiet:</p></div>
+    <div class="learned">
+      <ul>
+        <li>1️⃣ Așază <strong>centrul raportorului</strong> exact pe <strong>vârful</strong> unghiului.</li>
+        <li>2️⃣ Potrivește <strong>o latură</strong> a unghiului pe linia lui <strong>0°</strong>.</li>
+        <li>3️⃣ Citește numărul unde <strong>cealaltă latură</strong> traversează scala. Atenție: pornește de la scala care are 0 pe latura ta!</li>
+      </ul>
+    </div>
+    <p class="center" style="font-weight:600;color:#1d4e89;">De ținut minte: semicercul întreg are 180°, iar rotația completă are 360°.</p>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Tunul cu bile de vată!</h2>
+    <div class="guide">
+      <div class="face">🎯</div>
+      <p>Reglează țeava tunului la unghiul cerut, apoi apasă <strong>Trage!</strong>.
+      Ai 3 ținte de doborât — la unghiuri diferite!</p>
+    </div>
+    <p class="center" style="font-size:1.2rem;font-weight:700;color:#1d4e89;" id="ch-target"></p>
+    <canvas id="challenge" width="800" height="420"></canvas>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" id="ch-fire" onclick="fire()">💥 Trage!</button>
+    </div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Toate țintele doborâte! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 6!</h1>
+      <p>A șasea piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>📐 Unghiurile se măsoară în <strong>grade</strong> (°) cu <strong>raportorul</strong>.</li>
+        <li>1️⃣2️⃣3️⃣ Cei 3 pași: centrul pe vârf → o latură pe 0° → citește cealaltă latură.</li>
+        <li>🌓 Semicercul are <strong>180°</strong>; rotația completă are <strong>360°</strong>.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> ia raportorul adevărat! Desenează un unghi la întâmplare
+      și măsoară-l. Apoi construiește un unghi de exact 60°: trasează o semidreaptă, pune raportorul,
+      marchează 60° și unește. Măsoară și colțul caietului — cât are?</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-07-tipuri-unghiuri.html" class="btn-primary">Nivelul 7 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 6 · Geometrie clasa a V-a · Măsurarea și construcția unghiurilor cu raportorul</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l06";
+
+/* ---------- desenarea unui raportor pe canvas ---------- */
+function drawProtractor(ctx, cx, cy, R){
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx,cy,R,Math.PI,2*Math.PI); ctx.closePath();
+  ctx.fillStyle="rgba(190,215,245,.4)"; ctx.fill();
+  ctx.strokeStyle="#7aa3cf"; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle="#345"; ctx.textAlign="center";
+  for(let d=0; d<=180; d+=10){
+    const a=Math.PI - d*Math.PI/180;
+    const x1=cx+Math.cos(a)*R, y1=cy-Math.sin(a)*(R)* -1;
+    // ticks: de la margine spre interior
+    const inner = d%30===0 ? R-24 : R-14;
+    ctx.beginPath();
+    ctx.moveTo(cx+Math.cos(a)*R, cy-Math.sin(a)*R);
+    ctx.lineTo(cx+Math.cos(a)*inner, cy-Math.sin(a)*inner);
+    ctx.strokeStyle="#567"; ctx.lineWidth= d%30===0?2.5:1.5; ctx.stroke();
+    if(d%30===0){
+      ctx.font="bold 16px Segoe UI";
+      ctx.fillText(String(d), cx+Math.cos(a)*(R-40), cy-Math.sin(a)*(R-40)+6);
+    }
+  }
+  // linia de bază și centrul
+  ctx.beginPath(); ctx.moveTo(cx-R,cy); ctx.lineTo(cx+R,cy); ctx.strokeStyle="#7aa3cf"; ctx.lineWidth=2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,4,0,7); ctx.fillStyle="#345"; ctx.fill();
+  ctx.restore();
+  ctx.textAlign="start";
+}
+function angleOfHandle(cx,cy,h){
+  let deg = Math.atan2(cy-h.y, h.x-cx)*180/Math.PI;
+  return clamp(Math.round(deg),0,180);
+}
+
+/* ---------- explorare ---------- */
+const lab = document.getElementById("lab");
+const lctx = lab.getContext("2d");
+const LCX=400, LCY=360, LR=300;
+const labH = { H:{x:620,y:180} };
+function drawLab(){
+  lctx.clearRect(0,0,lab.width,lab.height);
+  drawProtractor(lctx,LCX,LCY,LR);
+  const deg = angleOfHandle(LCX,LCY,labH.H);
+  const a = deg*Math.PI/180;
+  // brațul fix (0°)
+  lctx.strokeStyle="#e08a1e"; lctx.lineWidth=5; lctx.lineCap="round";
+  lctx.beginPath(); lctx.moveTo(LCX,LCY); lctx.lineTo(LCX+LR-20,LCY); lctx.stroke();
+  // brațul mobil
+  lctx.strokeStyle="#1d8fe1";
+  lctx.beginPath(); lctx.moveTo(LCX,LCY);
+  lctx.lineTo(LCX+Math.cos(a)*(LR-20), LCY-Math.sin(a)*(LR-20)); lctx.stroke();
+  // mâner pe braț
+  labH.H.x = LCX+Math.cos(a)*(LR-60);
+  labH.H.y = LCY-Math.sin(a)*(LR-60);
+  drawPoint(lctx,labH.H,"","#1d8fe1");
+  // arc mic
+  lctx.beginPath(); lctx.arc(LCX,LCY,50,-a,0); lctx.strokeStyle="#e05555"; lctx.lineWidth=3; lctx.stroke();
+  document.getElementById("lab-status").textContent = "Unghiul măsoară " + deg + "°";
+}
+enableDrag(lab, ()=>labH, drawLab, -2000);
+
+/* ---------- figuri quiz: mini-raportor SVG ---------- */
+function figProtractor(deg){
+  const cx=200, cy=170, R=150;
+  let ticks="";
+  for(let d=0; d<=180; d+=10){
+    const a=d*Math.PI/180;
+    const inner = d%30===0 ? R-20 : R-11;
+    ticks += `<line x1="${cx+Math.cos(a)*R}" y1="${cy-Math.sin(a)*R}" x2="${cx+Math.cos(a)*inner}" y2="${cy-Math.sin(a)*inner}" stroke="#567" stroke-width="${d%30===0?2:1}"/>`;
+    if(d%30===0) ticks += `<text x="${cx+Math.cos(a)*(R-33)}" y="${cy-Math.sin(a)*(R-33)+5}" font-size="13" font-weight="bold" fill="#345" text-anchor="middle">${d}</text>`;
+  }
+  const a=deg*Math.PI/180;
+  return `<svg class="svg-fig" width="100%" height="190" viewBox="0 0 400 190">
+    <path d="M ${cx-R} ${cy} A ${R} ${R} 0 0 1 ${cx+R} ${cy} Z" fill="rgba(190,215,245,.4)" stroke="#7aa3cf" stroke-width="2"/>
+    ${ticks}
+    <line x1="${cx}" y1="${cy}" x2="${cx+R-15}" y2="${cy}" stroke="#e08a1e" stroke-width="4" stroke-linecap="round"/>
+    <line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*(R-15)}" y2="${cy-Math.sin(a)*(R-15)}" stroke="#1d8fe1" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="${cx}" cy="${cy}" r="4" fill="#345"/>
+  </svg>`;
+}
+
+const questions = [
+  { title:"Citește pe raportor: cât măsoară unghiul dintre brațul portocaliu și cel albastru?",
+    fig:()=>figProtractor(30),
+    choices:["30°","60°","150°"], correct:0,
+    hint:"Brațul portocaliu e pe 0°. Unde trece brațul albastru?",
+    explain:"Brațul albastru trece exact prin dreptul liniuței de 30 — unghiul are 30°." },
+  { title:"Dar acum, cât măsoară unghiul?",
+    fig:()=>figProtractor(90),
+    choices:["45°","90°","180°"], correct:1,
+    hint:"Brațul albastru e drept în sus — la jumătatea scalei.",
+    explain:"Brațul e exact pe 90° — jumătate din semicercul de 180°. Acesta e faimosul unghi drept!" },
+  { title:"Și acesta?",
+    fig:()=>figProtractor(120),
+    choices:["60°","120°","150°"], correct:1,
+    hint:"Numără liniuțele mari: 30, 60, 90, și încă una…",
+    explain:"Brațul albastru trece prin 120 — unghiul are 120°. Fii atent să citești pe scala care începe cu 0 pe brațul portocaliu!" },
+  { title:"Cu ce instrument măsurăm unghiurile?",
+    fig:null,
+    choices:["Cu rigla","Cu raportorul","Cu compasul"], correct:1,
+    hint:"Instrumentul în formă de semicerc…",
+    explain:"Raportorul! Rigla măsoară lungimi, compasul trasează cercuri, iar raportorul măsoară unghiuri în grade." },
+  { title:"Câte grade are semicercul întreg al raportorului?",
+    fig:()=>figProtractor(180),
+    choices:["90°","180°","360°"], correct:1,
+    hint:"Uită-te la ultimul număr de pe scală.",
+    explain:"Semicercul are 180°. Rotația completă (cercul întreg) are 360°." },
+  { title:"Care este primul pas când măsori un unghi cu raportorul?",
+    fig:null,
+    choices:["Citești numărul cel mai mare","Așezi centrul raportorului pe vârful unghiului","Măsori laturile cu rigla"], correct:1,
+    hint:"Totul pornește de la vârful unghiului…",
+    explain:"Pasul 1: centrul raportorului exact pe vârf. Apoi o latură pe 0° și abia la final citești scala." },
+  { title:"Robotul Bip măsoară un unghi și citește 60° pe o scală și 120° pe cealaltă. Care e măsura corectă, dacă unghiul e mai mic decât un colț de caiet (90°)?",
+    fig:()=>figProtractor(60),
+    choices:["60°","120°","Ambele"], correct:0,
+    hint:"Un unghi mai mic decât 90° poate avea 120°?",
+    explain:"Raportorul are două scale, dar unghiul nostru e mai mic decât 90°, deci măsura corectă e 60°. Citim pe scala care are 0 pe latura unghiului!" },
+  { title:"Un sfert de rotație completă înseamnă…",
+    fig:null,
+    choices:["45°","90°","180°"], correct:1,
+    hint:"Rotația completă are 360°. Împarte la 4.",
+    explain:"360° : 4 = 90°. Un sfert de rotație e un unghi drept!" },
+];
+
+/* ---------- provocarea: tunul ---------- */
+const ch = document.getElementById("challenge");
+const cctx = ch.getContext("2d");
+const CCX=400, CCY=360, CR=300;
+const chH = { H:{x:650,y:220} };
+const targets = [40, 65, 155];
+let tIdx = 0, chSolved=false;
+function chDeg(){ return angleOfHandle(CCX,CCY,chH.H); }
+function drawChallenge(){
+  cctx.clearRect(0,0,ch.width,ch.height);
+  drawProtractor(cctx,CCX,CCY,CR);
+  const deg = chDeg();
+  const a = deg*Math.PI/180;
+  cctx.font="30px Segoe UI";
+  targets.forEach((t,i)=>{
+    if(i<tIdx) return;
+    const ta=t*Math.PI/180;
+    cctx.fillText(i===tIdx?"🎈":"🎈", CCX+Math.cos(ta)*(CR+40), CCY-Math.sin(ta)*(CR+40)+10);
+  });
+  cctx.strokeStyle="#556e8d"; cctx.lineWidth=8; cctx.lineCap="round";
+  cctx.beginPath(); cctx.moveTo(CCX,CCY);
+  cctx.lineTo(CCX+Math.cos(a)*130, CCY-Math.sin(a)*130); cctx.stroke();
+  cctx.font="26px Segoe UI"; cctx.fillText("💣", CCX-14, CCY-6);
+  chH.H.x = CCX+Math.cos(a)*170; chH.H.y = CCY-Math.sin(a)*170;
+  drawPoint(cctx,chH.H,"","#1d8fe1");
+  cctx.font="bold 24px Segoe UI"; cctx.fillStyle="#1d4e89";
+  cctx.fillText(deg+"°", 40, 50);
+  if(!chSolved) document.getElementById("ch-target").textContent = `Ținta ${tIdx+1} din ${targets.length}: reglează tunul la ${targets[tIdx]}°`;
+}
+function fire(){
+  if(chSolved) return;
+  const deg = chDeg(), want = targets[tIdx];
+  const fb = document.getElementById("ch-feedback");
+  if(Math.abs(deg-want) <= 2){
+    tIdx++;
+    if(tIdx >= targets.length){
+      chSolved = true;
+      document.getElementById("ch-target").textContent = "Toate țintele doborâte!";
+      document.getElementById("ch-fire").classList.add("hidden");
+      fb.innerHTML = `<div class="feedback good">🎉 POC! Ultima țintă a căzut! Ești lunetist de unghiuri cu diplomă!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else {
+      fb.innerHTML = `<div class="feedback good">💥 POC! Țintă doborâtă la ${want}°! Următoarea…</div>`;
+    }
+  } else if(Math.abs(deg-want) <= 8){
+    fb.innerHTML = `<div class="feedback hint">Pfiu! Aproape… Ai tras la ${deg}°, dar ținta e la ${want}°. Ajustează puțin!</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback hint">Ai tras la ${deg}°, dar ținta e la ${want}°. ${deg<want?"Ridică":"Coboară"} țeava — privește scala raportorului!</div>`;
+  }
+  drawChallenge();
+}
+enableDrag(ch, ()=> chSolved ? {} : chH, drawChallenge, -2000);
+
+window.onShow = function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+};
+</script>
+</body>
+</html>

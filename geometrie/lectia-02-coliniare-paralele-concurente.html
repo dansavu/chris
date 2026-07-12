@@ -51,6 +51,7 @@
 </head>
 <body>
 <div class="app">
+  <div class="center" style="margin-bottom:10px;"><a href="index.html" style="display:inline-block;background:#ffffffcc;color:#1d4e89;font-weight:600;text-decoration:none;padding:8px 16px;border-radius:12px;box-shadow:0 2px 8px rgba(30,60,120,.15);">🏠 Meniu</a></div>
 
   <!-- ECRAN 0: START -->
   <div class="card" id="screen-start">
@@ -180,8 +181,10 @@
       (folosește cele două margini ale riglei!) și două drepte concurente. Apoi caută prin casă:
       găsește 3 perechi de linii paralele și 3 perechi de linii care se intersectează.</p>
     </div>
-    <div class="center">
+    <div class="center" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-03-lungime-mijloc-segment.html" class="btn-primary" style="display:inline-block;text-decoration:none;">Nivelul 3 ➜</a>
+      <a href="index.html" class="btn-primary" style="display:inline-block;text-decoration:none;background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
     </div>
   </div>
 
@@ -487,6 +490,19 @@ addEventListener("mouseup",()=>chDrag=null);
 ch.addEventListener("touchstart",chDown,{passive:false});
 ch.addEventListener("touchmove",chMove,{passive:false});
 ch.addEventListener("touchend",()=>chDrag=null);
+
+// progres salvat local
+const _show = show;
+show = function(id){
+  _show(id);
+  if(id === "screen-end"){
+    try{
+      const p = JSON.parse(localStorage.getItem("geoProgress")) || {};
+      p.l02 = true;
+      localStorage.setItem("geoProgress", JSON.stringify(p));
+    }catch(e){}
+  }
+};
 </script>
 </body>
 </html>

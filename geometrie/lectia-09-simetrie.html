@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 9 – Figuri congruente și axe de simetrie</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏠 Meniu</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🦋</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 9: Oglinda simetriei</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Privește un fluture: aripa stângă e imaginea în oglindă a aripii drepte!
+      Dacă l-ai împături pe mijloc, aripile s-ar suprapune perfect.
+      Linia de împăturire se numește <strong>axă de simetrie</strong>. Hai să pictăm cu oglinda!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 La oglindă!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Pictura fermecată</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Atinge pătrățelele din <strong>stânga</strong> liniei roșii ca să pictezi.
+      Oglinda magică pictează <em>singură</em> partea dreaptă! Observă: fiecare pătrățel apare
+      la aceeași distanță de linie, pe partea cealaltă.</p>
+    </div>
+    <canvas id="lab" width="800" height="440"></canvas>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-small" onclick="labCells.clear(); drawLab()">🧹 Șterge tot</button>
+      <button class="btn-primary" onclick="show('screen-learn')">Magic! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Cum le numim</h2>
+    <div class="guide"><div class="face">🦊</div><p>Numele oficiale:</p></div>
+    <div class="learned">
+      <ul>
+        <li>🪞 <strong>Axa de simetrie</strong> — linia care împarte o figură în două jumătăți ce se suprapun perfect prin împăturire.</li>
+        <li>👯 <strong>Figuri congruente</strong> — figurile care se suprapun exact: aceeași formă ȘI aceeași mărime.</li>
+        <li>🔤 Litere cu axă de simetrie: A, M, O, T, U… Litere fără: F, G, J, L…</li>
+        <li>⬜ Pătratul are <strong>4</strong> axe de simetrie; dreptunghiul doar <strong>2</strong>; cercul — oricâte!</li>
+      </ul>
+    </div>
+    <svg class="svg-fig" width="100%" height="150" viewBox="0 0 700 150">
+      <rect x="40" y="30" width="90" height="90" fill="#d8e9fb" stroke="#1d8fe1" stroke-width="3"/>
+      <line x1="85" y1="15" x2="85" y2="135" stroke="#e05555" stroke-width="2" stroke-dasharray="6 4"/>
+      <line x1="25" y1="75" x2="145" y2="75" stroke="#e05555" stroke-width="2" stroke-dasharray="6 4"/>
+      <line x1="35" y1="25" x2="135" y2="125" stroke="#e05555" stroke-width="2" stroke-dasharray="6 4"/>
+      <line x1="135" y1="25" x2="35" y2="125" stroke="#e05555" stroke-width="2" stroke-dasharray="6 4"/>
+      <text x="45" y="148" font-size="15" fill="#333">pătrat: 4 axe</text>
+      <rect x="240" y="45" width="130" height="65" fill="#d8f7dd" stroke="#35b653" stroke-width="3"/>
+      <line x1="305" y1="30" x2="305" y2="125" stroke="#e05555" stroke-width="2" stroke-dasharray="6 4"/>
+      <line x1="225" y1="77" x2="385" y2="77" stroke="#e05555" stroke-width="2" stroke-dasharray="6 4"/>
+      <text x="240" y="148" font-size="15" fill="#333">dreptunghi: 2 axe</text>
+      <text x="480" y="85" font-size="60">🦋</text>
+      <line x1="510" y1="25" x2="510" y2="115" stroke="#e05555" stroke-width="2" stroke-dasharray="6 4"/>
+      <text x="460" y="148" font-size="15" fill="#333">fluturele: 1 axă</text>
+    </svg>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Termină fluturele!</h2>
+    <div class="guide">
+      <div class="face">🦋</div>
+      <p>Oglinda magică s-a stricat! Aripa stângă e pictată — <strong>pictează tu aripa dreaptă</strong>,
+      atingând pătrățelele potrivite. Fiecare pătrățel trebuie să fie oglindit exact!</p>
+    </div>
+    <canvas id="challenge" width="800" height="440"></canvas>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Fluturele zboară! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 9!</h1>
+      <p>A noua piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>🪞 <strong>Axa de simetrie</strong> — linia de „împăturire” care suprapune perfect cele două jumătăți.</li>
+        <li>👯 <strong>Figurile congruente</strong> — aceeași formă și aceeași mărime; se suprapun exact.</li>
+        <li>⬜ Pătratul are 4 axe, dreptunghiul 2, cercul oricâte, fluturele 1.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> împăturește o foaie în două, decupează o jumătate
+      de inimă la îndoire și desfă foaia — inima întreagă! Linia de îndoire e chiar axa de simetrie.
+      Apoi scrie-ți numele cu majuscule și încercuiește literele care au axă de simetrie.</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+      <a href="lectia-10-perimetre.html" class="btn-primary">Nivelul 10 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏠 Meniu</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 9 · Geometrie clasa a V-a · Figuri congruente și axe de simetrie</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "l09";
+
+/* ---------- grilă cu oglindă ---------- */
+const COLS=12, ROWS=7, CELL=50, OX=100, OY=25;
+function cellKey(c,r){ return c+"_"+r; }
+function mirrorCol(c){ return COLS-1-c; }
+function drawGrid(ctx, painted, opts){
+  ctx.clearRect(0,0,800,440);
+  for(let c=0;c<COLS;c++) for(let r=0;r<ROWS;r++){
+    const x=OX+c*CELL, y=OY+r*CELL;
+    const k=cellKey(c,r);
+    if(painted.has(k)){
+      ctx.fillStyle = painted.get(k);
+      ctx.fillRect(x+2,y+2,CELL-4,CELL-4);
+    }
+    ctx.strokeStyle="#d5e2f0"; ctx.lineWidth=1;
+    ctx.strokeRect(x,y,CELL,CELL);
+  }
+  // axa
+  const mx = OX + (COLS/2)*CELL;
+  ctx.strokeStyle="#e05555"; ctx.lineWidth=3; ctx.setLineDash([10,7]);
+  ctx.beginPath(); ctx.moveTo(mx, OY-12); ctx.lineTo(mx, OY+ROWS*CELL+12); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle="#a02525"; ctx.font="bold 15px Segoe UI";
+  ctx.fillText("axa de simetrie", mx-55, OY+ROWS*CELL+28);
+}
+function hitCell(cv, ev){
+  const p = canvasPos(cv,ev);
+  const c = Math.floor((p.x-OX)/CELL), r = Math.floor((p.y-OY)/CELL);
+  if(c<0||c>=COLS||r<0||r>=ROWS) return null;
+  return {c,r};
+}
+
+/* ---------- explorare: pictură cu oglindă automată ---------- */
+const lab=document.getElementById("lab");
+const lctx=lab.getContext("2d");
+const labCells=new Map();
+function drawLab(){ drawGrid(lctx, labCells); }
+function labTap(ev){
+  const h=hitCell(lab,ev); if(!h) return;
+  ev.preventDefault();
+  if(h.c >= COLS/2) return; // doar stânga
+  const k=cellKey(h.c,h.r), km=cellKey(mirrorCol(h.c),h.r);
+  if(labCells.has(k)){ labCells.delete(k); labCells.delete(km); }
+  else { labCells.set(k,"#1d8fe1"); labCells.set(km,"#35b653"); }
+  drawLab();
+}
+lab.addEventListener("mousedown",labTap);
+lab.addEventListener("touchstart",labTap,{passive:false});
+
+/* ---------- quiz ---------- */
+function figLetter(l){
+  return `<div class="center" style="font-size:5rem;font-weight:800;color:#1d4e89;">${l}</div>`;
+}
+const questions = [
+  { title:"Litera A are axă de simetrie?",
+    fig:()=>figLetter("A"),
+    choices:["Da — o linie verticală prin mijloc","Nu"], correct:0,
+    hint:"Împăturește litera în minte, pe verticală…",
+    explain:"Da! Dacă împăturim litera A pe verticală, cele două jumătăți se suprapun perfect." },
+  { title:"Dar litera F?",
+    fig:()=>figLetter("F"),
+    choices:["Da","Nu — nicio împăturire nu suprapune jumătățile"], correct:1,
+    hint:"Încearcă s-o împăturești pe verticală… apoi pe orizontală…",
+    explain:"F nu are nicio axă de simetrie — oricum am împături-o, jumătățile nu se suprapun." },
+  { title:"Câte axe de simetrie are pătratul?",
+    fig:null,
+    choices:["2","4","1"], correct:1,
+    hint:"Două prin mijlocurile laturilor + două pe diagonale…",
+    explain:"Pătratul are 4 axe: verticala, orizontala și cele două diagonale." },
+  { title:"Dar dreptunghiul (care nu e pătrat)?",
+    fig:null,
+    choices:["4 — la fel ca pătratul","2 — doar verticala și orizontala"], correct:1,
+    hint:"Diagonalele dreptunghiului chiar suprapun jumătățile? Împăturește în minte…",
+    explain:"Capcană clasică! Dreptunghiul are doar 2 axe. Împăturit pe diagonală, colțurile NU se suprapun — încearcă acasă cu o foaie A4!" },
+  { title:"Două figuri sunt congruente dacă…",
+    fig:null,
+    choices:["au aceeași culoare","se suprapun exact — aceeași formă și mărime","sunt amândouă pătrate"], correct:1,
+    hint:"Gândește-te la gemenii identici…",
+    explain:"Congruente = se suprapun perfect. Trebuie să aibă și aceeași formă, și aceeași mărime!" },
+  { title:"Robotul Bip spune: „Un pătrat mic și un pătrat mare sunt congruente, că au aceeași formă.” Are dreptate?",
+    fig:null,
+    choices:["Da","Nu — le trebuie și aceeași MĂRIME"], correct:1,
+    hint:"S-ar suprapune exact un pătrat de 2 cm cu unul de 5 cm?",
+    explain:"Bip greșește! Forma nu e de ajuns: figurile congruente trebuie să aibă și aceeași mărime, ca să se suprapună exact." },
+  { title:"Câte axe de simetrie are cercul?",
+    fig:null,
+    choices:["1","4","Oricâte — orice dreaptă prin centru"], correct:2,
+    hint:"Împăturește un cerc de hârtie prin centru, în orice direcție…",
+    explain:"Orice dreaptă care trece prin centru e axă de simetrie — cercul are nenumărate axe!" },
+  { title:"Cele două jumătăți ale unui fluture, despărțite de axa lui de simetrie, sunt figuri…",
+    fig:null,
+    choices:["congruente — se suprapun prin împăturire","paralele","obtuze"], correct:0,
+    hint:"Ce se întâmplă când fluturele își închide aripile?",
+    explain:"Aripile se suprapun exact când se închid — sunt congruente! Simetria creează mereu jumătăți congruente." },
+];
+
+/* ---------- provocarea: fluturele ---------- */
+const ch=document.getElementById("challenge");
+const cctx=ch.getContext("2d");
+const wing=[[2,2],[3,1],[3,2],[3,3],[4,2],[4,3],[4,4],[5,3],[5,4],[5,5],[4,5],[3,6]];
+const chCells=new Map();
+wing.forEach(([c,r])=>chCells.set(cellKey(c,r),"#1d8fe1"));
+const need=new Set(wing.map(([c,r])=>cellKey(mirrorCol(c),r)));
+const got=new Set();
+let chSolved=false;
+function drawChallenge(){
+  drawGrid(cctx, chCells);
+  const fb=document.getElementById("ch-feedback");
+  if(!chSolved) fb.innerHTML=`<div class="feedback hint">Ai oglindit ${got.size} din ${need.size} pătrățele.</div>`;
+}
+function chTap(ev){
+  if(chSolved) return;
+  const h=hitCell(ch,ev); if(!h) return;
+  ev.preventDefault();
+  if(h.c < COLS/2) return; // doar dreapta
+  const k=cellKey(h.c,h.r);
+  if(got.has(k)) return;
+  if(need.has(k)){
+    got.add(k); chCells.set(k,"#35b653");
+    if(got.size===need.size){
+      chSolved=true;
+      drawGrid(cctx, chCells);
+      document.getElementById("ch-feedback").innerHTML=
+        `<div class="feedback good">🦋 Fluturele e complet și perfect simetric — bate din aripi și zboară! Bravo!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+      return;
+    }
+  } else {
+    chCells.set(k,"#e05555");
+    drawGrid(cctx, chCells);
+    setTimeout(()=>{ chCells.delete(k); drawChallenge(); }, 350);
+    document.getElementById("ch-feedback").innerHTML=
+      `<div class="feedback hint">Acolo nu e aripa! Numără pătrățelele: la ce distanță de linia roșie e pătrățelul albastru? Pune-l la fel de departe, pe partea cealaltă.</div>`;
+    return;
+  }
+  drawChallenge();
+}
+ch.addEventListener("mousedown",chTap);
+ch.addEventListener("touchstart",chTap,{passive:false});
+
+window.onShow=function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+};
+</script>
+</body>
+</html>
