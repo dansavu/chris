@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 1 – Punct, dreaptă, semidreaptă și segment</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', 'Comic Sans MS', sans-serif; }
+  body { background: linear-gradient(160deg, #eef6ff, #e6fff2); min-height: 100vh; display: flex; justify-content: center; padding: 12px; }
+  .app { width: 100%; max-width: 860px; }
+  .card { background: #fff; border-radius: 20px; box-shadow: 0 6px 24px rgba(30,60,120,.12); padding: 24px; margin-bottom: 16px; }
+  h1 { color: #1d4e89; font-size: 1.5rem; margin-bottom: 8px; }
+  h2 { color: #1d4e89; font-size: 1.25rem; margin-bottom: 12px; }
+  p { font-size: 1.05rem; line-height: 1.5; color: #333; margin-bottom: 10px; }
+  button { border: none; border-radius: 14px; padding: 14px 24px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: transform .1s, box-shadow .1s; }
+  button:active { transform: scale(.97); }
+  .btn-primary { background: #1d8fe1; color: #fff; box-shadow: 0 4px 0 #156bb0; }
+  .btn-primary:hover { background: #2a9bef; }
+  .btn-choice { background: #f0f5ff; color: #1d4e89; border: 3px solid #c9dcf5; width: 100%; text-align: left; margin-bottom: 10px; padding: 16px 20px; }
+  .btn-choice:hover { border-color: #1d8fe1; }
+  .btn-choice.correct { background: #d8f7dd; border-color: #35b653; color: #1b6b2e; }
+  .btn-choice.wrong { background: #ffe1e1; border-color: #e05555; color: #a02525; }
+  .btn-choice:disabled { cursor: default; }
+  .btn-tab { background: #eef2f8; color: #445; margin-right: 8px; margin-bottom: 8px; padding: 10px 18px; border: 3px solid transparent; }
+  .btn-tab.active { background: #1d8fe1; color: #fff; }
+  .hidden { display: none !important; }
+  canvas { background: #fbfdff; border: 2px dashed #bcd4ee; border-radius: 14px; width: 100%; touch-action: none; }
+  .guide { display: flex; gap: 14px; align-items: flex-start; background: #fff8e1; border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+  .guide .face { font-size: 2rem; }
+  .guide p { margin: 0; }
+  .feedback { border-radius: 14px; padding: 14px; margin-top: 12px; font-size: 1.05rem; }
+  .feedback.hint { background: #fff3cd; color: #7a5c00; }
+  .feedback.explain { background: #e3edff; color: #1d4e89; }
+  .feedback.good { background: #d8f7dd; color: #1b6b2e; }
+  .progress { display: flex; gap: 6px; margin-bottom: 16px; }
+  .progress span { flex: 1; height: 10px; border-radius: 5px; background: #e2e9f2; }
+  .progress span.done { background: #35b653; }
+  .progress span.now { background: #1d8fe1; }
+  .center { text-align: center; }
+  .big-emoji { font-size: 3rem; margin-bottom: 8px; }
+  .learned { text-align: left; background: #f2f9ff; border-radius: 14px; padding: 16px; margin: 14px 0; }
+  .learned li { margin: 8px 0 8px 22px; font-size: 1.05rem; }
+  .svg-fig { display: block; margin: 10px auto; }
+  .footer-note { text-align: center; color: #789; font-size: .9rem; padding: 8px; }
+  .toolbar { margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ECRAN 0: START -->
+  <div class="card" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🧭</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 1: Lumea punctelor și a liniilor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Salut! Eu sunt <strong>Rix</strong>, ghidul tău. Înainte să pornim: uită-te prin cameră.
+      Vezi colțul mesei? Marginea ușii? O rază de lumină de la lanternă?
+      Toate acestea au un secret geometric... Hai să-l descoperim!</p>
+    </div>
+    <div class="center">
+      <button class="btn-primary" onclick="show('screen-explore')">🚀 Pornim explorarea!</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 1: EXPLORARE -->
+  <div class="card hidden" id="screen-explore">
+    <h2>🔍 Laboratorul liniilor</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p id="explore-text">Trage de punctele <strong>A</strong> și <strong>B</strong> cu degetul sau cu mouse-ul.
+      Apoi apasă pe butoane și observă: <em>ce se schimbă la desen?</em></p>
+    </div>
+    <div class="toolbar">
+      <button class="btn-tab active" id="tab-dreapta" onclick="setMode('dreapta')">Dreaptă</button>
+      <button class="btn-tab" id="tab-semidreapta" onclick="setMode('semidreapta')">Semidreaptă</button>
+      <button class="btn-tab" id="tab-segment" onclick="setMode('segment')">Segment</button>
+    </div>
+    <canvas id="lab" width="800" height="360"></canvas>
+    <p id="mode-desc" style="margin-top:10px; font-weight:600; color:#1d4e89;">
+      Dreapta trece prin A și B și continuă la nesfârșit în ambele părți — de aceea desenul iese din chenar!</p>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am observat! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 2: NUMELE ȘI NOTAȚIA -->
+  <div class="card hidden" id="screen-learn">
+    <h2>✏️ Cum le numim și le scriem</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Acum că le-ai văzut cu ochii tăi, hai să le dăm nume — exact ca la școală:</p>
+    </div>
+
+    <svg class="svg-fig" width="100%" height="330" viewBox="0 0 700 330">
+      <!-- punct -->
+      <circle cx="80" cy="40" r="5" fill="#e05555"/>
+      <text x="95" y="46" font-size="18" fill="#333">Punctul <tspan font-weight="bold">M</tspan> — nu are dimensiune, e doar un loc.</text>
+
+      <!-- dreapta -->
+      <line x1="20" y1="110" x2="330" y2="110" stroke="#1d8fe1" stroke-width="3"/>
+      <polygon points="20,110 32,104 32,116" fill="#1d8fe1"/>
+      <polygon points="330,110 318,104 318,116" fill="#1d8fe1"/>
+      <circle cx="120" cy="110" r="5" fill="#333"/><text x="114" y="98" font-size="16" font-weight="bold">A</text>
+      <circle cx="230" cy="110" r="5" fill="#333"/><text x="224" y="98" font-size="16" font-weight="bold">B</text>
+      <text x="360" y="106" font-size="18" fill="#333">Dreapta <tspan font-weight="bold">AB</tspan> — nu are capete,</text>
+      <text x="360" y="128" font-size="18" fill="#333">continuă la nesfârșit în ambele sensuri.</text>
+
+      <!-- semidreapta -->
+      <line x1="120" y1="190" x2="330" y2="190" stroke="#35b653" stroke-width="3"/>
+      <polygon points="330,190 318,184 318,196" fill="#35b653"/>
+      <circle cx="120" cy="190" r="6" fill="#333"/><text x="114" y="178" font-size="16" font-weight="bold">O</text>
+      <circle cx="230" cy="190" r="5" fill="#333"/><text x="224" y="178" font-size="16" font-weight="bold">C</text>
+      <text x="360" y="186" font-size="18" fill="#333">Semidreapta <tspan font-weight="bold">OC</tspan> — are o origine (O)</text>
+      <text x="360" y="208" font-size="18" fill="#333">și continuă la nesfârșit doar într-un sens.</text>
+
+      <!-- segment -->
+      <line x1="120" y1="270" x2="330" y2="270" stroke="#e08a1e" stroke-width="3"/>
+      <circle cx="120" cy="270" r="6" fill="#333"/><text x="114" y="258" font-size="16" font-weight="bold">P</text>
+      <circle cx="330" cy="270" r="6" fill="#333"/><text x="324" y="258" font-size="16" font-weight="bold">Q</text>
+      <text x="360" y="266" font-size="18" fill="#333">Segmentul <tspan font-weight="bold">PQ</tspan> — are două capete.</text>
+      <text x="360" y="288" font-size="18" fill="#333">Doar el poate fi măsurat cu rigla!</text>
+    </svg>
+
+    <div class="center">
+      <button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 3: QUIZ -->
+  <div class="card hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 4: PROVOCARE FINALĂ -->
+  <div class="card hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Salvează robotul!</h2>
+    <div class="guide">
+      <div class="face">🤖</div>
+      <p>Robotul Bip stă în punctul <strong>O</strong> și vrea să ajungă la baterie 🔋, dar poate merge
+      doar de-a lungul unei <strong>semidrepte</strong> care pornește din el.
+      <strong>Trage de punctul verde</strong> ca semidreapta să treacă prin baterie!</p>
+    </div>
+    <canvas id="challenge" width="800" height="360"></canvas>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="finishLesson()">Am salvat robotul! 🎉</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 5: FINAL -->
+  <div class="card hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 1!</h1>
+      <p>Ai câștigat prima piesă din Harta Exploratorului.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>📍 <strong>Punctul</strong> — un loc, fără dimensiune; îl notăm cu literă mare: A, B, M.</li>
+        <li>📏 <strong>Dreapta AB</strong> — fără capete, nesfârșită în ambele sensuri.</li>
+        <li>➡️ <strong>Semidreapta OC</strong> — are origine și un singur sens; originea se scrie prima!</li>
+        <li>📐 <strong>Segmentul PQ</strong> — are două capete și poate fi măsurat.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> ia rigla și caietul de geometrie.
+      Desenează un segment AB de 6 cm, o semidreaptă și o dreaptă.
+      Apoi explică-i cuiva din familie: <em>care e diferența dintre ele?</em></p>
+    </div>
+    <div class="center">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 1 · Geometrie clasa a V-a · Punct, dreaptă, semidreaptă și segment</div>
+</div>
+
+<script>
+"use strict";
+// ---------- navigare ----------
+const screens = ["screen-start","screen-explore","screen-learn","screen-quiz","screen-challenge","screen-end"];
+function show(id){
+  screens.forEach(s=>document.getElementById(s).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+  window.scrollTo({top:0});
+}
+
+// ---------- laborator interactiv ----------
+const lab = document.getElementById("lab");
+const lctx = lab.getContext("2d");
+let mode = "dreapta";
+let pts = { A:{x:250,y:200}, B:{x:550,y:140} };
+let dragging = null;
+
+const modeDescs = {
+  dreapta: "Dreapta trece prin A și B și continuă la nesfârșit în ambele părți — de aceea desenul iese din chenar!",
+  semidreapta: "Semidreapta pornește din A (originea) și trece prin B, continuând la nesfârșit doar într-un sens.",
+  segment: "Segmentul AB are două capete: A și B. Se oprește exact acolo — doar pe el îl putem măsura!"
+};
+function setMode(m){
+  mode = m;
+  ["dreapta","semidreapta","segment"].forEach(t=>document.getElementById("tab-"+t).classList.toggle("active", t===m));
+  document.getElementById("mode-desc").textContent = modeDescs[m];
+  drawLab();
+}
+function extendLine(p1,p2,both){
+  // prelungește dincolo de canvas
+  const dx=p2.x-p1.x, dy=p2.y-p1.y;
+  const len=Math.hypot(dx,dy)||1;
+  const ux=dx/len, uy=dy/len, L=2000;
+  const end={x:p1.x+ux*L, y:p1.y+uy*L};
+  const start= both ? {x:p1.x-ux*L, y:p1.y-uy*L} : p1;
+  return [start,end];
+}
+function drawPoint(ctx,p,label,color){
+  ctx.beginPath(); ctx.arc(p.x,p.y,9,0,7); ctx.fillStyle=color||"#e05555"; ctx.fill();
+  ctx.fillStyle="#222"; ctx.font="bold 22px Segoe UI";
+  ctx.fillText(label, p.x+12, p.y-12);
+}
+function drawLab(){
+  lctx.clearRect(0,0,lab.width,lab.height);
+  lctx.strokeStyle="#1d8fe1"; lctx.lineWidth=4; lctx.lineCap="round";
+  let s,e;
+  if(mode==="dreapta"){ [s,e]=extendLine(pts.A,pts.B,true); }
+  else if(mode==="semidreapta"){ [s,e]=extendLine(pts.A,pts.B,false); }
+  else { s=pts.A; e=pts.B; }
+  lctx.beginPath(); lctx.moveTo(s.x,s.y); lctx.lineTo(e.x,e.y); lctx.stroke();
+  drawPoint(lctx,pts.A,"A","#e05555");
+  drawPoint(lctx,pts.B,"B","#e05555");
+}
+function canvasPos(cv,ev){
+  const r=cv.getBoundingClientRect();
+  const t=ev.touches?ev.touches[0]:ev;
+  return { x:(t.clientX-r.left)*cv.width/r.width, y:(t.clientY-r.top)*cv.height/r.height };
+}
+function labDown(ev){
+  const p=canvasPos(lab,ev);
+  for(const k of ["A","B"]){
+    if(Math.hypot(p.x-pts[k].x,p.y-pts[k].y)<30){ dragging=k; ev.preventDefault(); return; }
+  }
+}
+function labMove(ev){
+  if(!dragging) return;
+  const p=canvasPos(lab,ev);
+  pts[dragging]={x:Math.max(15,Math.min(lab.width-15,p.x)), y:Math.max(15,Math.min(lab.height-15,p.y))};
+  drawLab(); ev.preventDefault();
+}
+lab.addEventListener("mousedown",labDown); lab.addEventListener("mousemove",labMove);
+addEventListener("mouseup",()=>dragging=null);
+lab.addEventListener("touchstart",labDown,{passive:false});
+lab.addEventListener("touchmove",labMove,{passive:false});
+lab.addEventListener("touchend",()=>dragging=null);
+
+// ---------- figuri SVG pentru quiz ----------
+function figLine(type){
+  // desenează o figură orizontală de tipul dat
+  const y=50;
+  let inner="";
+  if(type==="dreapta"){
+    inner=`<line x1="20" y1="${y}" x2="380" y2="${y}" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="20,${y} 34,${y-7} 34,${y+7}" fill="#1d8fe1"/>
+      <polygon points="380,${y} 366,${y-7} 366,${y+7}" fill="#1d8fe1"/>
+      <circle cx="140" cy="${y}" r="6" fill="#333"/><text x="132" y="${y-14}" font-size="18" font-weight="bold">A</text>
+      <circle cx="260" cy="${y}" r="6" fill="#333"/><text x="252" y="${y-14}" font-size="18" font-weight="bold">B</text>`;
+  } else if(type==="semidreapta"){
+    inner=`<line x1="100" y1="${y}" x2="380" y2="${y}" stroke="#35b653" stroke-width="4"/>
+      <polygon points="380,${y} 366,${y-7} 366,${y+7}" fill="#35b653"/>
+      <circle cx="100" cy="${y}" r="7" fill="#333"/><text x="92" y="${y-14}" font-size="18" font-weight="bold">O</text>
+      <circle cx="240" cy="${y}" r="6" fill="#333"/><text x="232" y="${y-14}" font-size="18" font-weight="bold">C</text>`;
+  } else if(type==="segment"){
+    inner=`<line x1="100" y1="${y}" x2="320" y2="${y}" stroke="#e08a1e" stroke-width="4"/>
+      <circle cx="100" cy="${y}" r="7" fill="#333"/><text x="92" y="${y-14}" font-size="18" font-weight="bold">P</text>
+      <circle cx="320" cy="${y}" r="7" fill="#333"/><text x="312" y="${y-14}" font-size="18" font-weight="bold">Q</text>`;
+  }
+  return `<svg class="svg-fig" width="100%" height="100" viewBox="0 0 400 100">${inner}</svg>`;
+}
+function figThree(){
+  return `<svg class="svg-fig" width="100%" height="240" viewBox="0 0 420 240">
+    <text x="10" y="45" font-size="20" font-weight="bold" fill="#1d4e89">1.</text>
+    <line x1="60" y1="40" x2="300" y2="40" stroke="#e08a1e" stroke-width="4"/>
+    <circle cx="60" cy="40" r="6" fill="#333"/><circle cx="300" cy="40" r="6" fill="#333"/>
+    <text x="10" y="125" font-size="20" font-weight="bold" fill="#1d4e89">2.</text>
+    <line x1="40" y1="120" x2="380" y2="120" stroke="#1d8fe1" stroke-width="4"/>
+    <polygon points="40,120 54,113 54,127" fill="#1d8fe1"/>
+    <polygon points="380,120 366,113 366,127" fill="#1d8fe1"/>
+    <text x="10" y="205" font-size="20" font-weight="bold" fill="#1d4e89">3.</text>
+    <line x1="80" y1="200" x2="380" y2="200" stroke="#35b653" stroke-width="4"/>
+    <polygon points="380,200 366,193 366,207" fill="#35b653"/>
+    <circle cx="80" cy="200" r="7" fill="#333"/>
+  </svg>`;
+}
+
+// ---------- quiz ----------
+const questions = [
+  { title:"Ce este desenat aici?", fig:()=>figLine("segment"),
+    choices:["O dreaptă","O semidreaptă","Un segment"], correct:2,
+    hint:"Uită-te la capete: linia se oprește sau continuă?",
+    explain:"Linia are două capete, P și Q, deci este un segment. Segmentul poate fi măsurat cu rigla." },
+  { title:"Ce este desenat aici?", fig:()=>figLine("dreapta"),
+    choices:["O dreaptă","O semidreaptă","Un segment"], correct:0,
+    hint:"Săgețile de la ambele capete arată că linia continuă...",
+    explain:"Linia continuă la nesfârșit în ambele sensuri, deci este o dreaptă. O notăm AB, după două puncte de pe ea." },
+  { title:"Ce este desenat aici?", fig:()=>figLine("semidreapta"),
+    choices:["O dreaptă","O semidreaptă","Un segment"], correct:1,
+    hint:"Are un capăt (o origine), dar în cealaltă parte continuă la nesfârșit.",
+    explain:"Linia pornește din O și continuă la nesfârșit într-un singur sens: este semidreapta OC." },
+  { title:"Care dintre figurile 1, 2, 3 este SEMIDREAPTA?", fig:figThree,
+    choices:["Figura 1","Figura 2","Figura 3"], correct:2,
+    hint:"Semidreapta are exact un capăt: originea.",
+    explain:"Figura 3 are origine și săgeată într-un singur sens — este semidreapta. Figura 1 e segment, figura 2 e dreaptă." },
+  { title:"Robotul Bip spune: „Segmentul PQ nu poate fi măsurat, pentru că e nesfârșit.” Are dreptate?",
+    fig:()=>figLine("segment"),
+    choices:["Da, are dreptate","Nu, greșește: segmentul ARE două capete și poate fi măsurat"], correct:1,
+    hint:"Gândește-te: ce are un segment la fiecare capăt?",
+    explain:"Bip greșește! Dreapta e nesfârșită, dar segmentul are două capete, deci putem măsura lungimea lui cu rigla." },
+  { title:"Cum notăm corect semidreapta cu originea în O care trece prin punctul C?",
+    fig:()=>figLine("semidreapta"),
+    choices:["Semidreapta CO","Semidreapta OC","Semidreapta C"], correct:1,
+    hint:"Originea se scrie întotdeauna prima.",
+    explain:"Se scrie OC: mai întâi originea O, apoi punctul C prin care trece. CO ar însemna o semidreaptă cu originea în C!" },
+  { title:"Marginea unei rigle de 30 cm seamănă cel mai bine cu...",
+    fig:null,
+    choices:["O dreaptă","Un segment","Un punct"], correct:1,
+    hint:"Rigla are început și sfârșit?",
+    explain:"Rigla are două capete și o lungime pe care o putem măsura — exact ca un segment." },
+  { title:"O rază de laser care pornește din lanternă și merge tot înainte seamănă cu...",
+    fig:null,
+    choices:["Un segment","O dreaptă","O semidreaptă"], correct:2,
+    hint:"Raza are un punct de pornire (lanterna), dar unde se oprește?",
+    explain:"Raza pornește dintr-un punct (originea = lanterna) și continuă într-un singur sens — ca o semidreaptă." },
+];
+let qIndex = 0, mistakes = 0;
+
+function startQuiz(){ qIndex=0; show("screen-quiz"); renderQuestion(); }
+function renderQuestion(){
+  const q = questions[qIndex];
+  mistakes = 0;
+  document.getElementById("quiz-progress").innerHTML =
+    questions.map((_,i)=>`<span class="${i<qIndex?'done':i===qIndex?'now':''}"></span>`).join("");
+  document.getElementById("q-title").textContent = `Întrebarea ${qIndex+1}: ${q.title}`;
+  document.getElementById("q-figure").innerHTML = q.fig ? q.fig() : "";
+  document.getElementById("q-feedback").innerHTML = "";
+  document.getElementById("q-next-wrap").classList.add("hidden");
+  document.getElementById("q-choices").innerHTML = q.choices.map((c,i)=>
+    `<button class="btn-choice" onclick="answer(${i},this)">${c}</button>`).join("");
+}
+function answer(i, btn){
+  const q = questions[qIndex];
+  const fb = document.getElementById("q-feedback");
+  if(i === q.correct){
+    btn.classList.add("correct");
+    document.querySelectorAll("#q-choices button").forEach(b=>b.disabled=true);
+    const msgs = ["Bravo! 🎉","Exact! ⭐","Super! 🦊","Corect! 💪"];
+    fb.innerHTML = `<div class="feedback good">${msgs[qIndex % msgs.length]} ${q.explain}</div>`;
+    document.getElementById("q-next-wrap").classList.remove("hidden");
+  } else {
+    btn.classList.add("wrong");
+    btn.disabled = true;
+    mistakes++;
+    if(mistakes === 1){
+      fb.innerHTML = `<div class="feedback hint">🤔 Nu-i nimic, mai încearcă! Indiciu: ${q.hint}</div>`;
+    } else {
+      fb.innerHTML = `<div class="feedback explain">💡 ${q.explain}<br>Apasă acum pe răspunsul corect ca să mergem mai departe.</div>`;
+      document.querySelectorAll("#q-choices button").forEach((b,bi)=>{ if(bi!==q.correct) b.disabled=true; });
+    }
+  }
+}
+function nextQuestion(){
+  qIndex++;
+  if(qIndex < questions.length) renderQuestion();
+  else show("screen-challenge");
+}
+
+// ---------- provocarea finală ----------
+const ch = document.getElementById("challenge");
+const cctx = ch.getContext("2d");
+const robot = {x:120, y:200};
+let handle = {x:350, y:120};
+const battery = {x:650, y:250};
+let chDragging = false, chSolved = false;
+
+function drawChallenge(){
+  cctx.clearRect(0,0,ch.width,ch.height);
+  // semidreapta din robot prin handle
+  const [s,e] = extendLine(robot, handle, false);
+  cctx.strokeStyle = chSolved ? "#35b653" : "#1d8fe1";
+  cctx.lineWidth = 4; cctx.lineCap="round";
+  cctx.beginPath(); cctx.moveTo(s.x,s.y); cctx.lineTo(e.x,e.y); cctx.stroke();
+  // handle verde
+  cctx.beginPath(); cctx.arc(handle.x,handle.y,12,0,7); cctx.fillStyle="#35b653"; cctx.fill();
+  cctx.strokeStyle="#1b6b2e"; cctx.lineWidth=3; cctx.stroke();
+  // robot si baterie
+  cctx.font="34px Segoe UI";
+  cctx.fillText("🤖", robot.x-20, robot.y+12);
+  cctx.fillText("🔋", battery.x-17, battery.y+12);
+  cctx.font="bold 20px Segoe UI"; cctx.fillStyle="#222";
+  cctx.fillText("O", robot.x-8, robot.y-24);
+}
+function distToRay(p){
+  // distanta de la p la semidreapta robot->handle
+  const dx=handle.x-robot.x, dy=handle.y-robot.y;
+  const len2=dx*dx+dy*dy||1;
+  let t=((p.x-robot.x)*dx+(p.y-robot.y)*dy)/len2;
+  t=Math.max(0,t); // semidreapta: nu în spatele originii
+  const px=robot.x+t*dx, py=robot.y+t*dy;
+  return Math.hypot(p.x-px,p.y-py);
+}
+function checkChallenge(){
+  if(chSolved) return;
+  if(distToRay(battery) < 18){
+    chSolved = true;
+    drawChallenge();
+    document.getElementById("ch-feedback").innerHTML =
+      `<div class="feedback good">⚡ Bzzzt! Bip a ajuns la baterie mergând pe semidreapta care pornește din <strong>O</strong>. Misiune îndeplinită!</div>`;
+    document.getElementById("ch-next-wrap").classList.remove("hidden");
+  }
+}
+function chDown(ev){
+  const p=canvasPos(ch,ev);
+  if(Math.hypot(p.x-handle.x,p.y-handle.y)<35){ chDragging=true; ev.preventDefault(); }
+}
+function chMove(ev){
+  if(!chDragging || chSolved) return;
+  const p=canvasPos(ch,ev);
+  handle={x:Math.max(15,Math.min(ch.width-15,p.x)), y:Math.max(15,Math.min(ch.height-15,p.y))};
+  drawChallenge(); checkChallenge(); ev.preventDefault();
+}
+ch.addEventListener("mousedown",chDown); ch.addEventListener("mousemove",chMove);
+addEventListener("mouseup",()=>chDragging=false);
+ch.addEventListener("touchstart",chDown,{passive:false});
+ch.addEventListener("touchmove",chMove,{passive:false});
+ch.addEventListener("touchend",()=>chDragging=false);
+
+function finishLesson(){ show("screen-end"); }
+</script>
+</body>
+</html>

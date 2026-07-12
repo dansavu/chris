@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecția 2 – Puncte coliniare, drepte paralele și concurente</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', 'Comic Sans MS', sans-serif; }
+  body { background: linear-gradient(160deg, #eef6ff, #fff4e6); min-height: 100vh; display: flex; justify-content: center; padding: 12px; }
+  .app { width: 100%; max-width: 860px; }
+  .card { background: #fff; border-radius: 20px; box-shadow: 0 6px 24px rgba(30,60,120,.12); padding: 24px; margin-bottom: 16px; }
+  h1 { color: #1d4e89; font-size: 1.5rem; margin-bottom: 8px; }
+  h2 { color: #1d4e89; font-size: 1.25rem; margin-bottom: 12px; }
+  p { font-size: 1.05rem; line-height: 1.5; color: #333; margin-bottom: 10px; }
+  button { border: none; border-radius: 14px; padding: 14px 24px; font-size: 1.05rem; font-weight: 600; cursor: pointer; transition: transform .1s; }
+  button:active { transform: scale(.97); }
+  .btn-primary { background: #1d8fe1; color: #fff; box-shadow: 0 4px 0 #156bb0; }
+  .btn-primary:hover { background: #2a9bef; }
+  .btn-choice { background: #f0f5ff; color: #1d4e89; border: 3px solid #c9dcf5; width: 100%; text-align: left; margin-bottom: 10px; padding: 16px 20px; }
+  .btn-choice:hover { border-color: #1d8fe1; }
+  .btn-choice.correct { background: #d8f7dd; border-color: #35b653; color: #1b6b2e; }
+  .btn-choice.wrong { background: #ffe1e1; border-color: #e05555; color: #a02525; }
+  .btn-choice:disabled { cursor: default; }
+  .btn-tab { background: #eef2f8; color: #445; margin-right: 8px; margin-bottom: 8px; padding: 10px 18px; border: 3px solid transparent; }
+  .btn-tab.active { background: #1d8fe1; color: #fff; }
+  .hidden { display: none !important; }
+  canvas { background: #fbfdff; border: 2px dashed #bcd4ee; border-radius: 14px; width: 100%; touch-action: none; }
+  .guide { display: flex; gap: 14px; align-items: flex-start; background: #fff8e1; border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+  .guide .face { font-size: 2rem; }
+  .guide p { margin: 0; }
+  .feedback { border-radius: 14px; padding: 14px; margin-top: 12px; font-size: 1.05rem; }
+  .feedback.hint { background: #fff3cd; color: #7a5c00; }
+  .feedback.explain { background: #e3edff; color: #1d4e89; }
+  .feedback.good { background: #d8f7dd; color: #1b6b2e; }
+  .progress { display: flex; gap: 6px; margin-bottom: 16px; }
+  .progress span { flex: 1; height: 10px; border-radius: 5px; background: #e2e9f2; }
+  .progress span.done { background: #35b653; }
+  .progress span.now { background: #1d8fe1; }
+  .center { text-align: center; }
+  .big-emoji { font-size: 3rem; margin-bottom: 8px; }
+  .learned { text-align: left; background: #f2f9ff; border-radius: 14px; padding: 16px; margin: 14px 0; }
+  .learned li { margin: 8px 0 8px 22px; font-size: 1.05rem; }
+  .svg-fig { display: block; margin: 10px auto; }
+  .footer-note { text-align: center; color: #789; font-size: .9rem; padding: 8px; }
+  .status-badge { display:inline-block; padding: 8px 18px; border-radius: 12px; font-weight: 700; font-size: 1.1rem; margin-top: 10px; }
+  .status-badge.par { background: #d8f7dd; color: #1b6b2e; }
+  .status-badge.conc { background: #ffe8cc; color: #a05a00; }
+  .status-badge.col { background: #d8f7dd; color: #1b6b2e; }
+  .status-badge.nocol { background: #eef2f8; color: #556; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ECRAN 0: START -->
+  <div class="card" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🌉</div>
+      <h1>Academia Exploratorilor Geometrici</h1>
+      <p><strong>Nivelul 2: Podurile paralele</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Bine ai revenit! Înainte să pornim: uită-te la o cale ferată în imaginație.
+      Cele două șine merg una lângă alta și <em>nu se ating niciodată</em>.
+      Dar lamele unei foarfeci? Ele se <em>întâlnesc</em> într-un punct!
+      Astăzi construim poduri și descoperim secretul dreptelor care se întâlnesc… sau nu.</p>
+    </div>
+    <div class="center">
+      <button class="btn-primary" onclick="show('screen-explore')">🚀 La șantier!</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 1: EXPLORARE -->
+  <div class="card hidden" id="screen-explore">
+    <h2>🔍 Laboratorul dreptelor</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p id="explore-text">Trage de punctele colorate și privește eticheta de sub desen:
+      <em>când se întâlnesc dreptele? Când nu se întâlnesc deloc?</em></p>
+    </div>
+    <div class="toolbar" style="margin-bottom:10px;">
+      <button class="btn-tab active" id="tab-drepte" onclick="setTab('drepte')">Două drepte</button>
+      <button class="btn-tab" id="tab-coliniare" onclick="setTab('coliniare')">Trei puncte</button>
+    </div>
+    <canvas id="lab" width="800" height="380"></canvas>
+    <div class="center"><span class="status-badge conc" id="lab-status">…</span></div>
+    <p id="tab-desc" style="margin-top:10px; font-weight:600; color:#1d4e89;"></p>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am observat! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 2: NUMELE ȘI NOTAȚIA -->
+  <div class="card hidden" id="screen-learn">
+    <h2>✏️ Cum le numim și le scriem</h2>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p>Ai văzut deja totul cu ochii tăi. Acum, numele oficiale:</p>
+    </div>
+
+    <svg class="svg-fig" width="100%" height="360" viewBox="0 0 700 360">
+      <!-- coliniare -->
+      <line x1="20" y1="55" x2="330" y2="55" stroke="#1d8fe1" stroke-width="3"/>
+      <circle cx="80" cy="55" r="6" fill="#e05555"/><text x="74" y="42" font-size="16" font-weight="bold">A</text>
+      <circle cx="170" cy="55" r="6" fill="#e05555"/><text x="164" y="42" font-size="16" font-weight="bold">B</text>
+      <circle cx="270" cy="55" r="6" fill="#e05555"/><text x="264" y="42" font-size="16" font-weight="bold">C</text>
+      <text x="360" y="48" font-size="18" fill="#333"><tspan font-weight="bold">Puncte coliniare</tspan> — A, B și C stau</text>
+      <text x="360" y="70" font-size="18" fill="#333">pe aceeași dreaptă, ca mărgele pe ață.</text>
+
+      <!-- paralele -->
+      <line x1="20" y1="140" x2="330" y2="125" stroke="#35b653" stroke-width="3"/>
+      <line x1="20" y1="185" x2="330" y2="170" stroke="#35b653" stroke-width="3"/>
+      <text x="335" y="132" font-size="16" font-style="italic" fill="#1b6b2e">a</text>
+      <text x="335" y="177" font-size="16" font-style="italic" fill="#1b6b2e">b</text>
+      <text x="380" y="145" font-size="18" fill="#333"><tspan font-weight="bold">Drepte paralele</tspan> — nu se întâlnesc</text>
+      <text x="380" y="167" font-size="18" fill="#333">niciodată. Scriem: <tspan font-weight="bold">a ∥ b</tspan></text>
+
+      <!-- concurente -->
+      <line x1="30" y1="240" x2="330" y2="330" stroke="#e08a1e" stroke-width="3"/>
+      <line x1="30" y1="330" x2="330" y2="240" stroke="#e08a1e" stroke-width="3"/>
+      <circle cx="180" cy="285" r="6" fill="#e05555"/><text x="190" y="278" font-size="16" font-weight="bold">O</text>
+      <text x="360" y="270" font-size="18" fill="#333"><tspan font-weight="bold">Drepte concurente</tspan> — se întâlnesc</text>
+      <text x="360" y="292" font-size="18" fill="#333">într-un singur punct, numit</text>
+      <text x="360" y="314" font-size="18" fill="#333">punct de intersecție (aici, <tspan font-weight="bold">O</tspan>).</text>
+    </svg>
+
+    <div class="center">
+      <button class="btn-primary" onclick="startQuiz()">Sunt gata de joc! 🎮</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 3: QUIZ -->
+  <div class="card hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 4: PROVOCARE FINALĂ -->
+  <div class="card hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Constructorul de poduri!</h2>
+    <div class="guide">
+      <div class="face">👷</div>
+      <p>Podul de sus e gata, dar cel de jos e strâmb! Dacă rămâne așa, cele două poduri
+      se vor <strong>ciocni</strong> undeva. <strong>Trage de capetele portocalii</strong> ca podul tău
+      să fie <strong>paralel</strong> cu cel de sus — și să treacă peste amândouă malurile!</p>
+    </div>
+    <canvas id="challenge" width="800" height="380"></canvas>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Podul e gata! 🎉</button>
+    </div>
+  </div>
+
+  <!-- ECRAN 5: FINAL -->
+  <div class="card hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🗺️</div>
+      <h1>Ai terminat Nivelul 2!</h1>
+      <p>A doua piesă din Harta Exploratorului este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Astăzi ai descoperit:</strong></p>
+      <ul>
+        <li>📿 <strong>Puncte coliniare</strong> — trei sau mai multe puncte pe aceeași dreaptă.</li>
+        <li>🛤️ <strong>Drepte paralele</strong> — nu se întâlnesc niciodată; scriem a ∥ b.</li>
+        <li>✂️ <strong>Drepte concurente</strong> — se întâlnesc într-un singur punct de intersecție.</li>
+        <li>👀 Două drepte care „par" că nu se ating se pot totuși întâlni mai departe — doar dacă sunt cu adevărat paralele nu se ating niciodată!</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🦊</div>
+      <p><strong>Misiunea ta pe hârtie:</strong> ia rigla și echerul. Desenează două drepte paralele
+      (folosește cele două margini ale riglei!) și două drepte concurente. Apoi caută prin casă:
+      găsește 3 perechi de linii paralele și 3 perechi de linii care se intersectează.</p>
+    </div>
+    <div class="center">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia lecția</button>
+    </div>
+  </div>
+
+  <div class="footer-note">Lecția 2 · Geometrie clasa a V-a · Puncte coliniare, drepte paralele și concurente</div>
+</div>
+
+<script>
+"use strict";
+// ---------- navigare ----------
+const screens = ["screen-start","screen-explore","screen-learn","screen-quiz","screen-challenge","screen-end"];
+function show(id){
+  screens.forEach(s=>document.getElementById(s).classList.add("hidden"));
+  document.getElementById(id).classList.remove("hidden");
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawChallenge();
+  window.scrollTo({top:0});
+}
+
+// ---------- utilitare canvas ----------
+function canvasPos(cv,ev){
+  const r=cv.getBoundingClientRect();
+  const t=ev.touches?ev.touches[0]:ev;
+  return { x:(t.clientX-r.left)*cv.width/r.width, y:(t.clientY-r.top)*cv.height/r.height };
+}
+function extendLine(p1,p2){
+  const dx=p2.x-p1.x, dy=p2.y-p1.y;
+  const len=Math.hypot(dx,dy)||1;
+  const ux=dx/len, uy=dy/len, L=2000;
+  return [{x:p1.x-ux*L,y:p1.y-uy*L},{x:p1.x+ux*L,y:p1.y+uy*L}];
+}
+function drawPoint(ctx,p,label,color){
+  ctx.beginPath(); ctx.arc(p.x,p.y,10,0,7); ctx.fillStyle=color; ctx.fill();
+  ctx.strokeStyle="rgba(0,0,0,.25)"; ctx.lineWidth=2; ctx.stroke();
+  if(label){ ctx.fillStyle="#222"; ctx.font="bold 22px Segoe UI"; ctx.fillText(label,p.x+13,p.y-13); }
+}
+function lineAngle(p1,p2){ return Math.atan2(p2.y-p1.y,p2.x-p1.x); }
+function angleDiff(a,b){
+  let d=Math.abs(a-b)%Math.PI;
+  return Math.min(d,Math.PI-d);
+}
+// intersecția a două drepte (p1,p2) și (p3,p4)
+function intersect(p1,p2,p3,p4){
+  const d=(p2.x-p1.x)*(p4.y-p3.y)-(p2.y-p1.y)*(p4.x-p3.x);
+  if(Math.abs(d)<1e-9) return null;
+  const t=((p3.x-p1.x)*(p4.y-p3.y)-(p3.y-p1.y)*(p4.x-p3.x))/d;
+  return {x:p1.x+t*(p2.x-p1.x), y:p1.y+t*(p2.y-p1.y)};
+}
+
+// ---------- laborator ----------
+const lab=document.getElementById("lab");
+const lctx=lab.getContext("2d");
+let tab="drepte";
+const dr={ P1:{x:150,y:120}, P2:{x:650,y:180}, P3:{x:150,y:300}, P4:{x:650,y:240} };
+const col={ A:{x:180,y:190}, B:{x:420,y:190}, C:{x:620,y:300} };
+let dragKey=null;
+
+const tabDescs={
+  drepte:"Încearcă să faci dreptele să NU se mai întâlnească deloc. E ușor sau greu să le faci perfect paralele?",
+  coliniare:"Dreapta albastră trece prin A și B. Mută punctul C: poți să-l așezi exact pe dreaptă, în linie cu A și B?"
+};
+function setTab(t){
+  tab=t;
+  document.getElementById("tab-drepte").classList.toggle("active",t==="drepte");
+  document.getElementById("tab-coliniare").classList.toggle("active",t==="coliniare");
+  document.getElementById("tab-desc").textContent=tabDescs[t];
+  drawLab();
+}
+function drawLab(){
+  lctx.clearRect(0,0,lab.width,lab.height);
+  const badge=document.getElementById("lab-status");
+  if(tab==="drepte"){
+    const a1=lineAngle(dr.P1,dr.P2), a2=lineAngle(dr.P3,dr.P4);
+    const par=angleDiff(a1,a2)<0.035;
+    lctx.lineWidth=4; lctx.lineCap="round";
+    let [s1,e1]=extendLine(dr.P1,dr.P2), [s2,e2]=extendLine(dr.P3,dr.P4);
+    lctx.strokeStyle= par ? "#35b653" : "#1d8fe1";
+    lctx.beginPath(); lctx.moveTo(s1.x,s1.y); lctx.lineTo(e1.x,e1.y); lctx.stroke();
+    lctx.beginPath(); lctx.moveTo(s2.x,s2.y); lctx.lineTo(e2.x,e2.y); lctx.stroke();
+    if(!par){
+      const O=intersect(dr.P1,dr.P2,dr.P3,dr.P4);
+      if(O && O.x>-500 && O.x<lab.width+500 && O.y>-500 && O.y<lab.height+500){
+        if(O.x>0 && O.x<lab.width && O.y>0 && O.y<lab.height){
+          lctx.beginPath(); lctx.arc(O.x,O.y,8,0,7); lctx.fillStyle="#e05555"; lctx.fill();
+          lctx.fillStyle="#a02525"; lctx.font="bold 20px Segoe UI"; lctx.fillText("O",O.x+12,O.y-12);
+        }
+      }
+    }
+    drawPoint(lctx,dr.P1,"","#1d8fe1"); drawPoint(lctx,dr.P2,"","#1d8fe1");
+    drawPoint(lctx,dr.P3,"","#7a4de0"); drawPoint(lctx,dr.P4,"","#7a4de0");
+    badge.textContent = par ? "PARALELE — nu se întâlnesc niciodată! ∥" : "CONCURENTE — se întâlnesc în punctul O";
+    badge.className = "status-badge " + (par?"par":"conc");
+  } else {
+    const [s,e]=extendLine(col.A,col.B);
+    // distanta C fata de dreapta AB
+    const dx=col.B.x-col.A.x, dy=col.B.y-col.A.y;
+    const dist=Math.abs(dy*col.C.x-dx*col.C.y+col.B.x*col.A.y-col.B.y*col.A.x)/(Math.hypot(dx,dy)||1);
+    const onLine=dist<12;
+    lctx.lineWidth=4; lctx.lineCap="round";
+    lctx.strokeStyle= onLine ? "#35b653" : "#1d8fe1";
+    lctx.beginPath(); lctx.moveTo(s.x,s.y); lctx.lineTo(e.x,e.y); lctx.stroke();
+    drawPoint(lctx,col.A,"A","#e05555");
+    drawPoint(lctx,col.B,"B","#e05555");
+    drawPoint(lctx,col.C,"C", onLine ? "#35b653" : "#e08a1e");
+    badge.textContent = onLine ? "COLINIARE — A, B și C sunt pe aceeași dreaptă! 🎯" : "NU sunt coliniare — C e în afara dreptei AB";
+    badge.className = "status-badge " + (onLine?"col":"nocol");
+  }
+}
+function labPoints(){ return tab==="drepte" ? dr : col; }
+lab.addEventListener("mousedown",labDown); lab.addEventListener("mousemove",labMove);
+addEventListener("mouseup",()=>dragKey=null);
+lab.addEventListener("touchstart",labDown,{passive:false});
+lab.addEventListener("touchmove",labMove,{passive:false});
+lab.addEventListener("touchend",()=>dragKey=null);
+function labDown(ev){
+  const p=canvasPos(lab,ev), pts=labPoints();
+  for(const k in pts){
+    if(Math.hypot(p.x-pts[k].x,p.y-pts[k].y)<32){ dragKey=k; ev.preventDefault(); return; }
+  }
+}
+function labMove(ev){
+  if(!dragKey) return;
+  const p=canvasPos(lab,ev), pts=labPoints();
+  pts[dragKey]={x:Math.max(15,Math.min(lab.width-15,p.x)), y:Math.max(15,Math.min(lab.height-15,p.y))};
+  drawLab(); ev.preventDefault();
+}
+document.getElementById("tab-desc").textContent=tabDescs.drepte;
+
+// ---------- figuri SVG pentru quiz ----------
+function figParalele(){
+  return `<svg class="svg-fig" width="100%" height="120" viewBox="0 0 400 120">
+    <line x1="20" y1="40" x2="380" y2="30" stroke="#35b653" stroke-width="4"/>
+    <line x1="20" y1="90" x2="380" y2="80" stroke="#35b653" stroke-width="4"/>
+    <text x="385" y="36" font-size="16" font-style="italic">a</text>
+    <text x="385" y="86" font-size="16" font-style="italic">b</text>
+  </svg>`;
+}
+function figConcurente(){
+  return `<svg class="svg-fig" width="100%" height="140" viewBox="0 0 400 140">
+    <line x1="30" y1="20" x2="370" y2="120" stroke="#e08a1e" stroke-width="4"/>
+    <line x1="30" y1="120" x2="370" y2="20" stroke="#e08a1e" stroke-width="4"/>
+    <circle cx="200" cy="70" r="7" fill="#e05555"/>
+    <text x="212" y="62" font-size="18" font-weight="bold">O</text>
+  </svg>`;
+}
+function figColiniare(yes){
+  const cy = yes ? 60 : 25;
+  return `<svg class="svg-fig" width="100%" height="120" viewBox="0 0 400 120">
+    <line x1="20" y1="60" x2="380" y2="60" stroke="#1d8fe1" stroke-width="3"/>
+    <circle cx="90" cy="60" r="7" fill="#e05555"/><text x="82" y="46" font-size="17" font-weight="bold">A</text>
+    <circle cx="200" cy="60" r="7" fill="#e05555"/><text x="192" y="46" font-size="17" font-weight="bold">B</text>
+    <circle cx="310" cy="${cy}" r="7" fill="#e05555"/><text x="302" y="${cy-14}" font-size="17" font-weight="bold">C</text>
+  </svg>`;
+}
+function figAproape(){
+  // drepte neparalele care nu se intersecteaza IN desen
+  return `<svg class="svg-fig" width="100%" height="130" viewBox="0 0 400 130">
+    <line x1="20" y1="35" x2="380" y2="20" stroke="#7a4de0" stroke-width="4"/>
+    <line x1="20" y1="110" x2="380" y2="60" stroke="#7a4de0" stroke-width="4"/>
+    <text x="385" y="26" font-size="16" font-style="italic">m</text>
+    <text x="385" y="66" font-size="16" font-style="italic">n</text>
+  </svg>`;
+}
+
+// ---------- quiz ----------
+const questions=[
+  { title:"Cum sunt dreptele a și b din desen?", fig:figParalele,
+    choices:["Paralele","Concurente","Coliniare"], correct:0,
+    hint:"Se întâlnesc undeva dreptele acestea, oricât le-am prelungi?",
+    explain:"Dreptele a și b nu se întâlnesc niciodată, oricât le-am prelungi — sunt paralele. Scriem a ∥ b. „Coliniare” pot fi doar punctele, nu dreptele!" },
+  { title:"Cum sunt dreptele din desen?", fig:figConcurente,
+    choices:["Paralele","Concurente"], correct:1,
+    hint:"Uită-te în mijlocul desenului: ce se întâmplă acolo?",
+    explain:"Dreptele se întâlnesc în punctul O — sunt concurente, iar O este punctul lor de intersecție." },
+  { title:"Punctele A, B și C sunt coliniare?", fig:()=>figColiniare(true),
+    choices:["Da, sunt coliniare","Nu, nu sunt coliniare"], correct:0,
+    hint:"Sunt toate trei pe aceeași dreaptă, ca mărgele pe ață?",
+    explain:"Da! A, B și C se află toate pe aceeași dreaptă, deci sunt puncte coliniare." },
+  { title:"Dar acum? Punctele A, B și C sunt coliniare?", fig:()=>figColiniare(false),
+    choices:["Da, sunt coliniare","Nu, nu sunt coliniare"], correct:1,
+    hint:"Punctul C stă pe dreapta care trece prin A și B?",
+    explain:"Nu — C a „sărit” de pe dreaptă! A și B sunt pe dreaptă, dar C nu, deci cele trei puncte NU sunt coliniare." },
+  { title:"Robotul Bip spune: „Dreptele m și n nu se ating în desen, deci sigur sunt paralele.” Are dreptate?",
+    fig:figAproape,
+    choices:["Da, are dreptate","Nu — dreptele continuă la nesfârșit și se pot întâlni mai departe"], correct:1,
+    hint:"Amintește-ți: o dreaptă nu se oprește la marginea desenului…",
+    explain:"Bip greșește! Dreptele m și n se apropie una de alta. Cum dreptele continuă la nesfârșit, ele se vor întâlni undeva în afara desenului — deci sunt concurente, nu paralele." },
+  { title:"Ce semn folosim ca să scriem că dreptele a și b sunt paralele?",
+    fig:null,
+    choices:["a ∥ b","a ⊥ b","a = b"], correct:0,
+    hint:"Semnul chiar seamănă cu două… linii paralele!",
+    explain:"Scriem a ∥ b. Semnul ∥ arată chiar două liniuțe paralele — ușor de ținut minte!" },
+  { title:"Șinele de tren sunt ca niște drepte…",
+    fig:null,
+    choices:["concurente","paralele","coliniare"], correct:1,
+    hint:"Dacă șinele s-ar întâlni, ce-ar păți trenul?",
+    explain:"Șinele nu se ating niciodată — altfel trenul ar deraia! Sunt un exemplu perfect de drepte paralele." },
+  { title:"Lamele deschise ale unei foarfeci sunt ca niște drepte…",
+    fig:null,
+    choices:["paralele","concurente"], correct:1,
+    hint:"Cele două lame se întâlnesc undeva? Unde sunt prinse?",
+    explain:"Lamele se întâlnesc în șurubul din mijloc — exact ca două drepte concurente cu punctul lor de intersecție!" },
+];
+let qIndex=0, mistakes=0;
+function startQuiz(){ qIndex=0; show("screen-quiz"); renderQuestion(); }
+function renderQuestion(){
+  const q=questions[qIndex];
+  mistakes=0;
+  document.getElementById("quiz-progress").innerHTML=
+    questions.map((_,i)=>`<span class="${i<qIndex?'done':i===qIndex?'now':''}"></span>`).join("");
+  document.getElementById("q-title").textContent=`Întrebarea ${qIndex+1}: ${q.title}`;
+  document.getElementById("q-figure").innerHTML=q.fig?q.fig():"";
+  document.getElementById("q-feedback").innerHTML="";
+  document.getElementById("q-next-wrap").classList.add("hidden");
+  document.getElementById("q-choices").innerHTML=q.choices.map((c,i)=>
+    `<button class="btn-choice" onclick="answer(${i},this)">${c}</button>`).join("");
+}
+function answer(i,btn){
+  const q=questions[qIndex];
+  const fb=document.getElementById("q-feedback");
+  if(i===q.correct){
+    btn.classList.add("correct");
+    document.querySelectorAll("#q-choices button").forEach(b=>b.disabled=true);
+    const msgs=["Bravo! 🎉","Exact! ⭐","Super! 🦊","Corect! 💪"];
+    fb.innerHTML=`<div class="feedback good">${msgs[qIndex%msgs.length]} ${q.explain}</div>`;
+    document.getElementById("q-next-wrap").classList.remove("hidden");
+  } else {
+    btn.classList.add("wrong"); btn.disabled=true;
+    mistakes++;
+    if(mistakes===1){
+      fb.innerHTML=`<div class="feedback hint">🤔 Nu-i nimic, mai încearcă! Indiciu: ${q.hint}</div>`;
+    } else {
+      fb.innerHTML=`<div class="feedback explain">💡 ${q.explain}<br>Apasă acum pe răspunsul corect ca să mergem mai departe.</div>`;
+      document.querySelectorAll("#q-choices button").forEach((b,bi)=>{ if(bi!==q.correct) b.disabled=true; });
+    }
+  }
+}
+function nextQuestion(){
+  qIndex++;
+  if(qIndex<questions.length) renderQuestion();
+  else show("screen-challenge");
+}
+
+// ---------- provocarea finală: podul paralel ----------
+const ch=document.getElementById("challenge");
+const cctx=ch.getContext("2d");
+// podul model (fix)
+const deck1={p1:{x:80,y:100}, p2:{x:720,y:70}};
+// podul copilului (mobil)
+let deck2={p1:{x:150,y:250}, p2:{x:600,y:330}};
+let chDrag=null, chSolved=false;
+
+function drawChallenge(){
+  cctx.clearRect(0,0,ch.width,ch.height);
+  // râul
+  cctx.fillStyle="#cfe8ff";
+  cctx.fillRect(0,0,120,ch.height);
+  cctx.fillRect(ch.width-120,0,120,ch.height);
+  cctx.fillStyle="#8fb8dd"; cctx.font="26px Segoe UI";
+  cctx.fillText("🏝️",40,50); cctx.fillText("🏝️",ch.width-80,50);
+  cctx.font="16px Segoe UI"; cctx.fillStyle="#4a7aa8";
+  cctx.fillText("mal",45,ch.height-20); cctx.fillText("mal",ch.width-80,ch.height-20);
+  // pod model
+  cctx.strokeStyle="#556e8d"; cctx.lineWidth=10; cctx.lineCap="round";
+  cctx.beginPath(); cctx.moveTo(deck1.p1.x,deck1.p1.y); cctx.lineTo(deck1.p2.x,deck1.p2.y); cctx.stroke();
+  cctx.fillStyle="#556e8d"; cctx.font="15px Segoe UI";
+  cctx.fillText("podul model", 340, deck1.p1.y-25);
+  // podul copilului
+  const a1=lineAngle(deck1.p1,deck1.p2), a2=lineAngle(deck2.p1,deck2.p2);
+  const par=angleDiff(a1,a2)<0.03;
+  const spans = deck2.p1.x<130 && deck2.p2.x>ch.width-130 || deck2.p2.x<130 && deck2.p1.x>ch.width-130;
+  cctx.strokeStyle= (par&&spans) ? "#35b653" : "#e08a1e";
+  cctx.lineWidth=10;
+  cctx.beginPath(); cctx.moveTo(deck2.p1.x,deck2.p1.y); cctx.lineTo(deck2.p2.x,deck2.p2.y); cctx.stroke();
+  drawPoint(cctx,deck2.p1,"","#e08a1e");
+  drawPoint(cctx,deck2.p2,"","#e08a1e");
+  // status
+  const fb=document.getElementById("ch-feedback");
+  if(par&&spans && !chSolved){
+    chSolved=true;
+    fb.innerHTML=`<div class="feedback good">🌉 Perfect! Podurile sunt paralele — nu se vor ciocni niciodată, oricât ar fi de lungi. Ești un adevărat constructor!</div>`;
+    document.getElementById("ch-next-wrap").classList.remove("hidden");
+  } else if(!chSolved){
+    if(par && !spans) fb.innerHTML=`<div class="feedback hint">Aproape! Podul e paralel, dar trebuie să ajungă peste ambele maluri — întinde-l!</div>`;
+    else if(!par && spans) fb.innerHTML=`<div class="feedback hint">Podul trece peste apă, dar nu e paralel cu modelul. Privește înclinarea podului de sus!</div>`;
+    else fb.innerHTML=`<div class="feedback hint">Trage de capetele portocalii: podul trebuie să fie paralel cu modelul ȘI să atingă ambele maluri.</div>`;
+  }
+}
+function chDown(ev){
+  if(chSolved) return;
+  const p=canvasPos(ch,ev);
+  for(const k of ["p1","p2"]){
+    if(Math.hypot(p.x-deck2[k].x,p.y-deck2[k].y)<35){ chDrag=k; ev.preventDefault(); return; }
+  }
+}
+function chMove(ev){
+  if(!chDrag||chSolved) return;
+  const p=canvasPos(ch,ev);
+  deck2[chDrag]={x:Math.max(15,Math.min(ch.width-15,p.x)), y:Math.max(160,Math.min(ch.height-15,p.y))};
+  drawChallenge(); ev.preventDefault();
+}
+ch.addEventListener("mousedown",chDown); ch.addEventListener("mousemove",chMove);
+addEventListener("mouseup",()=>chDrag=null);
+ch.addEventListener("touchstart",chDown,{passive:false});
+ch.addEventListener("touchmove",chMove,{passive:false});
+ch.addEventListener("touchend",()=>chDrag=null);
+</script>
+</body>
+</html>

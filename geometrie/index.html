@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academia Exploratorilor Geometrici</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+  body { background: linear-gradient(160deg, #eef6ff, #e6fff2); min-height: 100vh; display: flex; justify-content: center; padding: 20px; }
+  .app { width: 100%; max-width: 640px; }
+  h1 { color: #1d4e89; text-align: center; margin: 16px 0 4px; }
+  .sub { text-align: center; color: #567; margin-bottom: 24px; }
+  a.lesson { display: flex; align-items: center; gap: 16px; background: #fff; border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(30,60,120,.12); padding: 18px 22px; margin-bottom: 14px;
+    text-decoration: none; color: #1d4e89; font-size: 1.1rem; font-weight: 600; transition: transform .1s; }
+  a.lesson:hover { transform: scale(1.02); }
+  a.lesson .emoji { font-size: 2rem; }
+  a.lesson .desc { font-size: .9rem; color: #678; font-weight: 400; }
+  .soon { opacity: .45; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>🧭 Academia Exploratorilor Geometrici</h1>
+  <p class="sub">Geometrie · clasa a V-a</p>
+
+  <a class="lesson" href="lectia-01-punct-dreapta-segment.html">
+    <span class="emoji">📍</span>
+    <span>Nivelul 1: Lumea punctelor și a liniilor<br>
+      <span class="desc">Punct, dreaptă, semidreaptă și segment</span></span>
+  </a>
+
+  <a class="lesson" href="lectia-02-coliniare-paralele-concurente.html">
+    <span class="emoji">🌉</span>
+    <span>Nivelul 2: Podurile paralele<br>
+      <span class="desc">Puncte coliniare, drepte paralele și concurente</span></span>
+  </a>
+
+  <a class="lesson soon" href="#">
+    <span class="emoji">🔒</span>
+    <span>Nivelul 3: Secretul mijlocului<br>
+      <span class="desc">Lungimea și mijlocul segmentului — în curând</span></span>
+  </a>
+</div>
+</body>
+</html>
