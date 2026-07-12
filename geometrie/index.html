@@ -21,6 +21,9 @@
   a.lesson.done { background: #f2fbf4; border: 2px solid #b5e3bf; }
   .reset { text-align: center; margin-top: 24px; }
   .reset button { background: none; border: none; color: #8aa; font-size: .85rem; cursor: pointer; text-decoration: underline; }
+  .map-wrap { background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(30,60,120,.12); padding: 14px; margin-bottom: 20px; }
+  .map-wrap svg { display: block; width: 100%; height: auto; border-radius: 12px; }
+  .diploma { text-align: center; background: linear-gradient(160deg, #fff8e1, #ffefc2); border: 3px solid #e0b94e; border-radius: 14px; padding: 14px; margin-top: 12px; font-weight: 700; color: #7a5c00; font-size: 1.1rem; }
 </style>
 </head>
 <body>
@@ -28,6 +31,28 @@
   <h1>🧭 Academia Exploratorilor Geometrici</h1>
   <p class="sub">Geometrie · clasa a V-a</p>
   <p class="map-progress" id="map-progress"></p>
+  <div class="map-wrap">
+    <svg viewBox="0 0 520 320" id="treasure-map">
+      <!-- marea -->
+      <rect x="0" y="0" width="520" height="320" fill="#aed6f1"/>
+      <text x="30" y="50" font-size="22">🌊</text>
+      <text x="460" y="290" font-size="22">🌊</text>
+      <text x="440" y="60" font-size="26">⛵</text>
+      <!-- insula -->
+      <path d="M 90 250 Q 60 180 110 130 Q 140 70 230 80 Q 320 50 390 100 Q 460 130 440 200 Q 430 260 340 270 Q 240 295 150 275 Q 100 270 90 250 Z" fill="#f5e3b3" stroke="#c9a95e" stroke-width="4"/>
+      <path d="M 120 240 Q 100 190 140 150 Q 170 105 240 110 Q 315 85 370 125 Q 425 150 410 200 Q 400 245 330 250 Q 245 268 165 255 Q 130 252 120 240 Z" fill="#efd89a" opacity=".6"/>
+      <!-- decor -->
+      <text x="140" y="160" font-size="26">🌴</text>
+      <text x="330" y="130" font-size="26">⛰️</text>
+      <text x="175" y="250" font-size="22">🏕️</text>
+      <text x="60" y="300" font-size="22">🧭</text>
+      <!-- drumul punctat spre comoara -->
+      <path d="M 130 230 Q 200 210 220 170 Q 245 130 300 150 Q 350 170 355 200" fill="none" stroke="#a0522d" stroke-width="3" stroke-dasharray="8 7"/>
+      <text id="map-x" x="345" y="215" font-size="30" font-weight="bold" fill="#c0392b">❌</text>
+      <g id="map-covers"></g>
+    </svg>
+    <div class="diploma" id="diploma" style="display:none;">🎓 Diplomă de Explorator Geometric — acordată pentru descoperirea întregii hărți! 🏆</div>
+  </div>
   <div id="lessons"></div>
   <div class="reset"><button onclick="resetProgress()">Șterge tot progresul</button></div>
 </div>
@@ -59,6 +84,7 @@ function render(){
     doneCount === lessons.length
       ? "🎓 Harta e completă — Explorator Geometric cu diplomă!"
       : `🗺️ Piese de hartă adunate: ${doneCount} din ${lessons.length}`;
+  renderMap(p, doneCount);
   document.getElementById("lessons").innerHTML = lessons.map(l=>{
     const done = !!p[l.id];
     return `<a class="lesson ${done?'done':''}" href="${l.file}">
@@ -73,6 +99,27 @@ function resetProgress(){
     localStorage.removeItem("geoProgress");
     render();
   }
+}
+/* harta acoperită de „ceață”: fiecare lecție terminată dezvăluie o piesă */
+function renderMap(p, doneCount){
+  // 13 piese: 5 + 5 + 3, acoperă toată harta
+  const tiles = [];
+  for(let i=0;i<5;i++) tiles.push({x:i*104, y:0,   w:104, h:107});
+  for(let i=0;i<5;i++) tiles.push({x:i*104, y:107, w:104, h:107});
+  for(let i=0;i<3;i++) tiles.push({x:i*173.4, y:214, w:173.4, h:106});
+  const g = document.getElementById("map-covers");
+  g.innerHTML = tiles.map((t,i)=>{
+    const done = !!p[lessons[i].id];
+    if(done) return "";
+    return `<g>
+      <rect x="${t.x}" y="${t.y}" width="${t.w}" height="${t.h}" fill="#8fa8be" stroke="#6d8299" stroke-width="2"/>
+      <text x="${t.x+t.w/2}" y="${t.y+t.h/2-4}" font-size="24" text-anchor="middle" fill="#dbe6ef">🧩</text>
+      <text x="${t.x+t.w/2}" y="${t.y+t.h/2+22}" font-size="14" font-weight="bold" text-anchor="middle" fill="#eef4f9">Nivelul ${i+1}</text>
+    </g>`;
+  }).join("");
+  const complete = doneCount === lessons.length;
+  document.getElementById("diploma").style.display = complete ? "block" : "none";
+  document.getElementById("map-x").textContent = complete ? "💎" : "❌";
 }
 render();
 </script>
