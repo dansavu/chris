@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Școala lui Chris</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+  body { background: linear-gradient(160deg, #eef6ff, #fdf3e7); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+  .app { width: 100%; max-width: 560px; text-align: center; }
+  h1 { color: #1d4e89; margin-bottom: 6px; }
+  .sub { color: #567; margin-bottom: 30px; }
+  a.course { display: flex; align-items: center; gap: 18px; background: #fff; border-radius: 20px;
+    box-shadow: 0 6px 20px rgba(30,60,120,.14); padding: 22px 26px; margin-bottom: 16px;
+    text-decoration: none; color: #1d4e89; font-size: 1.2rem; font-weight: 700; transition: transform .1s; text-align: left; }
+  a.course:hover { transform: scale(1.03); }
+  a.course .emoji { font-size: 2.4rem; }
+  a.course .desc { font-size: .92rem; color: #678; font-weight: 400; }
+  a.course.soon { opacity: .5; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>🎒 Școala lui Chris</h1>
+  <p class="sub">Lecții interactive, pas cu pas</p>
+
+  <a class="course" href="geometrie/">
+    <span class="emoji">🧭</span>
+    <span>Academia Exploratorilor Geometrici<br>
+      <span class="desc">Geometrie · clasa a V-a · 13 niveluri</span></span>
+  </a>
+
+  <a class="course soon" href="matematica3/">
+    <span class="emoji">🔢</span>
+    <span>Turnirul Numerelor<br>
+      <span class="desc">Matematică · clasa a III-a · în construcție</span></span>
+  </a>
+</div>
+</body>
+</html>
