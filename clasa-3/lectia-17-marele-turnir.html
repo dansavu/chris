@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 17 – Date, figuri și Marele Turnir</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .chart-bar { display:flex; align-items:flex-end; justify-content:center; gap:24px; height:220px; margin:14px 0; }
+  .chart-bar .col { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .chart-bar .bar { width:64px; background:#8ecae6; border:2px solid #1d8fe1; border-radius:8px 8px 0 0; transition:height .3s; }
+  .chart-bar .lbl { font-size:1.6rem; margin-top:6px; }
+  .chart-bar .cnt { font-weight:800; color:#1d4e89; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🏆</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 17: MARELE TURNIR</strong> · ultimul nivel!</p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>A sosit ziua cea mare, scutierule! Ultimele două arme din arsenal: <strong>tabelele și graficele</strong>
+      (ca să „citești” datele dintr-o privire) și <strong>figurile geometrice</strong>. Apoi… Marele Turnir,
+      unde arăți TOT ce ai învățat. Câștigi — și regele te face CAVALER! 👑</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">⚔️ Ziua cea mare!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Sondajul de la ospăț</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Votează felul de mâncare preferat (poți apăsa de mai multe ori!) și privește cum crește
+      graficul cu bare. Așa arată datele „la vedere”!</p>
+    </div>
+    <div class="chart-bar" id="chart"></div>
+    <div class="center">
+      <button class="btn-primary" onclick="vote(0)">🍗 Vot friptură</button>
+      <button class="btn-primary" onclick="vote(1)">🥧 Vot plăcintă</button>
+      <button class="btn-primary" onclick="vote(2)">🍇 Vot struguri</button>
+    </div>
+    <p class="center" id="chart-msg" style="margin-top:10px;font-weight:600;color:#1d4e89;"></p>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am votat! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Ultimele arme</h2>
+    <div class="guide"><div class="face">🐉</div><p>Pe scurt, tot ce mai trebuie:</p></div>
+    <div class="learned">
+      <ul>
+        <li>📊 <strong>Graficul cu bare</strong>: bara mai înaltă = mai multe voturi. Compari dintr-o privire!</li>
+        <li>📋 <strong>Tabelul</strong>: datele așezate pe rânduri și coloane — le citești ca pe o hartă.</li>
+        <li>🔷 <strong>Figuri</strong>: triunghi (3 laturi), pătrat (4 egale), dreptunghi (4, două câte două), cerc (fără colțuri!).</li>
+        <li>📦 <strong>Corpuri</strong>: cubul (ca zarul), cuboidul (ca o cutie de pantofi), sfera (ca mingea), cilindrul (ca o conservă).</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Spre Marele Turnir! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>👑 MARELE TURNIR!</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Șapte probe, din TOT ce ai învățat în cele 17 niveluri. Regele privește din tribună.
+      Arată-i ce poate un viitor cavaler!</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">👑 Încoronarea!</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">👑</div>
+      <h1>RIDICĂ-TE, CAVALER AL NUMERELOR!</h1>
+      <p>Ai terminat toate cele 17 niveluri ale Turnirului. Regele îți atinge umărul cu sabia:
+      din acest moment ești <strong>Cavaler al Numerelor</strong>! ⚔️✨</p>
+    </div>
+    <div class="learned">
+      <p><strong>În turnir ai cucerit:</strong></p>
+      <ul>
+        <li>🏰 Numerele până la 10 000: formare, comparare, rotunjire.</li>
+        <li>➕➖ Adunarea și scăderea cu trecere; numărul necunoscut.</li>
+        <li>✖️➗ Toată tabla înmulțirii și împărțirea; ordinea operațiilor.</li>
+        <li>🕵️ Problemele cu metoda grafică · 🍕 fracțiile.</li>
+        <li>📏🕐💰 Măsurări: lungime, masă, capacitate, timp și bani.</li>
+        <li>📊 Tabele, grafice, figuri și corpuri geometrice.</li>
+      </ul>
+      <p style="margin-top:10px;">Adică… <strong>toată matematica clasei a III-a!</strong> 💪</p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea finală de cavaler:</strong> învață pe altcineva ceva ce știi acum —
+      trucul lui 9, restul la cumpărături sau citirea ceasului. Un cavaler adevărat își împarte
+      înțelepciunea! A fost o onoare, prietene. — Zum 🐉</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+      <a href="../geometrie/index.html" class="btn-primary">🧭 Continuă cu geometria!</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 17 · Matematică clasa a III-a · Organizarea datelor, figuri și corpuri geometrice</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m17";
+
+/* sondaj cu bare */
+const votes = [3, 5, 2];
+const foods = ["🍗","🥧","🍇"];
+function vote(i){ votes[i]++; drawChart(); }
+function drawChart(){
+  const max = Math.max(...votes, 1);
+  document.getElementById("chart").innerHTML = votes.map((v,i)=>`
+    <div class="col">
+      <div class="cnt">${v}</div>
+      <div class="bar" style="height:${v/max*170}px"></div>
+      <div class="lbl">${foods[i]}</div>
+    </div>`).join("");
+  const w = votes.indexOf(Math.max(...votes));
+  document.getElementById("chart-msg").textContent =
+    `Conduce ${foods[w]} cu ${votes[w]} voturi — bara cea mai înaltă!`;
+}
+drawChart();
+
+function figShapes(){
+  return `<svg class="svg-fig" width="100%" height="120" viewBox="0 0 460 120">
+    <polygon points="60,95 20,95 40,35" fill="#8ecae6" stroke="#1d8fe1" stroke-width="3"/>
+    <text x="18" y="115" font-size="13">1. triunghi?</text>
+    <rect x="120" y="40" width="55" height="55" fill="#ffb703" stroke="#e08a1e" stroke-width="3"/>
+    <text x="118" y="115" font-size="13">2. pătrat?</text>
+    <rect x="230" y="50" width="85" height="45" fill="#b5e3bf" stroke="#35b653" stroke-width="3"/>
+    <text x="228" y="115" font-size="13">3. dreptunghi?</text>
+    <circle cx="390" cy="67" r="30" fill="#e6ccff" stroke="#7a4de0" stroke-width="3"/>
+    <text x="362" y="115" font-size="13">4. cerc?</text>
+  </svg>`;
+}
+const questions = [
+  { title:"La sondaj: friptura are 6 voturi, plăcinta 9, strugurii 3. Care bară e cea mai înaltă?",
+    fig:null, choices:["Friptura","Plăcinta","Strugurii"], correct:1,
+    hint:"Bara cea mai înaltă = cele mai multe voturi.",
+    explain:"Plăcinta, cu 9 voturi! Graficul arată câștigătorul dintr-o privire." },
+  { title:"Același sondaj: cu cât întrec voturile plăcintei pe cele ale strugurilor?",
+    fig:null, choices:["cu 6","cu 3","cu 12"], correct:0,
+    hint:"9 − 3…",
+    explain:"9 − 3 = 6 voturi diferență. Graficele se citesc și cu scăderea!" },
+  { title:"Ce figură are exact 3 laturi?",
+    fig:()=>figShapes(), choices:["Triunghiul","Pătratul","Cercul"], correct:0,
+    hint:"„TRI” înseamnă trei…",
+    explain:"Triunghiul: 3 laturi, 3 vârfuri." },
+  { title:"Prin ce se deosebește pătratul de dreptunghi?",
+    fig:()=>figShapes(), choices:["Pătratul are TOATE laturile egale","Pătratul are mai multe colțuri","Nu se deosebesc"], correct:0,
+    hint:"Uită-te la laturile figurii 2 față de figura 3.",
+    explain:"Amândouă au 4 laturi și colțuri drepte, dar la pătrat toate laturile sunt egale." },
+  { title:"Zarul de joc are forma unui…",
+    fig:null, choices:["cub","sferă","cilindru"], correct:0,
+    hint:"Are 6 fețe pătrate…",
+    explain:"Cubul! Toate fețele lui sunt pătrate egale." },
+  { title:"Mingea de fotbal are forma unei…",
+    fig:null, choices:["cub","sfere","cuboid"], correct:1,
+    hint:"Se rostogolește în orice direcție…",
+    explain:"Sfera — perfect rotundă, fără nicio față plată." },
+  { title:"Robotul Bip spune: „Cercul e un poligon cu foarte multe laturi.” Corect?",
+    fig:null, choices:["Da","Nu — cercul nu are laturi drepte deloc, nu e poligon"], correct:1,
+    hint:"Are cercul vreo latură dreaptă sau vreun colț?",
+    explain:"Bip greșește! Cercul e o linie curbă închisă — fără laturi, fără vârfuri, deci nu e poligon." },
+  { title:"Din tabel: luni s-au vândut 120 de covrigi, marți 150. Câți în cele două zile?",
+    fig:null, choices:["270","250","30"], correct:0,
+    hint:"Adună datele din tabel.",
+    explain:"120 + 150 = 270 de covrigi. Tabelele + operațiile = putere deplină!" },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Proba 1 — numerele: care e mai mare, 4 807 sau 4 870?",
+        choices:["4 807","4 870"], correct:1, hint:"Compară zecile!", explain:"4 870 — la zeci, 7 > 0. Prima probă trecută!" },
+      { q:"Proba 2 — adunarea: 1 875 + 2 125 = ?",
+        choices:["4 000","3 900","4 100"], correct:0, hint:"Transporturile curg în lanț!", explain:"Exact 4 000! Tribuna aplaudă." },
+      { q:"Proba 3 — tabla: 7 × 8 = ?",
+        choices:["54","56","64"], correct:1, hint:"Cea mai faimoasă…", explain:"56! Regele zâmbește." },
+      { q:"Proba 4 — legea ordinii: 20 − 2 × 5 = ?",
+        choices:["90","10","16"], correct:1, hint:"Înmulțirea întâi!", explain:"2×5=10, 20−10=10. Lege respectată!" },
+      { q:"Proba 5 — fracții: ce e mai mult, 1/2 sau 1/4 dintr-o pizza?",
+        choices:["1/2","1/4"], correct:0, hint:"Jumătate sau sfert?", explain:"1/2! Cu cât numitorul e mai mic, cu atât felia e mai mare." },
+      { q:"Proba 6 — timpul și banii: la 9:30 cumperi un scut de 35 lei și dai 50. Ce rest iei?",
+        choices:["15 lei","25 lei","20 lei"], correct:0, hint:"50 − 35.", explain:"15 lei rest. (Ora era doar să te încurce! 😉)" },
+      { q:"Proba 7 — problema regelui: 3 cufere a câte 240 de galbeni. Câți galbeni în total?",
+        choices:["720","640","820"], correct:0, hint:"3 × 240 — fabrica de zerouri ajută!", explain:"3 × 24 = 72, deci 3 × 240 = 720 de galbeni! PROBA FINALĂ TRECUTĂ!" },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">🎺🎺🎺 Șapte probe din șapte! Tribunele urlă, regele se ridică în picioare… E timpul încoronării!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

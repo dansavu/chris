@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 16 – Banii: lei și bani</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .wallet { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin:12px 0; }
+  .money { border:3px solid #c9dcf5; background:#f7fbff; border-radius:12px; padding:10px 14px; font-size:1.2rem; font-weight:800; color:#1d4e89; cursor:pointer; transition:transform .1s; }
+  .money:active { transform:scale(.93); }
+  .money.bill { background:#e8f6e9; border-color:#a8d8ae; }
+  .paid { text-align:center; font-size:1.5rem; font-weight:800; color:#1d4e89; margin:10px 0; min-height:36px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">💰</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 16: Piața castelului</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Zi de târg la castel! Negustorii strigă, tarabele-s pline… dar cine nu știe să socotească
+      banii pleacă acasă păcălit. În România plătim cu <strong>lei</strong> și <strong>bani</strong>
+      (1 leu = 100 de bani). Hai la cumpărături!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🛒 La târg!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Portofelul fermecat</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Atinge bancnotele și monedele ca să le pui pe tejghea. Poți forma exact <strong>23 de lei</strong>?
+      Dar în alt fel? (Sunt mai multe soluții!)</p>
+    </div>
+    <div class="wallet">
+      <div class="money bill" onclick="pay(50)">💵 50 lei</div>
+      <div class="money bill" onclick="pay(10)">💵 10 lei</div>
+      <div class="money bill" onclick="pay(5)">💵 5 lei</div>
+      <div class="money bill" onclick="pay(1)">💵 1 leu</div>
+      <div class="money" onclick="pay(0.5)">🪙 50 bani</div>
+    </div>
+    <div class="paid" id="paid"></div>
+    <div class="center">
+      <button class="btn-small" onclick="payReset()">🗑️ Golește tejgheaua</button>
+    </div>
+    <div class="center" style="margin-top:14px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am numărat! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Regulile pieței</h2>
+    <div class="guide"><div class="face">🐉</div><p>Socoteala banilor:</p></div>
+    <div class="learned">
+      <ul>
+        <li>🪙 <strong>1 leu = 100 de bani</strong>. 50 de bani = jumătate de leu.</li>
+        <li>💵 Bancnotele românești: 1, 5, 10, 50, 100, 200, 500 de lei.</li>
+        <li>🧾 Prețul total = aduni prețurile. <strong>Restul</strong> = cât ai dat − cât costă.</li>
+        <li>🧠 Verifică restul mereu: cumperi de 37 lei, dai 50 → rest 50 − 37 = 13 lei.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Plătește exact!</h2>
+    <div class="guide">
+      <div class="face">🧑‍🌾</div>
+      <p>Negustorul nu are rest! Formează <strong>exact suma cerută</strong> atingând banii,
+      apoi apasă „Plătește!”</p>
+    </div>
+    <p class="center" style="font-size:1.2rem;font-weight:700;color:#1d4e89;" id="ch-target"></p>
+    <div class="wallet">
+      <div class="money bill" onclick="chPay(50)">💵 50 lei</div>
+      <div class="money bill" onclick="chPay(10)">💵 10 lei</div>
+      <div class="money bill" onclick="chPay(5)">💵 5 lei</div>
+      <div class="money bill" onclick="chPay(1)">💵 1 leu</div>
+      <div class="money" onclick="chPay(0.5)">🪙 50 bani</div>
+    </div>
+    <div class="paid" id="ch-paid"></div>
+    <div class="center">
+      <button class="btn-primary" id="ch-buy" onclick="buy()">🤝 Plătește!</button>
+      <button class="btn-small" onclick="chReset()">🗑️ Ia banii înapoi</button>
+    </div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Coșul e plin! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 16!</h1>
+      <p>A șaisprezecea emblemă de cavaler este a ta. Încă una și ești CAVALER!</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>💰 1 leu = 100 de bani; bancnotele și monedele românești.</li>
+        <li>🧾 Totalul cumpărăturilor și calculul restului.</li>
+        <li>🧠 Aceeași sumă se poate forma în mai multe feluri.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea practică:</strong> la următoarele cumpărături, tu calculezi restul înainte
+      de casier — și verificați împreună! Acasă: câte feluri găsești de a forma 12 lei din bancnote de 1, 5 și 10?</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-17-marele-turnir.html" class="btn-primary">Nivelul 17 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 16 · Matematică clasa a III-a · Banii: lei și bani, prețuri și rest</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m16";
+
+function fmtLei(v){
+  const lei = Math.floor(v), bani = Math.round((v-lei)*100);
+  if(lei && bani) return `${lei} lei și ${bani} bani`;
+  if(bani) return `${bani} de bani`;
+  return `${lei} lei`;
+}
+
+/* explorare */
+let total = 0;
+function pay(v){
+  total = Math.round((total+v)*100)/100;
+  document.getElementById("paid").textContent =
+    "Pe tejghea: " + fmtLei(total) + (total===23 ? " — exact 23 de lei! 🎉 Găsești și altă combinație?" : "");
+}
+function payReset(){ total = 0; document.getElementById("paid").textContent = "Tejgheaua e goală."; }
+payReset();
+
+const questions = [
+  { title:"1 leu = ? bani",
+    fig:null, choices:["10 bani","100 de bani","1000 de bani"], correct:1,
+    hint:"Ca metrul și centimetrii!",
+    explain:"1 leu = 100 de bani. Iar 50 de bani = o jumătate de leu." },
+  { title:"Un măr costă 3 lei și o pâine 5 lei. Cât costă împreună?",
+    fig:null, choices:["8 lei","15 lei","2 lei"], correct:0,
+    hint:"Aduni prețurile.",
+    explain:"3 + 5 = 8 lei." },
+  { title:"Cumperi de 37 de lei și dai o bancnotă de 50. Ce rest primești?",
+    fig:null, choices:["13 lei","23 lei","87 lei"], correct:0,
+    hint:"50 − 37…",
+    explain:"Restul = 50 − 37 = 13 lei. Verifică mereu restul!" },
+  { title:"Care combinație face exact 27 de lei?",
+    fig:null, choices:["10+10+5+1+1","10+10+5","10+5+5+1"], correct:0,
+    hint:"Adună fiecare variantă.",
+    explain:"10+10+5+1+1 = 27 ✓. Celelalte dau 25 și 21." },
+  { title:"O carte costă 24 de lei. Cât costă 3 cărți?",
+    fig:null, choices:["72 lei","62 lei","27 lei"], correct:0,
+    hint:"3 × 24…",
+    explain:"3 × 24 = 72 de lei. Înmulțirea la cumpărături!" },
+  { title:"Robotul Bip dă 20 de lei pe o jucărie de 12 lei și primește rest 12 lei. E corect?",
+    fig:null, choices:["Da","Nu — restul corect e 20 − 12 = 8 lei"], correct:1,
+    hint:"Fă socoteala: 20 − 12…",
+    explain:"Bip a fost păcălit! Restul = 20 − 12 = 8 lei. Cine nu socotește, pierde!" },
+  { title:"Ai 2 monede de 50 de bani. Cât ai în total?",
+    fig:null, choices:["100 de bani = 1 leu","50 de bani","2 lei"], correct:0,
+    hint:"50 + 50 = 100 de bani, adică…",
+    explain:"50+50 = 100 de bani = exact 1 leu!" },
+  { title:"Vrei o minge de 45 de lei. Ai economisit 28. Câți lei îți mai trebuie?",
+    fig:null, choices:["17 lei","23 lei","73 lei"], correct:0,
+    hint:"45 − 28 — sau: numărul mascat! 28 + 🎭 = 45.",
+    explain:"45 − 28 = 17 lei de economisit. Detectivul numerelor lovește din nou!" },
+];
+
+/* provocarea */
+const chOrders = [
+  {sum:23, text:"Coiful de lemn costă 23 de lei"},
+  {sum:36, text:"Sabia de jucărie costă 36 de lei"},
+  {sum:7.5, text:"Covrigul uriaș costă 7 lei și 50 de bani"},
+];
+let oi = 0, chTotal = 0, chSolved = false;
+function chPay(v){
+  if(chSolved) return;
+  chTotal = Math.round((chTotal+v)*100)/100;
+  document.getElementById("ch-paid").textContent = "Ai pus: " + fmtLei(chTotal);
+}
+function chReset(){ chTotal = 0; document.getElementById("ch-paid").textContent = "N-ai pus nimic încă."; }
+function drawOrder(){
+  document.getElementById("ch-target").textContent =
+    `Cumpărătura ${oi+1} din ${chOrders.length}: ${chOrders[oi].text} — plătește exact!`;
+  chReset();
+}
+function buy(){
+  if(chSolved) return;
+  const o = chOrders[oi];
+  const fb = document.getElementById("ch-feedback");
+  if(Math.abs(chTotal - o.sum) < 0.001){
+    oi++;
+    if(oi >= chOrders.length){
+      chSolved = true;
+      document.getElementById("ch-buy").classList.add("hidden");
+      document.getElementById("ch-target").textContent = "Toate cumpărăturile sunt făcute!";
+      fb.innerHTML = `<div class="feedback good">🛒 Exact până la ultimul ban! Negustorii te aplaudă — nimeni nu te mai poate păcăli!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else {
+      fb.innerHTML = `<div class="feedback good">🤝 Plată exactă! Următoarea tarabă…</div>`;
+      drawOrder();
+    }
+  } else {
+    fb.innerHTML = `<div class="feedback hint">Ai pus ${fmtLei(chTotal)}, dar prețul e ${fmtLei(o.sum)}. ${chTotal>o.sum?"E prea mult — ia banii înapoi și încearcă iar!":"Mai lipsește ceva!"}</div>`;
+  }
+}
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chSolved) drawOrder();
+};
+</script>
+</body>
+</html>

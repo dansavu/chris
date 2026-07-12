@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 5 – Scăderea numerelor până la 10 000</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .calc { font-family:Consolas,monospace; font-size:2rem; font-weight:700; color:#1d4e89; text-align:center; line-height:1.4; margin:14px 0; white-space:pre; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">➖</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 5: Turnul împrumuturilor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Castelul avea 5 234 de săgeți, iar arcașii au tras 1 567 la antrenament. Câte au rămas?
+      Azi înveți scăderea numerelor mari — cu faimosul truc al <strong>împrumutului</strong>:
+      când o coloană nu are destul, împrumută de la vecina din stânga!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">⚔️ Numărăm săgețile!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Scăderea pas cu pas</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Privește scăderea 5 234 − 1 567, coloană cu coloană. Când cifra de sus e prea mică,
+      împrumutăm o „zecime” de la coloana din stânga!</p>
+    </div>
+    <div class="calc" id="calc-view"></div>
+    <div id="steps"></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" id="step-btn" onclick="nextStep()">Arată pasul 1 ➜</button>
+      <button class="btn-primary hidden" id="to-learn" onclick="show('screen-learn')">Am înțeles! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Regulile scăderii</h2>
+    <div class="guide"><div class="face">🐉</div><p>Așa scazi orice numere mari:</p></div>
+    <div class="learned">
+      <ul>
+        <li>📝 Numărul mare sus, cel mic jos, aliniate pe coloane.</li>
+        <li>➡️ Scazi de la dreapta la stânga, începând cu unitățile.</li>
+        <li>🤝 Dacă cifra de sus e mai mică, <strong>împrumuți</strong>: iei 1 de la coloana din stânga (care scade cu 1) și primești 10.</li>
+        <li>✅ <strong>Proba prin adunare</strong>: rezultatul + numărul scăzut = numărul de la început. 3 667 + 1 567 = 5 234 ✓</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Evadarea din turn!</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Ești închis în Turnul Împrumuturilor! Fiecare scădere corectă deschide o încuietoare.
+      Trei încuietori — și ești liber! (Caietul e arma ta secretă.)</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Sunt liber! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 5!</h1>
+      <p>A cincea emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>➖ Scăderea în coloană, de la unități spre mii.</li>
+        <li>🤝 Împrumutul: iei 1 de la stânga, primești 10.</li>
+        <li>✅ Proba prin adunare — scăderea nu te mai poate păcăli!</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea pe hârtie:</strong> calculează 4 000 − 1 234 (împrumut în lanț!) și fă proba
+      prin adunare. Apoi: câți ani sunt de la anul nașterii tale până azi? Scade!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-06-numarul-necunoscut.html" class="btn-primary">Nivelul 6 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 5 · Matematică clasa a III-a · Scăderea 0–10 000, cu împrumut</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m05";
+
+const views = [
+  "  5234\n− 1567\n──────\n      ",
+  "  5234\n− 1567\n──────\n     7",
+  "  5234\n− 1567\n──────\n    67",
+  "  5234\n− 1567\n──────\n   667",
+  "  5234\n− 1567\n──────\n  3667",
+];
+const stepTexts = [
+  `<div class="feedback explain"><strong>Pasul 1 — unitățile:</strong> 4 − 7 nu se poate! Împrumutăm de la zeci: 14 − 7 = <strong>7</strong>. (Zecile scad: 3 devine 2.)</div>`,
+  `<div class="feedback explain"><strong>Pasul 2 — zecile:</strong> 2 − 6 nu se poate! Împrumutăm de la sute: 12 − 6 = <strong>6</strong>. (Sutele: 2 devine 1.)</div>`,
+  `<div class="feedback explain"><strong>Pasul 3 — sutele:</strong> 1 − 5 nu se poate! Împrumutăm de la mii: 11 − 5 = <strong>6</strong>. (Miile: 5 devine 4.)</div>`,
+  `<div class="feedback good"><strong>Pasul 4 — miile:</strong> 4 − 1 = <strong>3</strong>. Rezultat: <strong>5 234 − 1 567 = 3 667</strong> săgeți rămase! Proba: 3 667 + 1 567 = 5 234 ✓</div>`,
+];
+let sIdx = 0;
+document.getElementById("calc-view").textContent = views[0];
+function nextStep(){
+  document.getElementById("steps").innerHTML += stepTexts[sIdx];
+  sIdx++;
+  document.getElementById("calc-view").textContent = views[sIdx];
+  const btn = document.getElementById("step-btn");
+  if(sIdx >= stepTexts.length){
+    btn.classList.add("hidden");
+    document.getElementById("to-learn").classList.remove("hidden");
+  } else btn.textContent = "Arată pasul " + (sIdx+1) + " ➜";
+}
+
+const questions = [
+  { title:"87 − 34 = ?",
+    fig:null, choices:["53","52","43"], correct:0,
+    hint:"7−4 și 8−3, fără împrumut.",
+    explain:"U: 7−4=3. Z: 8−3=5. Rezultat: 53." },
+  { title:"62 − 38 = ?",
+    fig:null, choices:["34","24","36"], correct:1,
+    hint:"2−8 nu se poate — împrumută o zece!",
+    explain:"U: 12−8=4 (împrumut). Z: 5−3=2. Rezultat: 24." },
+  { title:"523 − 187 = ?",
+    fig:null, choices:["336","346","436"], correct:0,
+    hint:"Două împrumuturi la rând! Calculează pe caiet.",
+    explain:"U: 13−7=6. Z: 11−8=3. S: 4−1=3. Rezultat: 336." },
+  { title:"3 000 − 1 = ?",
+    fig:null, choices:["2 999","3 001","2 000"], correct:0,
+    hint:"Un pas înapoi de la un număr rotund…",
+    explain:"3 000 − 1 = 2 999. Împrumutul trece prin toate zerourile!" },
+  { title:"Care e PROBA corectă pentru 850 − 320 = 530?",
+    fig:null, choices:["530 + 320 = 850 ✓","530 − 320 = 210","850 + 320 = 1 170"], correct:0,
+    hint:"Rezultatul + ce ai scăzut = numărul de la început.",
+    explain:"Proba scăderii se face prin adunare: 530 + 320 = 850 ✓. Dacă nu iese numărul inițial, ai greșit undeva!" },
+  { title:"Robotul Bip calculează 52 − 38 așa: „2−8 nu pot, deci fac 8−2=6. Rezultat: 26.” Ce a greșit?",
+    fig:null, choices:["Nimic","Nu ai voie să întorci scăderea — trebuia să ÎMPRUMUTE"], correct:1,
+    hint:"Poți schimba ordinea la scădere cum îți convine?",
+    explain:"Bip a inversat cifrele — interzis! Corect: împrumuți → 12−8=4, apoi 4−3=1. Rezultat: 14, nu 26!" },
+  { title:"4 305 − 2 158 = ?",
+    fig:null, choices:["2 147","2 157","2 247"], correct:0,
+    hint:"5−8 cere împrumut… iar la zeci e 0 — împrumutul sare la sute!",
+    explain:"U: 15−8=7. Z: 0 devine 9 (împrumut în lanț): 9−5=4. S: 2−1=1. M: 4−2=2. Rezultat: 2 147." },
+  { title:"Zum avea 6 420 de galbeni și a cumpărat o armură de 2 850. Câți i-au rămas?",
+    fig:null, choices:["3 570","3 670","4 570"], correct:0,
+    hint:"6 420 − 2 850, pe caiet.",
+    explain:"U: 0−0=0. Z: 12−5=7. S: 3−8 → 13−8=5. M: 5−2=3. Au rămas 3 570 de galbeni." },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Încuietoarea 1: 750 − 280 = ?",
+        choices:["470","570","480"], correct:0, hint:"5−8 la zeci cere împrumut de la sute.", explain:"U:0. Z:15−8=7. S:6−2=4. → 470!" },
+      { q:"Încuietoarea 2: 5 000 − 2 345 = ?",
+        choices:["2 655","2 755","3 655"], correct:0, hint:"Împrumut în lanț prin toate zerourile!", explain:"5 000−2 345 = 2 655. Proba: 2 655+2 345=5 000 ✓" },
+      { q:"Încuietoarea 3: dragonul avea 8 234 de solzi și a pierdut 4 567 în luptă. Câți i-au rămas?",
+        choices:["3 667","3 767","4 667"], correct:0, hint:"8 234 − 4 567 — trei împrumuturi!", explain:"8 234 − 4 567 = 3 667 de solzi. Ai scăpat din turn!" },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">🗝️ Toate încuietorile au cedat — ești liber, iar împrumutul nu mai are secrete!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

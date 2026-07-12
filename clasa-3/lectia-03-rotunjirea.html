@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 3 – Rotunjirea numerelor</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .rot-num { text-align:center; font-size:2.4rem; font-weight:800; color:#1d4e89; margin:8px 0; }
+  .rot-controls { text-align:center; margin-bottom:8px; }
+  .rot-results { display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:12px 0; }
+  .rot-box { background:#f2f7fd; border:3px solid #c9dcf5; border-radius:14px; padding:12px 18px; text-align:center; }
+  .rot-box .lbl { font-size:.9rem; color:#678; }
+  .rot-box .val { font-size:1.5rem; font-weight:800; color:#1b6b2e; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🎯</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 3: Catapulta rotunjirii</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>„Cam câți spectatori sunt la turnir?” — „Vreo 3 000!” Nimeni nu zice „2 987”!
+      Când nu avem nevoie de numărul exact, îl <strong>rotunjim</strong> — îl aruncăm cu catapulta
+      spre cel mai apropiat număr „rotund”. Hai să țintim!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">⚔️ La catapultă!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Mașina de rotunjit</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Schimbă numărul și privește unde „aterizează” la fiecare rotunjire.
+      Încearcă 45 → vezi regula specială? La jumătate, urcăm!</p>
+    </div>
+    <div class="rot-controls">
+      <button class="btn-small" onclick="rot(-1000)">−1000</button>
+      <button class="btn-small" onclick="rot(-100)">−100</button>
+      <button class="btn-small" onclick="rot(-10)">−10</button>
+      <button class="btn-small" onclick="rot(-1)">−1</button>
+      <button class="btn-small" onclick="rot(1)">+1</button>
+      <button class="btn-small" onclick="rot(10)">+10</button>
+      <button class="btn-small" onclick="rot(100)">+100</button>
+      <button class="btn-small" onclick="rot(1000)">+1000</button>
+    </div>
+    <div class="rot-num" id="rot-num"></div>
+    <div class="rot-results">
+      <div class="rot-box"><div class="lbl">la zeci</div><div class="val" id="r10"></div></div>
+      <div class="rot-box"><div class="lbl">la sute</div><div class="val" id="r100"></div></div>
+      <div class="rot-box"><div class="lbl">la mii</div><div class="val" id="r1000"></div></div>
+    </div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am înțeles! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Regula catapultei</h2>
+    <div class="guide"><div class="face">🐉</div><p>Cum rotunjim un număr:</p></div>
+    <div class="learned">
+      <ul>
+        <li>👀 Te uiți la <strong>cifra de după</strong> locul la care rotunjești (la zeci → te uiți la unități).</li>
+        <li>⬇️ Dacă e <strong>0, 1, 2, 3, 4</strong> → cobori la numărul rotund mai mic: 43 → 40.</li>
+        <li>⬆️ Dacă e <strong>5, 6, 7, 8, 9</strong> → urci la numărul rotund mai mare: 47 → 50 (și 45 → 50!).</li>
+        <li>🎯 La sute te uiți la zeci: 349 → 300. La mii te uiți la sute: 2 700 → 3 000.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Tirul cu catapulta!</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Catapulta aruncă numere — tu alegi ținta pe care aterizează fiecare!</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Tir perfect! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 3!</h1>
+      <p>A treia emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>🎯 Rotunjirea: te uiți la cifra de după locul de rotunjire.</li>
+        <li>⬇️ 0–4 cobori · ⬆️ 5–9 urci (45 → 50!).</li>
+        <li>🗣️ Rotunjim ca să vorbim mai ușor despre numere mari.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea practică:</strong> întreabă pe cineva câți pași sunt până la magazin — sigur
+      va spune un număr rotunjit! Apoi rotunjește în caiet: 728 la zeci, la sute; 4 555 la mii.</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-04-adunarea.html" class="btn-primary">Nivelul 4 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 3 · Matematică clasa a III-a · Rotunjirea la zeci, sute și mii</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m03";
+
+let n = 2748;
+function roundTo(x,m){ return Math.round(x/m)*m; }
+function rot(d){ n = clamp(n+d, 0, 9999); drawRot(); }
+function drawRot(){
+  document.getElementById("rot-num").textContent = n.toLocaleString("ro");
+  document.getElementById("r10").textContent = roundTo(n,10).toLocaleString("ro");
+  document.getElementById("r100").textContent = roundTo(n,100).toLocaleString("ro");
+  document.getElementById("r1000").textContent = roundTo(n,1000).toLocaleString("ro");
+}
+drawRot();
+
+const questions = [
+  { title:"Rotunjit la zeci, 47 devine…",
+    fig:null, choices:["40","50"], correct:1,
+    hint:"Unitățile sunt 7 — cobori sau urci?",
+    explain:"7 ≥ 5, deci urcăm: 47 → 50." },
+  { title:"Rotunjit la zeci, 132 devine…",
+    fig:null, choices:["130","140","100"], correct:0,
+    hint:"Unitățile sunt 2…",
+    explain:"2 < 5, coborâm: 132 → 130." },
+  { title:"Rotunjit la zeci, 45 devine…",
+    fig:null, choices:["40","50"], correct:1,
+    hint:"Regula specială: exact la jumătate…",
+    explain:"La 5 urcăm mereu: 45 → 50. Aceasta e regula „jumătății care urcă”!" },
+  { title:"Rotunjit la sute, 349 devine…",
+    fig:null, choices:["300","350","400"], correct:0,
+    hint:"La sute te uiți la cifra ZECILOR: 4…",
+    explain:"Zecile sunt 4 < 5, deci coborâm: 349 → 300. (Nu rotunjim de două ori!)" },
+  { title:"Rotunjit la sute, 2 781 devine…",
+    fig:null, choices:["2 700","2 800","3 000"], correct:1,
+    hint:"Zecile sunt 8…",
+    explain:"8 ≥ 5, urcăm suta: 2 781 → 2 800." },
+  { title:"Rotunjit la mii, 6 499 devine…",
+    fig:null, choices:["6 000","6 500","7 000"], correct:0,
+    hint:"La mii te uiți la cifra SUTELOR: 4…",
+    explain:"Sutele sunt 4 < 5, coborâm: 6 499 → 6 000. Chiar dacă pare „aproape jumate”, regula e clară!" },
+  { title:"Robotul Bip rotunjește 349 la sute așa: „349 → 350 → 400”. Ce a greșit?",
+    fig:null, choices:["Nimic, e corect","A rotunjit de DOUĂ ori — se rotunjește o singură dată!"], correct:1,
+    hint:"La sute te uiți direct la zeci, nu treci prin rotunjirea la zeci.",
+    explain:"Bip a înlănțuit două rotunjiri — interzis! 349 la sute: zecile sunt 4 < 5 → 300." },
+  { title:"La turnir au venit 3 850 de spectatori. „Aproximativ câte mii”?",
+    fig:null, choices:["3 000","4 000"], correct:1,
+    hint:"Sutele sunt 8…",
+    explain:"8 ≥ 5, urcăm: 3 850 → aproximativ 4 000 de spectatori." },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Catapulta aruncă 76. La zeci, aterizează pe…",
+        choices:["70","80"], correct:1, hint:"Unitățile: 6.", explain:"6 ≥ 5 → urcă la 80!" },
+      { q:"Catapulta aruncă 1 234. La sute, aterizează pe…",
+        choices:["1 200","1 300"], correct:0, hint:"Zecile: 3.", explain:"3 < 5 → coboară la 1 200." },
+      { q:"Catapulta aruncă 8 500. La mii, aterizează pe…",
+        choices:["8 000","9 000"], correct:1, hint:"Sutele: 5 — jumătatea care…", explain:"5 urcă mereu → 9 000!" },
+      { q:"Ultima lovitură: 995 rotunjit la zeci?",
+        choices:["990","1 000"], correct:1, hint:"Unitățile: 5 → urci zecea… iar 99 de zeci + 1 = ?", explain:"995 → 1 000! Urcarea a umplut și sutele — lovitură de maestru!" },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">🎯 Patru din patru — tir perfect cu catapulta!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

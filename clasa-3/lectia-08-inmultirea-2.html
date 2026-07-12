@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 8 – Înmulțirea: tablele 6–9 și proprietăți</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .flip-grid { text-align:center; font-size:1.7rem; line-height:1.25; margin:10px 0; min-height:100px; }
+  .flip-eq { text-align:center; font-size:1.4rem; font-weight:800; color:#1d4e89; margin:8px 0; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🧠</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 8: Vraja înmulțirii (partea a II-a)</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Tablele lui 6, 7, 8 și 9 par fioroase… dar am un secret uriaș pentru tine:
+      <strong>jumătate le știi deja!</strong> 7 × 3 e totuna cu 3 × 7 — ordinea nu contează.
+      Plus trucuri pentru ×9 și prietenii speciali 0 și 1. La treabă!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🪄 Arată-mi secretul!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Tava care se rotește</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Apasă „Rotește tava” și privește: 3 rânduri de 7 devin 7 rânduri de 3 —
+      dar prăjiturile rămân la fel de multe! Asta e <strong>comutativitatea</strong>.</p>
+    </div>
+    <div class="flip-eq" id="flip-eq"></div>
+    <div class="flip-grid" id="flip-grid"></div>
+    <div class="center"><button class="btn-primary" onclick="flip()">🔄 Rotește tava</button></div>
+    <div class="center" style="margin-top:14px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Genial! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Cartea de vrăji: tablele 6–9 și prietenii speciali</h2>
+    <div class="guide"><div class="face">🐉</div><p>Trucurile marilor vrăjitori:</p></div>
+    <div class="learned">
+      <ul>
+        <li>🔄 <strong>Comutativitate</strong>: 7 × 3 = 3 × 7. Știi tablele mici → știi jumătate din cele mari!</li>
+        <li>9️⃣ Trucul lui 9: 9 × 6 = 10 × 6 − 6 = 54. (Zece grupe minus una!)</li>
+        <li>✋ La tabla lui 9, cifrele produsului adunate dau 9: 54 → 5+4=9!</li>
+        <li>1️⃣ Orice număr × 1 = el însuși: 8 × 1 = 8.</li>
+        <li>0️⃣ Orice număr × 0 = 0: 9 × 0 = 0. Zero tăvi = zero prăjituri!</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Dragonul cu 6 capete!</h2>
+    <div class="guide">
+      <div class="face">🐲</div>
+      <p>Un dragon rival cu 6 capete blochează poarta! Fiecare răspuns corect adoarme un cap.
+      Adoarme-le pe toate!</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Dragonul doarme! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 8!</h1>
+      <p>A opta emblemă de cavaler este a ta. Toată tabla înmulțirii e a ta!</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>🔄 Comutativitatea: ordinea factorilor nu schimbă produsul.</li>
+        <li>📋 Tablele lui 6, 7, 8, 9 + trucul lui 9.</li>
+        <li>0️⃣1️⃣ × 0 dă mereu 0; × 1 lasă numărul neschimbat.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea practică:</strong> joacă „duelul tablelor” cu un părinte: fiecare spune pe rând
+      o înmulțire grea (ca 7×8), celălalt răspunde. Primul la 5 puncte câștigă!
+      Trucul lui 9 pe degete: pentru 9×4, îndoaie al 4-lea deget — vezi 3 și 6 → 36!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-09-inmultirea-numere-mari.html" class="btn-primary">Nivelul 9 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 8 · Matematică clasa a III-a · Tablele 6–9, comutativitatea, înmulțirea cu 0 și 1</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m08";
+
+let flipped = false;
+function flip(){ flipped = !flipped; drawFlip(); }
+function drawFlip(){
+  const r = flipped ? 7 : 3, c = flipped ? 3 : 7;
+  document.getElementById("flip-grid").innerHTML =
+    Array.from({length:r}, ()=> "🧁".repeat(c)).join("<br>");
+  document.getElementById("flip-eq").textContent = `${r} × ${c} = 21 — mereu 21!`;
+}
+drawFlip();
+
+const questions = [
+  { title:"7 × 8 = ?",
+    fig:null, choices:["54","56","64"], correct:1,
+    hint:"Ține minte rima: 7 ori 8, cincizeci-și-șase!",
+    explain:"7 × 8 = 56 — cea mai faimoasă înmulțire grea. Acum o știi!" },
+  { title:"9 × 6 = ?",
+    fig:null, choices:["54","56","63"], correct:0,
+    hint:"Trucul lui 9: 10 × 6 − 6…",
+    explain:"9 × 6 = 60 − 6 = 54. Verificare: 5+4=9 ✓" },
+  { title:"6 × 6 = ?",
+    fig:null, choices:["36","30","42"], correct:0,
+    hint:"Un pătrat de 6 pe 6…",
+    explain:"6 × 6 = 36." },
+  { title:"8 × 6 = ?",
+    fig:null, choices:["42","48","54"], correct:1,
+    hint:"Dublul lui 4 × 6 = 24…",
+    explain:"8 × 6 = 48. Sau: 6 × 8, aceeași vrajă întoarsă!" },
+  { title:"Dacă știi că 6 × 9 = 54, cât e 9 × 6?",
+    fig:null, choices:["54 — comutativitatea!","45","Nu se poate ști"], correct:0,
+    hint:"Rotește tava…",
+    explain:"Tot 54! Ordinea factorilor nu schimbă produsul — asta e comutativitatea." },
+  { title:"475 × 0 = ?",
+    fig:null, choices:["475","0","1"], correct:1,
+    hint:"Zero tăvi cu 475 de prăjituri fiecare… câte prăjituri ai?",
+    explain:"Orice număr × 0 = 0. Nicio tavă = nicio prăjitură!" },
+  { title:"Robotul Bip spune: „8 × 1 = 9, pentru că adaugi unu.” Corect?",
+    fig:null, choices:["Da","Nu — 8 × 1 = 8: o singură tavă cu 8 prăjituri"], correct:1,
+    hint:"× 1 înseamnă „o dată”, nu „plus unu”.",
+    explain:"Bip a confundat cu adunarea! 8 luat o singură dată rămâne 8." },
+  { title:"7 × 7 = ?",
+    fig:null, choices:["47","49","56"], correct:1,
+    hint:"Un pătrat de 7 pe 7…",
+    explain:"7 × 7 = 49." },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Capul 1 🐲: 6 × 7 = ?", choices:["42","36","48"], correct:0, hint:"6×7 = 6×6+6.", explain:"42! Primul cap sforăie." },
+      { q:"Capul 2 🐲: 9 × 8 = ?", choices:["81","72","64"], correct:1, hint:"10×8 − 8…", explain:"72! (7+2=9 ✓) Al doilea cap a ațipit." },
+      { q:"Capul 3 🐲: 8 × 8 = ?", choices:["64","72","56"], correct:0, hint:"Pătratul lui 8.", explain:"64! Trei capete dorm." },
+      { q:"Capul 4 🐲: 9 × 9 = ?", choices:["89","81","91"], correct:1, hint:"10×9 − 9…", explain:"81! (8+1=9 ✓)" },
+      { q:"Capul 5 🐲: 7 × 6 = ?", choices:["42","49","36"], correct:0, hint:"E fratele geamăn al lui 6×7…", explain:"42 — comutativitatea adoarme și acest cap!" },
+      { q:"Capul 6 🐲: 1000 × 0 + 8 × 1 = ?", choices:["8","1008","0"], correct:0, hint:"×0 dă 0, ×1 lasă la fel…", explain:"0 + 8 = 8! Ultimul cap doarme buștean. Poarta e liberă!" },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">🐲💤 Toate cele 6 capete sforăie! Tabla înmulțirii e complet a ta!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

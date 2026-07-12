@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 1 – Formarea numerelor până la 10 000</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .abacus { display:flex; justify-content:center; gap:14px; margin:14px 0; flex-wrap:wrap; }
+  .rod { background:#f2f7fd; border:3px solid #c9dcf5; border-radius:14px; padding:12px; text-align:center; min-width:110px; }
+  .rod h3 { color:#1d4e89; font-size:1rem; margin-bottom:6px; }
+  .rod .beads { font-size:1.4rem; min-height:110px; line-height:1.1; word-break:break-all; }
+  .rod .cnt { font-size:1.6rem; font-weight:800; color:#1d4e89; margin:6px 0; }
+  .numar-mare { text-align:center; font-size:2.6rem; font-weight:800; color:#1d4e89; letter-spacing:4px; margin:10px 0; }
+  .descompunere { text-align:center; font-size:1.15rem; color:#556; margin-bottom:8px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🏰</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 1: Castelul cifrelor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Salut, scutierule! Eu sunt <strong>Zum</strong>, dragonul de la castel. Ca să devii Cavaler al
+      Numerelor, trebuie mai întâi să stăpânești marile numere — până la <strong>10 000</strong>!
+      Secretul lor? Fiecare cifră stă pe un „turn”: unități, zeci, sute, mii. Hai să construim!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">⚔️ Începe antrenamentul!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Mașina de construit numere</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Apasă + și − la fiecare turn și privește cum se schimbă numărul.
+      Construiește numărul <strong>2 435</strong>! Apoi joacă-te: ce se întâmplă când un turn ajunge la 9 și mai adaugi una?</p>
+    </div>
+    <div class="abacus" id="abacus"></div>
+    <div class="numar-mare" id="big-num"></div>
+    <div class="descompunere" id="decomp"></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am construit! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Turnurile numărului</h2>
+    <div class="guide"><div class="face">🐉</div><p>Regula de aur a numerelor mari:</p></div>
+    <div class="learned">
+      <ul>
+        <li>🗼 Fiecare cifră are o <strong>valoare după locul ei</strong>: în 3 427 → 3 <strong>mii</strong>, 4 <strong>sute</strong>, 2 <strong>zeci</strong>, 7 <strong>unități</strong>.</li>
+        <li>🔟 10 unități = 1 zece · 10 zeci = 1 sută · 10 sute = 1 mie.</li>
+        <li>➕ Putem „desface” numărul: 3 427 = 3000 + 400 + 20 + 7.</li>
+        <li>⚠️ Zero ține locul: 3 067 are 0 sute — fără el, numărul ar deveni 367!</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Comorile dragonului!</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Zum îți dictează codurile de la 3 cufere. <strong>Construiește fiecare număr</strong>
+      cu mașina de mai jos, apoi apasă „Deschide cufărul”!</p>
+    </div>
+    <p class="center" style="font-size:1.2rem;font-weight:700;color:#1d4e89;" id="ch-target"></p>
+    <div class="abacus" id="ch-abacus"></div>
+    <div class="numar-mare" id="ch-num"></div>
+    <div class="center"><button class="btn-primary" id="ch-open" onclick="openChest()">🗝️ Deschide cufărul</button></div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Toate cuferele deschise! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 1!</h1>
+      <p>Prima emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>🗼 Numerele până la 10 000 au turnuri: mii, sute, zeci, unități.</li>
+        <li>💰 Valoarea cifrei depinde de locul ei: 4 în 4 209 înseamnă 4 mii!</li>
+        <li>0️⃣ Zero ține locul turnurilor goale.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea pe hârtie:</strong> scrie în caiet numărul anului în care ne aflăm și desface-l
+      în mii + sute + zeci + unități. Apoi scrie cel mai mare și cel mai mic număr de 4 cifre diferite!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-02-comparare-ordonare.html" class="btn-primary">Nivelul 2 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 1 · Matematică clasa a III-a · Formarea, citirea și scrierea numerelor 0–10 000</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m01";
+
+/* ---------- mașina de numere ---------- */
+const RODS = [
+  {key:"M", name:"MII", bead:"🟥", mult:1000},
+  {key:"S", name:"SUTE", bead:"🟦", mult:100},
+  {key:"Z", name:"ZECI", bead:"🟩", mult:10},
+  {key:"U", name:"UNITĂȚI", bead:"🟡", mult:1},
+];
+function makeAbacus(containerId, state, onChange){
+  const el = document.getElementById(containerId);
+  el.innerHTML = RODS.map(r=>`
+    <div class="rod">
+      <h3>${r.name}</h3>
+      <div class="beads" id="${containerId}-b${r.key}"></div>
+      <div class="cnt" id="${containerId}-c${r.key}">0</div>
+      <button class="btn-small" onclick="rodChange('${containerId}','${r.key}',-1)">−</button>
+      <button class="btn-small" onclick="rodChange('${containerId}','${r.key}',1)">+</button>
+    </div>`).join("");
+  el.dataset.state = JSON.stringify(state);
+  el.dataset.onchange = onChange;
+  refreshAbacus(containerId);
+}
+const abacusStates = {};
+function rodChange(containerId, key, d){
+  const st = abacusStates[containerId];
+  st[key] = clamp(st[key]+d, 0, 9);
+  refreshAbacus(containerId);
+}
+function abacusValue(containerId){
+  const st = abacusStates[containerId];
+  return st.M*1000 + st.S*100 + st.Z*10 + st.U;
+}
+function refreshAbacus(containerId){
+  const st = abacusStates[containerId];
+  RODS.forEach(r=>{
+    document.getElementById(containerId+"-b"+r.key).textContent = r.bead.repeat(st[r.key]);
+    document.getElementById(containerId+"-c"+r.key).textContent = st[r.key];
+  });
+  if(containerId==="abacus"){
+    const v = abacusValue("abacus");
+    document.getElementById("big-num").textContent = v.toLocaleString("ro");
+    document.getElementById("decomp").textContent =
+      `${st.M} mii + ${st.S} sute + ${st.Z} zeci + ${st.U} unități  =  ${st.M*1000} + ${st.S*100} + ${st.Z*10} + ${st.U}`;
+  } else {
+    document.getElementById("ch-num").textContent = abacusValue("ch-abacus").toLocaleString("ro");
+  }
+}
+abacusStates["abacus"] = {M:1,S:2,Z:0,U:5};
+makeAbacus("abacus", abacusStates["abacus"]);
+
+/* ---------- quiz ---------- */
+const questions = [
+  { title:"Ce număr are 3 mii, 4 sute, 2 zeci și 7 unități?",
+    fig:null, choices:["3 427","3 247","34 027"], correct:0,
+    hint:"Așază cifrele în ordine: mii, sute, zeci, unități.",
+    explain:"M=3, S=4, Z=2, U=7 → 3 427." },
+  { title:"Care este cifra sutelor în numărul 5 816?",
+    fig:null, choices:["5","8","1"], correct:1,
+    hint:"Ordinea turnurilor: mii, SUTE, zeci, unități — a doua cifră din stânga.",
+    explain:"5 816 = 5 mii, 8 sute, 1 zece, 6 unități. Cifra sutelor este 8." },
+  { title:"2000 + 300 + 50 + 6 = ?",
+    fig:null, choices:["2 356","23 506","2 536"], correct:0,
+    hint:"Pune fiecare bucată în turnul ei.",
+    explain:"2 mii, 3 sute, 5 zeci, 6 unități = 2 356." },
+  { title:"Cum se scrie cu cifre „șapte mii cinci”?",
+    fig:null, choices:["75","7 005","7 500"], correct:1,
+    hint:"Șapte mii… zero sute… zero zeci… cinci unități. Zero ține locul!",
+    explain:"7 005: zerourile păzesc turnurile goale ale sutelor și zecilor. Fără ele am citi 75!" },
+  { title:"Ce valoare are cifra 4 în numărul 4 209?",
+    fig:null, choices:["4 unități","4 sute","4 mii"], correct:2,
+    hint:"Pe ce turn stă cifra 4? E prima din stânga…",
+    explain:"4 stă pe turnul miilor, deci valorează 4 000!" },
+  { title:"Robotul Bip spune: „În 3 070, cifra 7 înseamnă 7 unități.” Are dreptate?",
+    fig:null, choices:["Da","Nu — 7 e pe turnul zecilor, deci înseamnă 70"], correct:1,
+    hint:"Numără turnurile din dreapta: unități (0), zeci (7)…",
+    explain:"Bip greșește! În 3 070, cifra 7 stă pe locul zecilor: valorează 70, nu 7." },
+  { title:"Care e cel mai mare număr de 4 cifre?",
+    fig:null, choices:["9 999","10 000","9 000"], correct:0,
+    hint:"Pune cea mai mare cifră pe fiecare turn.",
+    explain:"9 999! (10 000 are cinci cifre.) Iar dacă adaugi 1 la 9 999 obții exact 10 000." },
+  { title:"Ce număr urmează imediat după 2 999?",
+    fig:null, choices:["3 000","2 100","2 990"], correct:0,
+    hint:"Unitățile, zecile și sutele sunt pline (9)… toate se transformă!",
+    explain:"2 999 + 1 = 3 000. Cele 10 unități devin o zece, cele 10 zeci o sută, cele 10 sute o mie nouă!" },
+];
+
+/* ---------- provocarea ---------- */
+const chTargets = [2305, 7040, 9999];
+let chIdx = 0, chSolved = false;
+abacusStates["ch-abacus"] = {M:0,S:0,Z:0,U:0};
+function setupChallenge(){
+  makeAbacus("ch-abacus", abacusStates["ch-abacus"]);
+  document.getElementById("ch-target").textContent =
+    `Cufărul ${chIdx+1} din ${chTargets.length}: construiește numărul „${spellRo(chTargets[chIdx])}”`;
+}
+function spellRo(n){
+  // afișare în cuvinte simple pentru dictare
+  const map = {2305:"două mii trei sute cinci", 7040:"șapte mii patruzeci", 9999:"nouă mii nouă sute nouăzeci și nouă"};
+  return map[n];
+}
+function openChest(){
+  if(chSolved) return;
+  const fb = document.getElementById("ch-feedback");
+  const v = abacusValue("ch-abacus");
+  if(v === chTargets[chIdx]){
+    chIdx++;
+    if(chIdx >= chTargets.length){
+      chSolved = true;
+      document.getElementById("ch-open").classList.add("hidden");
+      document.getElementById("ch-target").textContent = "Toate cuferele sunt deschise!";
+      fb.innerHTML = `<div class="feedback good">💎 CLIC! Ultimul cufăr s-a deschis — înăuntru strălucește prima ta emblemă de cavaler!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else {
+      fb.innerHTML = `<div class="feedback good">🗝️ CLIC! Cufărul s-a deschis! Următorul cod…</div>`;
+      abacusStates["ch-abacus"] = {M:0,S:0,Z:0,U:0};
+      setupChallenge();
+    }
+  } else {
+    fb.innerHTML = `<div class="feedback hint">Cufărul nu se deschide — ai format ${v.toLocaleString("ro")}. Ascultă din nou codul: „${spellRo(chTargets[chIdx])}”. Atenție la turnurile goale (zero)!</div>`;
+  }
+}
+
+window.onShow = function(id){
+  if(id==="screen-challenge" && chIdx===0 && !chSolved) setupChallenge();
+};
+</script>
+</body>
+</html>

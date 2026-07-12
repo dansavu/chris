@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 2 – Compararea și ordonarea numerelor</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .duel { display:flex; justify-content:center; align-items:center; gap:16px; margin:16px 0; flex-wrap:wrap; }
+  .fighter { background:#f2f7fd; border:3px solid #c9dcf5; border-radius:16px; padding:16px; text-align:center; min-width:170px; }
+  .fighter .num { font-size:2.2rem; font-weight:800; color:#1d4e89; margin:8px 0; }
+  .vs { font-size:2.6rem; font-weight:800; color:#e05555; min-width:70px; text-align:center; }
+  .order-row { display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin:14px 0; }
+  .order-card { background:#fff; border:3px solid #c9dcf5; border-radius:14px; padding:16px 20px; font-size:1.5rem; font-weight:800; color:#1d4e89; cursor:pointer; transition:transform .1s; }
+  .order-card:active { transform:scale(.95); }
+  .order-card.picked { opacity:.25; pointer-events:none; }
+  .order-slots { text-align:center; font-size:1.5rem; font-weight:800; color:#1b6b2e; min-height:44px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">⚖️</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 2: Duelul numerelor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>La turnir, doi cavaleri-numere se duelează: care e mai mare?
+      Crocodilul <strong>&lt;</strong> mănâncă mereu numărul mai mare! 🐊
+      Azi înveți să compari și să ordonezi orice numere până la 10 000.</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">⚔️ La duel!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Arena duelurilor</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Schimbă numerele cu butoanele și privește semnul dintre ei!
+      Poți face egalitate? Dar un duel în care câștigă cel din stânga?</p>
+    </div>
+    <div class="duel">
+      <div class="fighter">
+        <button class="btn-small" onclick="duel(0,-100)">−100</button>
+        <button class="btn-small" onclick="duel(0,-10)">−10</button>
+        <div class="num" id="f0">2 430</div>
+        <button class="btn-small" onclick="duel(0,10)">+10</button>
+        <button class="btn-small" onclick="duel(0,100)">+100</button>
+      </div>
+      <div class="vs" id="sign">&lt;</div>
+      <div class="fighter">
+        <button class="btn-small" onclick="duel(1,-100)">−100</button>
+        <button class="btn-small" onclick="duel(1,-10)">−10</button>
+        <div class="num" id="f1">2 570</div>
+        <button class="btn-small" onclick="duel(1,10)">+10</button>
+        <button class="btn-small" onclick="duel(1,100)">+100</button>
+      </div>
+    </div>
+    <p class="center" id="duel-msg" style="font-weight:600;color:#1d4e89;"></p>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am înțeles! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Regulile duelului</h2>
+    <div class="guide"><div class="face">🐉</div><p>Cum compari două numere mari:</p></div>
+    <div class="learned">
+      <ul>
+        <li>1️⃣ Numărul cu <strong>mai multe cifre</strong> câștigă: 1 000 &gt; 999.</li>
+        <li>2️⃣ La același număr de cifre, compari <strong>de la stânga</strong>: întâi miile, apoi sutele, zecile, unitățile.</li>
+        <li>🐊 Semnul &lt; („mai mic”) se deschide mereu spre numărul mai mare: 2 430 <strong>&lt;</strong> 2 570.</li>
+        <li>📈 Ordonare <strong>crescătoare</strong> = de la mic la mare; <strong>descrescătoare</strong> = de la mare la mic.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Parada cavalerilor!</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Cavalerii trebuie să intre în arenă în ordine <strong>crescătoare</strong> (de la cel mai mic la cel mai mare).
+      <strong>Atinge cărțile în ordinea corectă!</strong></p>
+    </div>
+    <div class="order-row" id="ch-cards"></div>
+    <div class="order-slots" id="ch-slots"></div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Parada e perfectă! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 2!</h1>
+      <p>A doua emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>⚖️ Compari numerele de la stânga la dreapta: mii, sute, zeci, unități.</li>
+        <li>🐊 Semnul &lt; se deschide spre numărul mai mare.</li>
+        <li>📈 Ordonare crescătoare și descrescătoare.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea pe hârtie:</strong> scrie vârstele tuturor membrilor familiei și ordonează-le
+      crescător. Apoi scrie 3 numere de 4 cifre și pune semnele &lt; sau &gt; între ele!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-03-rotunjirea.html" class="btn-primary">Nivelul 3 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 2 · Matematică clasa a III-a · Compararea și ordonarea numerelor 0–10 000</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m02";
+
+/* ---------- arena ---------- */
+const vals = [2430, 2570];
+function duel(i, d){
+  vals[i] = clamp(vals[i]+d, 0, 9990);
+  drawDuel();
+}
+function drawDuel(){
+  document.getElementById("f0").textContent = vals[0].toLocaleString("ro");
+  document.getElementById("f1").textContent = vals[1].toLocaleString("ro");
+  const s = vals[0]<vals[1] ? "<" : vals[0]>vals[1] ? ">" : "=";
+  document.getElementById("sign").textContent = s;
+  document.getElementById("duel-msg").textContent =
+    s==="=" ? "Egalitate! Cavalerii se salută. 🤝"
+    : s==="<" ? "Crocodilul mănâncă numărul din dreapta — el e mai mare!"
+    : "Crocodilul mănâncă numărul din stânga — el e mai mare!";
+}
+drawDuel();
+
+/* ---------- quiz ---------- */
+const questions = [
+  { title:"Care semn se potrivește: 4 783 … 4 738?",
+    fig:null, choices:["<",">","="], correct:1,
+    hint:"Miile-s egale, sutele-s egale… compară zecile!",
+    explain:"4 783 > 4 738: la zeci, 8 > 3. Compari de la stânga și te oprești la prima diferență!" },
+  { title:"Care semn se potrivește: 999 … 1 000?",
+    fig:null, choices:["<",">","="], correct:0,
+    hint:"Câte cifre are fiecare?",
+    explain:"999 are 3 cifre, 1 000 are 4 — numărul cu mai multe cifre e mai mare: 999 < 1 000." },
+  { title:"Care e cel mai MIC dintre: 5 240, 5 204, 5 420?",
+    fig:null, choices:["5 240","5 204","5 420"], correct:1,
+    hint:"Miile-s la fel (5)… compară sutele, apoi zecile.",
+    explain:"5 204 are 2 sute și 0 zeci — mai puțin decât 5 240 (4 zeci) și 5 420 (4 sute)." },
+  { title:"Ordonate CRESCĂTOR, numerele 3 100, 1 300, 3 001 sunt:",
+    fig:null, choices:["1 300, 3 001, 3 100","3 100, 3 001, 1 300","1 300, 3 100, 3 001"], correct:0,
+    hint:"Crescător = pornești de la cel mai mic.",
+    explain:"1 300 < 3 001 < 3 100. Aceleași cifre pot forma numere foarte diferite!" },
+  { title:"Robotul Bip spune: „8 099 > 8 100, pentru că 99 e mai mare ca 00.” Are dreptate?",
+    fig:null, choices:["Da","Nu — compari SUTELE înainte de zeci: 0 < 1"], correct:1,
+    hint:"Nu sari peste turnuri! După mii vin sutele.",
+    explain:"Bip greșește! La sute: 0 < 1, deci 8 099 < 8 100. Comparația merge strict de la stânga la dreapta." },
+  { title:"Care număr e cu 1 mai mic decât 6 000?",
+    fig:null, choices:["5 999","6 001","5 000"], correct:0,
+    hint:"Vecinul din stânga al lui 6 000…",
+    explain:"6 000 − 1 = 5 999. Vecinii lui 6 000 sunt 5 999 și 6 001." },
+  { title:"Ce cifră poate fi ★ ca să fie adevărat: 2 ★45 > 2 745?",
+    fig:null, choices:["6","7","8"], correct:2,
+    hint:"Sutele trebuie să fie mai mari decât 7.",
+    explain:"★ trebuie să fie mai mare decât 7 (la egalitate, 45=45 nu ajută). Doar 8 merge: 2 845 > 2 745!" },
+  { title:"Într-o cursă, Ana are 1 250 puncte, Dan 1 520, Vlad 1 205. Cine e pe primul loc?",
+    fig:null, choices:["Ana","Dan","Vlad"], correct:1,
+    hint:"Compară sutele: 2, 5, 2…",
+    explain:"1 520 > 1 250 > 1 205. Dan câștigă — sutele lui (5) bat sutele celorlalți (2)!" },
+];
+
+/* ---------- provocarea: ordonare prin atingere ---------- */
+const chNums = [3407, 3047, 4370, 3740, 4073];
+const sorted = [...chNums].sort((a,b)=>a-b);
+let pickIdx = 0, chSolved = false;
+function setupChallenge(){
+  document.getElementById("ch-cards").innerHTML = chNums.map((n,i)=>
+    `<div class="order-card" id="card-${i}" onclick="pickCard(${i})">${n.toLocaleString("ro")}</div>`).join("");
+  document.getElementById("ch-slots").textContent = "";
+  pickIdx = 0;
+}
+function pickCard(i){
+  if(chSolved) return;
+  const fb = document.getElementById("ch-feedback");
+  if(chNums[i] === sorted[pickIdx]){
+    document.getElementById("card-"+i).classList.add("picked");
+    pickIdx++;
+    document.getElementById("ch-slots").textContent = sorted.slice(0,pickIdx).map(n=>n.toLocaleString("ro")).join("  <  ");
+    if(pickIdx === sorted.length){
+      chSolved = true;
+      fb.innerHTML = `<div class="feedback good">🎺 Parada e perfectă! Cavalerii au intrat exact în ordine crescătoare!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else {
+      fb.innerHTML = `<div class="feedback good">⭐ Corect! Cine urmează?</div>`;
+    }
+  } else {
+    fb.innerHTML = `<div class="feedback hint">🤔 ${chNums[i].toLocaleString("ro")} nu e următorul. Caută cel mai mic număr rămas — compară întâi miile, apoi sutele!</div>`;
+  }
+}
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chSolved) setupChallenge();
+};
+</script>
+</body>
+</html>

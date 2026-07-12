@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 13 – Fracții: jumătate, sfert, treime</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .frac-display { text-align:center; font-size:1.5rem; font-weight:800; color:#1d4e89; margin:8px 0; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🍕</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 13: Pizza dragonului</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Zum a comandat pizza! Dar cum împarte o pizza la mai mulți cavaleri?
+      Cu <strong>fracții</strong>: jumătăți, sferturi, treimi… Bucăți egale dintr-un întreg.
+      Azi tai pizza ca un maestru!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🍕 La pizzerie!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Pizzeria fracțiilor</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Alege în câte felii tai pizza, apoi <strong>atinge feliile</strong> ca să le iei în farfurie.
+      Privește fracția de sub pizza!</p>
+    </div>
+    <div class="center" style="margin-bottom:8px;">
+      Felii: <button class="btn-small" onclick="setSlices(2)">2</button>
+      <button class="btn-small" onclick="setSlices(3)">3</button>
+      <button class="btn-small" onclick="setSlices(4)">4</button>
+      <button class="btn-small" onclick="setSlices(6)">6</button>
+      <button class="btn-small" onclick="setSlices(8)">8</button>
+    </div>
+    <canvas id="pizza" width="700" height="320"></canvas>
+    <div class="frac-display" id="frac-display"></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am gustat! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Limba fracțiilor</h2>
+    <div class="guide"><div class="face">🐉</div><p>Cum citim o fracție ca 3/4:</p></div>
+    <div class="learned">
+      <ul>
+        <li>🔢 Jos e <strong>numitorul</strong> (4) — în câte felii EGALE am tăiat întregul.</li>
+        <li>🔝 Sus e <strong>numărătorul</strong> (3) — câte felii am luat.</li>
+        <li>🗣️ Nume speciale: 1/2 = <strong>jumătate</strong> · 1/4 = <strong>sfert</strong> · 1/3 = <strong>treime</strong>.</li>
+        <li>⚖️ Cu același numitor, câștigă numărătorul mai mare: 4/8 &gt; 2/8.</li>
+        <li>🟰 Când iei TOATE feliile (4/4), ai întregul — fracție <strong>echiunitară</strong>. Mai puține (3/4) — <strong>subunitară</strong>.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Comanda dragonului!</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Zum comandă exact cât vrea el! <strong>Atinge feliile</strong> ca să iei fix fracția cerută,
+      apoi apasă „Servește!”</p>
+    </div>
+    <p class="center" style="font-size:1.2rem;font-weight:700;color:#1d4e89;" id="ch-target"></p>
+    <canvas id="ch-pizza" width="700" height="320"></canvas>
+    <div class="frac-display" id="ch-frac"></div>
+    <div class="center"><button class="btn-primary" id="ch-serve" onclick="serve()">🍽️ Servește!</button></div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Dragonul e sătul! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 13!</h1>
+      <p>A treisprezecea emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>🍕 Fracția = felii egale dintr-un întreg: numărător / numitor.</li>
+        <li>🗣️ Jumătate (1/2), sfert (1/4), treime (1/3).</li>
+        <li>⚖️ Compararea fracțiilor cu același numitor.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea practică:</strong> la masă, împăturește o felie de pâine în 2, apoi în 4.
+      Ce fracție e o bucată? Cine mănâncă 2/4, mănâncă de fapt… o jumătate! Verifică suprapunând bucățile.</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-14-masurari.html" class="btn-primary">Nivelul 14 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 13 · Matematică clasa a III-a · Fracții subunitare și echiunitare, comparare</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m13";
+
+/* ---------- pizza interactivă ---------- */
+function makePizza(canvasId, displayId, opts){
+  const cv = document.getElementById(canvasId);
+  const ctx = cv.getContext("2d");
+  const st = { slices: 4, taken: new Set() };
+  const CX = 350, CY = 165, R = 140;
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    for(let i=0;i<st.slices;i++){
+      const a0 = -Math.PI/2 + i*2*Math.PI/st.slices;
+      const a1 = a0 + 2*Math.PI/st.slices;
+      ctx.beginPath(); ctx.moveTo(CX,CY);
+      ctx.arc(CX,CY,R,a0,a1); ctx.closePath();
+      ctx.fillStyle = st.taken.has(i) ? "#ffb703" : "#fdeacc";
+      ctx.fill();
+      ctx.strokeStyle = "#c98a2e"; ctx.lineWidth = 3; ctx.stroke();
+      if(st.taken.has(i)){
+        const am = (a0+a1)/2;
+        ctx.font = "22px Segoe UI";
+        ctx.fillText("🍕", CX+Math.cos(am)*R*0.6-11, CY+Math.sin(am)*R*0.6+8);
+      }
+    }
+    ctx.strokeStyle = "#a05a00"; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,7); ctx.stroke();
+    const n = st.taken.size, m = st.slices;
+    let name = "";
+    if(n===1 && m===2) name = " — o jumătate!";
+    if(n===1 && m===4) name = " — un sfert!";
+    if(n===1 && m===3) name = " — o treime!";
+    if(n===m && n>0) name = " — întregul! (fracție echiunitară)";
+    document.getElementById(displayId).textContent =
+      n===0 ? `Pizza tăiată în ${m} felii — atinge o felie!`
+      : `Ai luat ${n}/${m}${name}`;
+    if(opts && opts.onChange) opts.onChange(n, m);
+  }
+  function tap(ev){
+    const p = canvasPos(cv,ev);
+    const dx = p.x-CX, dy = p.y-CY;
+    if(Math.hypot(dx,dy) > R) return;
+    ev.preventDefault();
+    let ang = Math.atan2(dy,dx) + Math.PI/2;
+    if(ang < 0) ang += 2*Math.PI;
+    const i = Math.floor(ang / (2*Math.PI/st.slices));
+    if(st.taken.has(i)) st.taken.delete(i); else st.taken.add(i);
+    draw();
+  }
+  cv.addEventListener("mousedown",tap);
+  cv.addEventListener("touchstart",tap,{passive:false});
+  return {
+    setSlices(m){ st.slices = m; st.taken.clear(); draw(); },
+    count(){ return [st.taken.size, st.slices]; },
+    draw
+  };
+}
+const pizza = makePizza("pizza","frac-display");
+function setSlices(m){ pizza.setSlices(m); }
+pizza.setSlices(4);
+
+/* ---------- quiz ---------- */
+function figFrac(n,m){
+  const CX=200, CY=80, R=70;
+  let out = "";
+  for(let i=0;i<m;i++){
+    const a0 = -Math.PI/2 + i*2*Math.PI/m, a1 = a0 + 2*Math.PI/m;
+    const x0 = CX+Math.cos(a0)*R, y0 = CY+Math.sin(a0)*R;
+    const x1 = CX+Math.cos(a1)*R, y1 = CY+Math.sin(a1)*R;
+    out += `<path d="M ${CX} ${CY} L ${x0} ${y0} A ${R} ${R} 0 0 1 ${x1} ${y1} Z"
+      fill="${i<n?'#ffb703':'#fdeacc'}" stroke="#c98a2e" stroke-width="2"/>`;
+  }
+  return `<svg class="svg-fig" width="100%" height="165" viewBox="0 0 400 165">${out}</svg>`;
+}
+const questions = [
+  { title:"Pizza e tăiată în 4 felii egale și iei una. Ce fracție ai luat?",
+    fig:()=>figFrac(1,4), choices:["1/4 — un sfert","4/1","1/2"], correct:0,
+    hint:"Jos scrii feliile totale, sus cât ai luat.",
+    explain:"1 felie din 4 = 1/4, adică un sfert." },
+  { title:"În fracția 3/8, numitorul este…",
+    fig:null, choices:["3","8","11"], correct:1,
+    hint:"Numitorul NUMEȘTE felia — e jos.",
+    explain:"Numitorul e 8 (jos): pizza tăiată în 8. Numărătorul 3 (sus): am luat 3 felii." },
+  { title:"Cum se numește 1/2?",
+    fig:()=>figFrac(1,2), choices:["Un sfert","O jumătate","O treime"], correct:1,
+    hint:"Una din DOUĂ părți egale…",
+    explain:"1/2 = o jumătate. La fel: 1/4 = sfert, 1/3 = treime." },
+  { title:"Ce fracție e colorată aici?",
+    fig:()=>figFrac(3,4), choices:["3/4","4/3","1/4"], correct:0,
+    hint:"Numără feliile colorate, apoi toate feliile.",
+    explain:"3 felii colorate din 4 = 3/4." },
+  { title:"Care fracție e mai mare: 2/8 sau 5/8?",
+    fig:null, choices:["2/8","5/8","Sunt egale"], correct:1,
+    hint:"Feliile-s la fel de mari — cine are mai multe?",
+    explain:"La același numitor, câștigă numărătorul mai mare: 5/8 > 2/8." },
+  { title:"Robotul Bip zice: „1/3 > 1/2, pentru că 3 > 2.” Corect?",
+    fig:null, choices:["Da","Nu — cu cât tai în mai multe felii, cu atât felia e mai MICĂ"], correct:1,
+    hint:"Ce felie e mai mare: dintr-o pizza tăiată în 2 sau în 3?",
+    explain:"Bip greșește! Pizza tăiată în 3 are felii mai mici decât cea tăiată în 2. Deci 1/3 < 1/2." },
+  { title:"Fracția 4/4 înseamnă…",
+    fig:()=>figFrac(4,4), choices:["nimic","întregul — fracție echiunitară","jumătate"], correct:1,
+    hint:"Ai luat TOATE feliile…",
+    explain:"4/4 = pizza întreagă! Fracțiile cu numărătorul = numitorul se numesc echiunitare." },
+  { title:"Câte mere sunt o jumătate din 10 mere?",
+    fig:null, choices:["5","2","20"], correct:0,
+    hint:"Împarte 10 în două părți egale.",
+    explain:"1/2 din 10 = 10 : 2 = 5 mere. Fracțiile funcționează și cu grupuri de lucruri!" },
+];
+
+/* ---------- provocarea ---------- */
+const orders = [
+  {slices:4, need:3, text:"Zum vrea 3/4 dintr-o pizza tăiată în 4"},
+  {slices:2, need:1, text:"Acum vrea o JUMĂTATE dintr-o pizza tăiată în 2"},
+  {slices:8, need:6, text:"Ultima: 6/8 dintr-o pizza tăiată în 8"},
+];
+let oIdx = 0, chSolved = false, chPizza = null;
+function setupChallenge(){
+  if(!chPizza) chPizza = makePizza("ch-pizza","ch-frac");
+  chPizza.setSlices(orders[oIdx].slices);
+  document.getElementById("ch-target").textContent =
+    `Comanda ${oIdx+1} din ${orders.length}: ${orders[oIdx].text}`;
+}
+function serve(){
+  if(chSolved) return;
+  const [n,m] = chPizza.count();
+  const o = orders[oIdx];
+  const fb = document.getElementById("ch-feedback");
+  if(m===o.slices && n===o.need){
+    oIdx++;
+    if(oIdx >= orders.length){
+      chSolved = true;
+      document.getElementById("ch-serve").classList.add("hidden");
+      document.getElementById("ch-target").textContent = "Toate comenzile servite!";
+      fb.innerHTML = `<div class="feedback good">🐉 Burp! Zum e sătul și fericit — ești maestrul pizzelor fracționare!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else {
+      fb.innerHTML = `<div class="feedback good">🍽️ Exact ${o.need}/${o.slices} — delicios! Următoarea comandă…</div>`;
+      setupChallenge();
+    }
+  } else {
+    fb.innerHTML = `<div class="feedback hint">Zum se încruntă: ai pus ${n}/${m}, dar el a cerut ${o.need}/${o.slices}. Mai atinge feliile!</div>`;
+  }
+}
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chSolved) setupChallenge();
+};
+</script>
+</body>
+</html>

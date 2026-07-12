@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 7 – Înmulțirea: sensul și tablele 2–5</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .candy-grid { text-align:center; font-size:1.9rem; line-height:1.3; margin:12px 0; min-height:120px; }
+  .grid-eq { text-align:center; font-size:1.4rem; font-weight:800; color:#1d4e89; margin-bottom:8px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">✖️</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 7: Vraja înmulțirii (partea I)</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Bucătarul castelului pune prăjiturile pe tăvi: 3 rânduri a câte 4 prăjituri.
+      Le poți număra pe rând: 4 + 4 + 4 = 12. Sau poți folosi vraja:
+      <strong>3 × 4 = 12</strong>! Înmulțirea e o adunare repetată — dar mult mai rapidă. 🪄</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🪄 Învăț vraja!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Tava cu prăjituri</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Schimbă rândurile și coloanele. Privește: numărul total e mereu
+      <em>rânduri × prăjituri pe rând</em>!</p>
+    </div>
+    <div class="dim-controls">
+      <span class="lbl">Rânduri:</span>
+      <button class="btn-small" onclick="gchange(0,-1)">−</button><span class="val" id="g0">3</span><button class="btn-small" onclick="gchange(0,1)">+</button>
+      <span class="lbl">Pe rând:</span>
+      <button class="btn-small" onclick="gchange(1,-1)">−</button><span class="val" id="g1">4</span><button class="btn-small" onclick="gchange(1,1)">+</button>
+    </div>
+    <div class="grid-eq" id="grid-eq"></div>
+    <div class="candy-grid" id="candy-grid"></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am prins vraja! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Cartea de vrăji: tablele 2, 3, 4 și 5</h2>
+    <div class="guide"><div class="face">🐉</div><p>Numele oficiale și trucuri de memorat:</p></div>
+    <div class="learned">
+      <ul>
+        <li>✖️ <strong>3 × 4 = 12</strong>: 3 și 4 sunt <strong>factori</strong>, 12 este <strong>produsul</strong>.</li>
+        <li>2️⃣ Tabla lui 2 = dublul: 2, 4, 6, 8, 10, 12, 14, 16, 18, 20.</li>
+        <li>5️⃣ Tabla lui 5 se termină mereu în 0 sau 5: 5, 10, 15, 20, 25, 30…</li>
+        <li>4️⃣ Tabla lui 4 = dublul dublului: 4 × 6 = dublul lui 2 × 6 = 24.</li>
+        <li>🔁 Adunarea repetată: 5 × 3 = 3 + 3 + 3 + 3 + 3 = 15.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Duelul vrăjitorilor!</h2>
+    <div class="guide">
+      <div class="face">🧙</div>
+      <p>Vrăjitorul rival îți aruncă 5 vrăji de înmulțire. Răspunde corect la toate și câștigi duelul!</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Duel câștigat! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 7!</h1>
+      <p>A șaptea emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>✖️ Înmulțirea = adunare repetată; factori × factori = produs.</li>
+        <li>📋 Tablele lui 2, 3, 4 și 5.</li>
+        <li>🪄 Trucuri: tabla lui 2 = dublul, tabla lui 5 se termină în 0/5.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea practică:</strong> așază boabe de fasole (sau lego-uri) în 4 rânduri de câte 5.
+      Numără-le. Apoi rearanjază-le în 5 rânduri de câte 4 — câte sunt acum? Surpriză: la fel!
+      Recită și tabla lui 5 în timp ce faci 10 sărituri. 🏃</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-08-inmultirea-2.html" class="btn-primary">Nivelul 8 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 7 · Matematică clasa a III-a · Înmulțirea: sensul operației, tablele 2–5</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m07";
+
+const g = [3,4];
+function gchange(i,d){
+  g[i] = clamp(g[i]+d, 1, 6);
+  document.getElementById("g0").textContent = g[0];
+  document.getElementById("g1").textContent = g[1];
+  drawGrid();
+}
+function drawGrid(){
+  const [r,c] = g;
+  document.getElementById("candy-grid").innerHTML =
+    Array.from({length:r}, ()=> "🧁".repeat(c)).join("<br>");
+  const parts = Array.from({length:r}, ()=>c).join(" + ");
+  document.getElementById("grid-eq").textContent = `${r} × ${c} = ${parts} = ${r*c}`;
+}
+drawGrid();
+
+const questions = [
+  { title:"4 + 4 + 4 scrisă ca înmulțire este…",
+    fig:null, choices:["3 × 4","4 × 4","3 + 4"], correct:0,
+    hint:"De câte ori se repetă 4?",
+    explain:"4 se repetă de 3 ori → 3 × 4 = 12." },
+  { title:"2 × 7 = ?",
+    fig:null, choices:["14","9","16"], correct:0,
+    hint:"Dublul lui 7…",
+    explain:"2 × 7 = 14. Tabla lui 2 e tabla dublului!" },
+  { title:"5 × 6 = ?",
+    fig:null, choices:["30","25","35"], correct:0,
+    hint:"Numără din 5 în 5, de 6 ori: 5, 10, 15…",
+    explain:"5 × 6 = 30. Tabla lui 5 se termină mereu în 0 sau 5!" },
+  { title:"3 × 8 = ?",
+    fig:null, choices:["21","24","27"], correct:1,
+    hint:"8 + 8 + 8…",
+    explain:"3 × 8 = 24. Sau: 8+8=16, 16+8=24." },
+  { title:"4 × 7 = ?",
+    fig:null, choices:["28","24","32"], correct:0,
+    hint:"Dublul dublului: 2×7=14, apoi dublezi…",
+    explain:"4 × 7 = 28. Trucul: 2×7=14, iar 14+14=28!" },
+  { title:"În 5 × 8 = 40, numerele 5 și 8 se numesc…",
+    fig:null, choices:["termeni","factori","produse"], correct:1,
+    hint:"La adunare erau termeni. La înmulțire sunt…",
+    explain:"Factorii sunt numerele care se înmulțesc; 40 este produsul." },
+  { title:"Robotul Bip zice: „3 × 4 înseamnă 3 + 4 = 7.” Are dreptate?",
+    fig:null, choices:["Da","Nu — 3 × 4 = 4 + 4 + 4 = 12"], correct:1,
+    hint:"Înmulțirea e adunare REPETATĂ, nu o singură adunare.",
+    explain:"Bip a confundat operațiile! 3 × 4 înseamnă 4 luat de 3 ori: 12, nu 7." },
+  { title:"Pe fiecare din cele 5 tăvi sunt câte 4 prăjituri. Câte prăjituri sunt în total?",
+    fig:null, choices:["9","20","16"], correct:1,
+    hint:"5 tăvi × 4 prăjituri…",
+    explain:"5 × 4 = 20 de prăjituri. Vraja înmulțirii bate numărătoarea!" },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Vraja 1: 2 × 9 = ?", choices:["18","16","11"], correct:0, hint:"Dublul lui 9.", explain:"18! Prima vrajă respinsă." },
+      { q:"Vraja 2: 5 × 7 = ?", choices:["30","35","40"], correct:1, hint:"5, 10, 15, 20, 25, 30, …", explain:"35! Se termină în 5, ca-n tabla lui 5." },
+      { q:"Vraja 3: 3 × 9 = ?", choices:["27","24","21"], correct:0, hint:"9+9+9.", explain:"27! Ești mai rapid decât vrăjitorul." },
+      { q:"Vraja 4: 4 × 8 = ?", choices:["28","36","32"], correct:2, hint:"Dublul lui 2×8=16.", explain:"32! Dublul dublului funcționează mereu." },
+      { q:"Vraja finală: 4 rânduri a câte 6 scuturi. Câte scuturi?", choices:["24","20","26"], correct:0, hint:"4 × 6.", explain:"24 de scuturi! Vrăjitorul rival se înclină — ai câștigat duelul!" },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">🧙 Cinci din cinci! Vrăjitorul rival își scoate pălăria în fața ta!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 4 – Adunarea numerelor până la 10 000</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .calc { font-family:Consolas,monospace; font-size:2rem; font-weight:700; color:#1d4e89; text-align:center; line-height:1.4; margin:14px 0; white-space:pre; }
+  .calc .carry { color:#e05555; font-size:1.2rem; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">➕</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 4: Podul adunării</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Două armate de cavaleri se unesc ca să apere castelul: 2 478 de cavaleri + 1 356 de arcași.
+      Câți luptători în total? Azi înveți adunarea numerelor mari — inclusiv trucul
+      <strong>„transportului”</strong> peste ordin!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">⚔️ Unim armatele!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Adunarea pas cu pas</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Privește cum se face adunarea 2 478 + 1 356, coloană cu coloană, de la unități spre mii.
+      Cifra roșie e „transportul” — o zecime care urcă la turnul următor!</p>
+    </div>
+    <div class="calc" id="calc-view"></div>
+    <div id="steps"></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" id="step-btn" onclick="nextStep()">Arată pasul 1 ➜</button>
+      <button class="btn-primary hidden" id="to-learn" onclick="show('screen-learn')">Am înțeles! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Regulile adunării</h2>
+    <div class="guide"><div class="face">🐉</div><p>Așa aduni orice numere mari:</p></div>
+    <div class="learned">
+      <ul>
+        <li>📝 Scrii numerele <strong>unul sub altul</strong>: unități sub unități, zeci sub zeci…</li>
+        <li>➡️ Aduni <strong>de la dreapta la stânga</strong>: întâi unitățile.</li>
+        <li>🎒 Dacă suma unei coloane trece de 9, scrii unitățile și <strong>transporți</strong> 1 la coloana următoare.</li>
+        <li>✅ Verificare rapidă: rotunjește și estimează! 2 478 + 1 356 ≈ 2 500 + 1 400 = 3 900 — aproape de 3 834 ✓</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Podul cu trei porți!</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Ca să treci podul spre castel, rezolvă adunarea de la fiecare poartă.
+      Poți calcula pe caiet — cavalerii adevărați așa fac!</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Podul e trecut! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 4!</h1>
+      <p>A patra emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>➕ Adunarea în coloană, de la unități spre mii.</li>
+        <li>🎒 Transportul: când coloana trece de 9, duci 1 mai departe.</li>
+        <li>🎯 Estimarea prin rotunjire, ca să-ți verifici rezultatul.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea pe hârtie:</strong> calculează în caiet, cu numerele unul sub altul:
+      1 234 + 2 345, apoi 3 456 + 2 789 (ai grijă la transporturi!). Verifică prin estimare.</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-05-scaderea.html" class="btn-primary">Nivelul 5 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 4 · Matematică clasa a III-a · Adunarea 0–10 000, cu trecere peste ordin</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m04";
+
+/* pașii adunării 2478+1356 */
+const views = [
+  "  2478\n+ 1356\n──────\n      ",
+  "  2478\n+ 1356\n──────\n     4",
+  "  2478\n+ 1356\n──────\n    34",
+  "  2478\n+ 1356\n──────\n   834",
+  "  2478\n+ 1356\n──────\n  3834",
+];
+const stepTexts = [
+  `<div class="feedback explain"><strong>Pasul 1 — unitățile:</strong> 8 + 6 = 14. Scriem <strong>4</strong>, transportăm <strong style="color:#e05555">1</strong> la zeci. 🎒</div>`,
+  `<div class="feedback explain"><strong>Pasul 2 — zecile:</strong> 7 + 5 = 12, plus <strong style="color:#e05555">1</strong> transportat = 13. Scriem <strong>3</strong>, transportăm <strong style="color:#e05555">1</strong> la sute.</div>`,
+  `<div class="feedback explain"><strong>Pasul 3 — sutele:</strong> 4 + 3 = 7, plus <strong style="color:#e05555">1</strong> = 8. Scriem <strong>8</strong>, nimic de transportat.</div>`,
+  `<div class="feedback good"><strong>Pasul 4 — miile:</strong> 2 + 1 = 3. Rezultat: <strong>2 478 + 1 356 = 3 834</strong> luptători! 🎉</div>`,
+];
+let sIdx = 0;
+document.getElementById("calc-view").textContent = views[0];
+function nextStep(){
+  document.getElementById("steps").innerHTML += stepTexts[sIdx];
+  sIdx++;
+  document.getElementById("calc-view").textContent = views[sIdx];
+  const btn = document.getElementById("step-btn");
+  if(sIdx >= stepTexts.length){
+    btn.classList.add("hidden");
+    document.getElementById("to-learn").classList.remove("hidden");
+  } else btn.textContent = "Arată pasul " + (sIdx+1) + " ➜";
+}
+
+const questions = [
+  { title:"23 + 45 = ?",
+    fig:null, choices:["68","67","78"], correct:0,
+    hint:"Unități: 3+5. Zeci: 2+4.",
+    explain:"3+5=8 unități, 2+4=6 zeci → 68. Fără transport de data asta!" },
+  { title:"38 + 25 = ?",
+    fig:null, choices:["53","63","58"], correct:1,
+    hint:"8+5=13 — scrii 3, transporți 1…",
+    explain:"Unități: 8+5=13 → scriu 3, duc 1. Zeci: 3+2+1=6. Rezultat: 63." },
+  { title:"456 + 237 = ?",
+    fig:null, choices:["693","683","793"], correct:0,
+    hint:"6+7=13: transport la zeci!",
+    explain:"U: 6+7=13 → 3, duc 1. Z: 5+3+1=9. S: 4+2=6. Total: 693." },
+  { title:"1 250 + 1 250 = ?",
+    fig:null, choices:["2 500","2 400","2 550"], correct:0,
+    hint:"Jumate plus jumate…",
+    explain:"1 250 + 1 250 = 2 500. Dublul lui 1 250!" },
+  { title:"2 675 + 1 448 = ?",
+    fig:null, choices:["4 123","4 023","3 123"], correct:0,
+    hint:"Calculează pe caiet, coloană cu coloană. Sunt DOUĂ transporturi!",
+    explain:"U: 5+8=13→3, duc 1. Z: 7+4+1=12→2, duc 1. S: 6+4+1=11→1, duc 1. M: 2+1+1=4. Total: 4 123." },
+  { title:"Robotul Bip calculează 47+38 așa: „4+3=7 și 7+8=15, deci 715”. Ce a greșit?",
+    fig:null, choices:["Nimic","15 unități nu încap pe o coloană — 1 trebuia TRANSPORTAT la zeci"], correct:1,
+    hint:"Poate o coloană să țină cifra „15”?",
+    explain:"Bip a uitat transportul! 7+8=15 → scrii 5, duci 1 la zeci: 4+3+1=8. Corect: 85, nu 715!" },
+  { title:"Estimare rapidă: 2 980 + 2 020 e cam…",
+    fig:null, choices:["cam 4 000","cam 5 000","cam 6 000"], correct:1,
+    hint:"Rotunjește: 3 000 + 2 000…",
+    explain:"≈ 3 000 + 2 000 = 5 000. (Exact: 5 000 chiar!) Estimarea te ferește de greșeli mari." },
+  { title:"La turnir sunt 1 750 de spectatori pe scaune și 485 în picioare. Câți în total?",
+    fig:null, choices:["2 235","2 135","1 235"], correct:0,
+    hint:"1 750 + 485 — atenție la transporturi.",
+    explain:"U: 0+5=5. Z: 5+8=13→3, duc 1. S: 7+4+1=12→2, duc 1. M: 1+1=2. Total: 2 235 de spectatori!" },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Poarta 1: 340 + 260 = ?",
+        choices:["600","500","640"], correct:0, hint:"4 zeci + 6 zeci = 10 zeci = o sută!", explain:"340+260 = 600. Zecile au format o sută nouă." },
+      { q:"Poarta 2: 1 875 + 1 125 = ?",
+        choices:["3 000","2 900","2 990"], correct:0, hint:"Calculează pe caiet — transporturile se țin lanț!", explain:"5+5=10→0 duc 1; 7+2+1=10→0 duc 1; 8+1+1=10→0 duc 1; 1+1+1=3. Exact 3 000!" },
+      { q:"Poarta 3 (de aur): Zum are 4 250 de galbeni și primește 3 785. Câți are acum?",
+        choices:["8 035","7 935","8 135"], correct:0, hint:"4 250 + 3 785, coloană cu coloană.", explain:"U:0+5=5. Z:5+8=13→3,duc 1. S:2+7+1=10→0,duc 1. M:4+3+1=8. Total: 8 035 galbeni!" },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">🌉 Toate porțile s-au deschis — ai trecut podul adunării!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

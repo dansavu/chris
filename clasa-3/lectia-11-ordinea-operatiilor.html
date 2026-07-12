@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 11 – Ordinea efectuării operațiilor</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .expr { text-align:center; font-size:2rem; font-weight:800; color:#1d4e89; margin:12px 0; }
+  .expr .hl { color:#e05555; text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🧮</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 11: Legea castelului</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Doi cavaleri se ceartă: cât face <strong>2 + 3 × 4</strong>? Unul zice 20, altul 14.
+      Cine are dreptate? Ca să nu fie haos, matematica are o LEGE: ordinea operațiilor.
+      Azi devii judecătorul castelului! ⚖️</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">⚖️ Judec eu!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Procesul: 2 + 3 × 4</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Privește pas cu pas cum se aplică legea — și ce se schimbă când apar parantezele!</p>
+    </div>
+    <div class="expr" id="expr-view">2 + 3 × 4</div>
+    <div id="steps"></div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" id="step-btn" onclick="nextStep()">Arată pasul 1 ➜</button>
+      <button class="btn-primary hidden" id="to-learn" onclick="show('screen-learn')">Am înțeles legea! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Legea ordinii operațiilor</h2>
+    <div class="guide"><div class="face">🐉</div><p>Ordinea sfântă a castelului:</p></div>
+    <div class="learned">
+      <ul>
+        <li>1️⃣ Întâi ce e în <strong>paranteze</strong> ( ).</li>
+        <li>2️⃣ Apoi <strong>înmulțirile și împărțirile</strong>, în ordine, de la stânga.</li>
+        <li>3️⃣ La final <strong>adunările și scăderile</strong>, de la stânga.</li>
+        <li>⚖️ Deci: 2 + 3 × 4 = 2 + 12 = <strong>14</strong>. Dar (2 + 3) × 4 = 5 × 4 = <strong>20</strong>. Parantezele schimbă tot!</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Judecata cea mare!</h2>
+    <div class="guide">
+      <div class="face">⚖️</div>
+      <p>Trei procese aşteaptă judecata ta. Aplică legea ordinii fără milă!</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Dreptatea a învins! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 11!</h1>
+      <p>A unsprezecea emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>⚖️ Ordinea: paranteze → × și : → + și −.</li>
+        <li>💥 Parantezele pot schimba complet rezultatul.</li>
+        <li>➡️ Operațiile de același rang se fac de la stânga la dreapta.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea pe hârtie:</strong> calculează 10 − 2 × 3 și (10 − 2) × 3. Apoi inventează
+      un calcul în care parantezele schimbă rezultatul și testează-l pe cineva din familie!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-12-probleme.html" class="btn-primary">Nivelul 12 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 11 · Matematică clasa a III-a · Ordinea operațiilor și parantezele rotunde</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m11";
+
+const steps = [
+  { view:'2 + <span class="hl">3 × 4</span>', text:`<div class="feedback explain"><strong>Pasul 1:</strong> Legea spune: întâi înmulțirea! Subliniem 3 × 4 = 12.</div>` },
+  { view:'2 + 12', text:`<div class="feedback explain"><strong>Pasul 2:</strong> Acum doar adunarea: 2 + 12 = 14. Cavalerul cu „14” avea dreptate!</div>` },
+  { view:'(2 + 3) × 4', text:`<div class="feedback explain"><strong>Dar cu paranteze?</strong> (2 + 3) × 4 — paranteza trece în FAȚA tuturor!</div>` },
+  { view:'<span class="hl">5</span> × 4 = 20', text:`<div class="feedback good"><strong>Final:</strong> (2+3)=5, apoi 5 × 4 = 20. Aceleași numere, alt rezultat — parantezele conduc!</div>` },
+];
+let sIdx = 0;
+function nextStep(){
+  const s = steps[sIdx];
+  document.getElementById("expr-view").innerHTML = s.view;
+  document.getElementById("steps").innerHTML += s.text;
+  sIdx++;
+  const btn = document.getElementById("step-btn");
+  if(sIdx >= steps.length){
+    btn.classList.add("hidden");
+    document.getElementById("to-learn").classList.remove("hidden");
+  } else btn.textContent = "Arată pasul " + (sIdx+1) + " ➜";
+}
+
+const questions = [
+  { title:"5 + 2 × 3 = ?",
+    fig:null, choices:["21","11","10"], correct:1,
+    hint:"Întâi înmulțirea: 2 × 3…",
+    explain:"2×3=6, apoi 5+6=11. Cine face întâi 5+2 încalcă legea!" },
+  { title:"10 − 4 : 2 = ?",
+    fig:null, choices:["3","8","6"], correct:1,
+    hint:"Întâi împărțirea: 4 : 2…",
+    explain:"4:2=2, apoi 10−2=8." },
+  { title:"(5 + 2) × 3 = ?",
+    fig:null, choices:["21","11","30"], correct:0,
+    hint:"Paranteza primează!",
+    explain:"(5+2)=7, apoi 7×3=21. Compară cu întrebarea 1 — parantezele au schimbat tot!" },
+  { title:"18 : 3 + 3 = ?",
+    fig:null, choices:["3","9","6"], correct:1,
+    hint:"Întâi împărțirea.",
+    explain:"18:3=6, apoi 6+3=9." },
+  { title:"20 − (4 + 6) = ?",
+    fig:null, choices:["10","22","18"], correct:0,
+    hint:"Paranteza întâi: 4+6…",
+    explain:"(4+6)=10, apoi 20−10=10." },
+  { title:"Robotul Bip calculează 8 − 2 + 3 așa: „întâi 2+3=5, apoi 8−5=3”. Corect?",
+    fig:null, choices:["Da","Nu — la același rang se merge DE LA STÂNGA: 8−2=6, 6+3=9"], correct:1,
+    hint:"Adunarea și scăderea au același rang — cine e primul la stânga?",
+    explain:"Bip greșește! Fără paranteze, + și − se fac în ordine de la stânga: 8−2=6, apoi 6+3=9." },
+  { title:"2 × 3 + 4 × 5 = ?",
+    fig:null, choices:["26","70","50"], correct:0,
+    hint:"Două înmulțiri întâi, apoi aduni.",
+    explain:"2×3=6 și 4×5=20, apoi 6+20=26." },
+  { title:"Care calcul dă 16?",
+    fig:null, choices:["2 + 2 × 4","(2 + 2) × 4","2 × 2 + 4"], correct:1,
+    hint:"Testează-le pe toate, cu legea în mână!",
+    explain:"(2+2)×4 = 4×4 = 16. Celelalte: 2+8=10 și 4+4=8." },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Procesul 1: 30 − 5 × 4 = ?", choices:["100","10","20"], correct:1, hint:"Înmulțirea întâi!", explain:"5×4=20, 30−20=10. Verdict corect!" },
+      { q:"Procesul 2: (30 − 5) × 4 = ?", choices:["100","10","95"], correct:0, hint:"Paranteza întâi.", explain:"25×4=100. Aceleași numere, altă lege — alt verdict!" },
+      { q:"Procesul 3: 6 + 24 : 6 − 2 = ?", choices:["8","3","10"], correct:0, hint:"Împărțirea întâi: 24:6…", explain:"24:6=4 → 6+4−2 = 8. Judecată de maestru!" },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">⚖️ Trei verdicte perfecte — ești judecătorul suprem al numerelor!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

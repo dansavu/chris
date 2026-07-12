@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 10 – Împărțirea</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .plates { display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin:14px 0; }
+  .plate { background:#f2f7fd; border:3px solid #c9dcf5; border-radius:50% 50% 14px 14px; padding:14px 18px; min-width:100px; min-height:80px; text-align:center; font-size:1.5rem; line-height:1.2; }
+  .plate .lbl { font-size:.85rem; color:#678; }
+  .share-eq { text-align:center; font-size:1.4rem; font-weight:800; color:#1d4e89; margin:8px 0; }
+  .pool { text-align:center; font-size:1.6rem; min-height:44px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">➗</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 10: Ospățul împărțirii</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>La ospăț, 12 prăjituri trebuie împărțite <em>egal</em> la 3 cavaleri. Câte primește fiecare?
+      Împărțirea e vraja inversă a înmulțirii — dacă știi tabla, o știi deja și pe ea!
+      <strong>12 : 3 = 4</strong>, pentru că 4 × 3 = 12. 🪄</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🍰 La ospăț!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Masa ospățului</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Apasă „Împarte un rând” — fiecare cavaler primește câte o prăjitură pe rând,
+      până se termină. Așa funcționează împărțirea: <em>în părți egale</em>!</p>
+    </div>
+    <div class="pool" id="pool"></div>
+    <div class="plates" id="plates"></div>
+    <div class="share-eq" id="share-eq"></div>
+    <div class="center">
+      <button class="btn-primary" id="share-btn" onclick="shareRound()">🍰 Împarte un rând</button>
+      <button class="btn-small" onclick="shareReset()">↺ de la capăt</button>
+    </div>
+    <div class="center" style="margin-top:14px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am înțeles! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Regulile împărțirii</h2>
+    <div class="guide"><div class="face">🐉</div><p>Numele oficiale și legătura secretă:</p></div>
+    <div class="learned">
+      <ul>
+        <li>➗ <strong>12 : 3 = 4</strong>: 12 = deîmpărțit, 3 = împărțitor, 4 = cât.</li>
+        <li>🔗 Împărțirea e inversul înmulțirii: 12 : 3 = 4 <em>pentru că</em> 4 × 3 = 12.</li>
+        <li>✅ <strong>Proba</strong>: câtul × împărțitorul = deîmpărțitul.</li>
+        <li>1️⃣ n : 1 = n · n : n = 1 · 0 : n = 0. Dar <strong>la 0 nu se împarte niciodată!</strong></li>
+        <li>⚠️ Ordinea contează: 10 : 2 = 5, dar 2 : 10 nu dă la fel — împărțirea NU e comutativă.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Ospățul cel mare!</h2>
+    <div class="guide">
+      <div class="face">👑</div>
+      <p>Regele te-a numit Mare Împărțitor al Ospățului! Împarte totul corect, în 5 runde!</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Ospățul e servit! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 10!</h1>
+      <p>A zecea emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>➗ Deîmpărțit : împărțitor = cât.</li>
+        <li>🔗 Împărțirea = înmulțirea pe dos; proba prin înmulțire.</li>
+        <li>⚠️ Nu se împarte la 0, iar ordinea contează!</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea practică:</strong> ia 20 de boabe de fasole și împarte-le egal în 4 grămezi.
+      Câte are fiecare? Scrie operația. Apoi împarte-le în 5 grămezi — ce observi?</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-11-ordinea-operatiilor.html" class="btn-primary">Nivelul 11 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 10 · Matematică clasa a III-a · Împărțirea, legătura cu înmulțirea</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m10";
+
+/* masa ospățului: 12 : 3 */
+let poolCount, plateCounts;
+function shareReset(){
+  poolCount = 12; plateCounts = [0,0,0];
+  document.getElementById("share-btn").disabled = false;
+  drawShare();
+}
+function shareRound(){
+  if(poolCount < 3) return;
+  poolCount -= 3;
+  plateCounts = plateCounts.map(c=>c+1);
+  drawShare();
+  if(poolCount === 0){
+    document.getElementById("share-eq").textContent = "12 : 3 = 4 — fiecare cavaler are 4 prăjituri!";
+    document.getElementById("share-btn").disabled = true;
+  }
+}
+function drawShare(){
+  document.getElementById("pool").textContent = poolCount>0 ? "🧁".repeat(poolCount) : "— tava e goală —";
+  document.getElementById("plates").innerHTML = plateCounts.map((c,i)=>
+    `<div class="plate"><div class="lbl">Cavalerul ${i+1}</div>${"🧁".repeat(c) || "…"}</div>`).join("");
+  if(poolCount>0) document.getElementById("share-eq").textContent = `Pe tavă: ${poolCount} · La fiecare: ${plateCounts[0]}`;
+}
+shareReset();
+
+const questions = [
+  { title:"45 : 5 = ?",
+    fig:null, choices:["9","8","40"], correct:0,
+    hint:"Ce număr × 5 = 45?",
+    explain:"9 × 5 = 45, deci 45 : 5 = 9." },
+  { title:"63 : 7 = ?",
+    fig:null, choices:["8","9","7"], correct:1,
+    hint:"Tabla lui 7: 7 × ? = 63.",
+    explain:"9 × 7 = 63, deci 63 : 7 = 9." },
+  { title:"Cum faci PROBA pentru 56 : 8 = 7?",
+    fig:null, choices:["7 × 8 = 56 ✓","56 × 8","7 : 8"], correct:0,
+    hint:"Câtul × împărțitorul = …",
+    explain:"Proba împărțirii: 7 × 8 = 56 ✓. Împărțirea și înmulțirea se verifică una pe alta!" },
+  { title:"0 : 6 = ?",
+    fig:null, choices:["6","0","Nu se poate"], correct:1,
+    hint:"Zero prăjituri împărțite la 6 cavaleri…",
+    explain:"0 : 6 = 0 — nimeni nu primește nimic. Atenție: invers, 6 : 0 NU se poate!" },
+  { title:"Robotul Bip zice: „10 : 2 = 2 : 10 — e comutativă, ca înmulțirea.” Corect?",
+    fig:null, choices:["Da","Nu — 10 : 2 = 5, dar 2 : 10 nu dă 5"], correct:1,
+    hint:"Împarte 10 prăjituri la 2 cavaleri. Apoi 2 prăjituri la 10 cavaleri…",
+    explain:"Bip greșește! La împărțire ordinea contează. Doar adunarea și înmulțirea sunt comutative." },
+  { title:"72 : 8 = ?",
+    fig:null, choices:["9","8","7"], correct:0,
+    hint:"8 × ? = 72.",
+    explain:"8 × 9 = 72, deci 72 : 8 = 9." },
+  { title:"24 : 24 = ?",
+    fig:null, choices:["0","1","24"], correct:1,
+    hint:"24 de prăjituri la 24 de cavaleri…",
+    explain:"Fiecare primește exact una! Orice număr împărțit la el însuși dă 1." },
+  { title:"36 de săgeți se împart egal la 4 arcași. Câte primește fiecare?",
+    fig:null, choices:["9","8","12"], correct:0,
+    hint:"36 : 4 — ce număr × 4 = 36?",
+    explain:"36 : 4 = 9 săgeți de arcaș. Proba: 9 × 4 = 36 ✓" },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Runda 1: 40 de prăjituri la 5 mese. Câte pe masă?", choices:["8","7","9"], correct:0, hint:"40 : 5.", explain:"8 pe fiecare masă!" },
+      { q:"Runda 2: 54 de pahare la 6 mese?", choices:["8","9","7"], correct:1, hint:"6 × ? = 54.", explain:"9 pahare pe masă!" },
+      { q:"Runda 3: 32 de mere la 8 copii?", choices:["4","3","5"], correct:0, hint:"8 × 4 = ?", explain:"4 mere de copil!" },
+      { q:"Runda 4: 63 de baloane la 9 stâlpi?", choices:["6","7","8"], correct:1, hint:"9 × 7 = ?", explain:"7 baloane pe stâlp!" },
+      { q:"Runda regală: 48 de torțe, câte 6 pe fiecare zid. Câte ziduri luminezi?", choices:["8 ziduri","7 ziduri","9 ziduri"], correct:0, hint:"48 : 6.", explain:"8 ziduri strălucesc! Ospățul poate începe!" },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">👑 Totul împărțit perfect egal — regele te aplaudă în picioare!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

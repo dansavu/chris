@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 6 – Aflarea numărului necunoscut</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .balance { text-align:center; font-size:2rem; font-weight:800; color:#1d4e89; margin:14px 0; }
+  .balance .unk { color:#e05555; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🔍</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 6: Detectivul numerelor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Un număr a fugit din calcul și s-a ascuns sub o mască: <strong>? + 25 = 60</strong>.
+      Tu ești detectivul care îl găsește! Azi înveți să afli <strong>numărul necunoscut</strong>
+      și să faci <strong>proba</strong> oricărui calcul.</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🕵️ Pornesc ancheta!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Balanța magică</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Ghicește numărul mascat! Apasă pe butoane și vezi dacă balanța se echilibrează.</p>
+    </div>
+    <div class="balance" id="bal-eq"></div>
+    <div class="center" id="bal-choices"></div>
+    <div id="bal-fb"></div>
+    <div class="center" style="margin-top:14px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Am prins ideea! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Regulile detectivului</h2>
+    <div class="guide"><div class="face">🐉</div><p>Cum demaști numărul necunoscut (îi zicem „mascatul” ?):</p></div>
+    <div class="learned">
+      <ul>
+        <li>➕ <strong>? + 25 = 60</strong> → mascatul = 60 − 25 = 35. <em>(Un termen = suma minus celălalt termen.)</em></li>
+        <li>➖ <strong>? − 30 = 50</strong> → mascatul = 50 + 30 = 80. <em>(Descăzutul = diferența plus scăzătorul.)</em></li>
+        <li>➖ <strong>90 − ? = 20</strong> → mascatul = 90 − 20 = 70. <em>(Scăzătorul = descăzutul minus diferența.)</em></li>
+        <li>✅ Mereu faci <strong>proba</strong>: pui numărul găsit înapoi și verifici!</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Banda numerelor mascate!</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Trei numere mascate au furat cheile castelului. Demască-le pe toate!</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Banda e prinsă! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 6!</h1>
+      <p>A șasea emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>🔍 Termenul necunoscut la adunare: suma − termenul cunoscut.</li>
+        <li>🔍 Descăzutul: diferența + scăzătorul. Scăzătorul: descăzutul − diferența.</li>
+        <li>✅ Proba: pune numărul găsit la loc și verifică!</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea pe hârtie:</strong> inventează tu 3 „numere mascate” pentru un părinte
+      (de exemplu ? + 120 = 300) și verifică dacă le rezolvă corect. Tu ești acum profesorul!</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-07-inmultirea-1.html" class="btn-primary">Nivelul 7 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 6 · Matematică clasa a III-a · Aflarea numărului necunoscut, proba operațiilor</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m06";
+
+/* balanța: mini-joc de încălzire */
+const balRounds = [
+  {eq:"? + 25 = 60", opts:[25,35,85], ans:35, expl:"60 − 25 = 35. Proba: 35 + 25 = 60 ✓"},
+  {eq:"? − 10 = 40", opts:[30,50,4], ans:50, expl:"40 + 10 = 50. Proba: 50 − 10 = 40 ✓"},
+  {eq:"70 − ? = 30", opts:[40,100,30], ans:40, expl:"70 − 30 = 40. Proba: 70 − 40 = 30 ✓"},
+];
+let balIdx = 0;
+function drawBal(){
+  const r = balRounds[balIdx];
+  document.getElementById("bal-eq").innerHTML = r.eq.replace("?", '<span class="unk">🎭</span>');
+  document.getElementById("bal-choices").innerHTML =
+    r.opts.map(o=>`<button class="btn-primary" style="margin:6px;" onclick="balPick(${o})">${o}</button>`).join("");
+  document.getElementById("bal-fb").innerHTML = "";
+}
+function balPick(v){
+  const r = balRounds[balIdx];
+  const fb = document.getElementById("bal-fb");
+  if(v === r.ans){
+    fb.innerHTML = `<div class="feedback good">⚖️ Balanța e dreaptă! ${r.expl}</div>`;
+    balIdx = (balIdx+1) % balRounds.length;
+    setTimeout(drawBal, 1700);
+  } else {
+    fb.innerHTML = `<div class="feedback hint">Balanța se înclină! Pune ${v} în locul măștii și verifică — iese?</div>`;
+  }
+}
+drawBal();
+
+const questions = [
+  { title:"🎭 + 40 = 90. Cine se ascunde sub mască?",
+    fig:null, choices:["50","130","40"], correct:0,
+    hint:"Suma minus termenul cunoscut.",
+    explain:"90 − 40 = 50. Proba: 50 + 40 = 90 ✓" },
+  { title:"25 + 🎭 = 100. Mascatul este…",
+    fig:null, choices:["125","75","85"], correct:1,
+    hint:"100 − 25…",
+    explain:"100 − 25 = 75. Proba: 25 + 75 = 100 ✓" },
+  { title:"🎭 − 30 = 45. Mascatul este…",
+    fig:null, choices:["15","75","35"], correct:1,
+    hint:"Aici mascatul e numărul MARE de la început: diferența + scăzătorul.",
+    explain:"45 + 30 = 75. Proba: 75 − 30 = 45 ✓" },
+  { title:"80 − 🎭 = 20. Mascatul este…",
+    fig:null, choices:["100","60","40"], correct:1,
+    hint:"Cât s-a luat din 80 ca să rămână 20?",
+    explain:"80 − 20 = 60. Proba: 80 − 60 = 20 ✓" },
+  { title:"Robotul Bip rezolvă 🎭 − 30 = 45 prin 45 − 30 = 15. Corect?",
+    fig:null, choices:["Da","Nu — mascatul e descăzutul, deci se ADUNĂ: 45 + 30 = 75"], correct:1,
+    hint:"Fă proba cu 15: 15 − 30 = 45? Se poate?",
+    explain:"Bip greșește! Proba îl demască: 15 − 30 nu dă 45. Descăzutul = diferența + scăzătorul = 75." },
+  { title:"🎭 + 🎭 = 60. Doi mascați IDENTICI! Cine sunt?",
+    fig:null, choices:["câte 30","câte 20","câte 40"], correct:0,
+    hint:"Două numere egale care adunate dau 60…",
+    explain:"30 + 30 = 60. Jumătatea lui 60!" },
+  { title:"🎭 + 250 = 1 000. Mascatul este…",
+    fig:null, choices:["750","850","1 250"], correct:0,
+    hint:"1 000 − 250…",
+    explain:"1 000 − 250 = 750. Proba: 750 + 250 = 1 000 ✓" },
+  { title:"Zum avea niște galbeni, a primit 320 și acum are 900. Câți avea la început?",
+    fig:null, choices:["580","620","1 220"], correct:0,
+    hint:"🎭 + 320 = 900…",
+    explain:"900 − 320 = 580 de galbeni la început. Problemele cu poveste sunt tot numere mascate!" },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Mascatul 1: 🎭 + 175 = 400",
+        choices:["225","275","575"], correct:0, hint:"400 − 175.", explain:"400 − 175 = 225. Primul mascat e prins!" },
+      { q:"Mascatul 2: 🎭 − 260 = 340",
+        choices:["80","600","520"], correct:1, hint:"Descăzutul = diferența + scăzătorul.", explain:"340 + 260 = 600. Al doilea mascat e prins!" },
+      { q:"Șeful bandei: 1 000 − 🎭 = 250",
+        choices:["750","1 250","850"], correct:0, hint:"1 000 − 250.", explain:"1 000 − 250 = 750. Șeful bandei, demascat! Cheile castelului sunt salvate." },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">🕵️ Toată banda e după gratii — ești detectivul-șef al castelului!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

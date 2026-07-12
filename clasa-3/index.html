@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Turnirul Numerelor · Matematică clasa a III-a</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+  body { background: linear-gradient(160deg, #fdf3e7, #eef6ff); min-height: 100vh; display: flex; justify-content: center; padding: 20px; }
+  .app { width: 100%; max-width: 680px; }
+  h1 { color: #7a3803; text-align: center; margin: 16px 0 4px; }
+  .sub { text-align: center; color: #765; margin-bottom: 10px; }
+  .back { text-align: center; margin-bottom: 10px; }
+  .back a { color: #1d4e89; font-weight: 600; text-decoration: none; background: #ffffffcc; padding: 6px 14px; border-radius: 10px; box-shadow: 0 2px 8px rgba(120,60,20,.15); }
+  .map-progress { text-align: center; font-size: 1.05rem; color: #7a3803; font-weight: 600; margin-bottom: 16px; }
+  .shield-wall { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; background: #fff; border-radius: 18px; box-shadow: 0 4px 16px rgba(120,60,20,.12); padding: 14px; margin-bottom: 8px; }
+  .shield { text-align: center; font-size: 1.7rem; padding: 6px 2px; border-radius: 10px; background: #f4ece2; }
+  .shield.won { background: #ffe9a8; box-shadow: 0 0 8px #e8c15a; }
+  .shield small { display: block; font-size: .62rem; color: #987; font-weight: 700; }
+  .diploma { text-align: center; background: linear-gradient(160deg, #fff8e1, #ffefc2); border: 3px solid #e0b94e; border-radius: 14px; padding: 14px; margin-bottom: 16px; font-weight: 700; color: #7a5c00; font-size: 1.1rem; }
+  a.lesson { display: flex; align-items: center; gap: 14px; background: #fff; border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(120,60,20,.12); padding: 14px 18px; margin-bottom: 10px;
+    text-decoration: none; color: #7a3803; font-size: 1.02rem; font-weight: 600; transition: transform .1s; }
+  a.lesson:hover { transform: scale(1.02); }
+  a.lesson .emoji { font-size: 1.7rem; min-width: 38px; text-align: center; }
+  a.lesson .desc { font-size: .85rem; color: #987; font-weight: 400; }
+  a.lesson .badge { margin-left: auto; font-size: 1.4rem; }
+  a.lesson.done { background: #fdf9ee; border: 2px solid #e8d5a0; }
+  .reset { text-align: center; margin-top: 20px; }
+  .reset button { background: none; border: none; color: #a98; font-size: .85rem; cursor: pointer; text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>⚔️ Turnirul Numerelor</h1>
+  <p class="sub">Matematică · clasa a III-a</p>
+  <p class="back"><a href="../index.html">🎒 Toate cursurile</a></p>
+  <p class="map-progress" id="map-progress"></p>
+  <div class="shield-wall" id="shield-wall"></div>
+  <div class="diploma" id="diploma" style="display:none;">👑 Diplomă de CAVALER AL NUMERELOR — toate cele 17 embleme cucerite! ⚔️</div>
+  <div id="lessons"></div>
+  <div class="reset"><button onclick="resetProgress()">Șterge tot progresul</button></div>
+</div>
+
+<script>
+"use strict";
+const lessons = [
+  { id:"m01", file:"lectia-01-formarea-numerelor.html", emoji:"🏰", title:"Nivelul 1: Castelul cifrelor", desc:"Formarea, citirea și scrierea numerelor 0–10 000" },
+  { id:"m02", file:"lectia-02-comparare-ordonare.html", emoji:"⚖️", title:"Nivelul 2: Duelul numerelor", desc:"Compararea și ordonarea numerelor" },
+  { id:"m03", file:"lectia-03-rotunjirea.html", emoji:"🎯", title:"Nivelul 3: Catapulta rotunjirii", desc:"Rotunjirea la zeci, sute și mii" },
+  { id:"m04", file:"lectia-04-adunarea.html", emoji:"➕", title:"Nivelul 4: Podul adunării", desc:"Adunarea cu trecere peste ordin" },
+  { id:"m05", file:"lectia-05-scaderea.html", emoji:"➖", title:"Nivelul 5: Turnul împrumuturilor", desc:"Scăderea cu împrumut" },
+  { id:"m06", file:"lectia-06-numarul-necunoscut.html", emoji:"🔍", title:"Nivelul 6: Detectivul numerelor", desc:"Aflarea numărului necunoscut, proba" },
+  { id:"m07", file:"lectia-07-inmultirea-1.html", emoji:"✖️", title:"Nivelul 7: Vraja înmulțirii I", desc:"Sensul înmulțirii, tablele 2–5" },
+  { id:"m08", file:"lectia-08-inmultirea-2.html", emoji:"🧠", title:"Nivelul 8: Vraja înmulțirii II", desc:"Tablele 6–9, comutativitate, ×0 și ×1" },
+  { id:"m09", file:"lectia-09-inmultirea-numere-mari.html", emoji:"🚀", title:"Nivelul 9: Fabrica de zerouri", desc:"Înmulțirea cu 10, 100, 1000 și cu o cifră" },
+  { id:"m10", file:"lectia-10-impartirea.html", emoji:"➗", title:"Nivelul 10: Ospățul împărțirii", desc:"Împărțirea și legătura cu înmulțirea" },
+  { id:"m11", file:"lectia-11-ordinea-operatiilor.html", emoji:"🧮", title:"Nivelul 11: Legea castelului", desc:"Ordinea operațiilor și parantezele" },
+  { id:"m12", file:"lectia-12-probleme.html", emoji:"🕵️", title:"Nivelul 12: Harta problemelor", desc:"Probleme cu metoda reprezentării grafice" },
+  { id:"m13", file:"lectia-13-fractii.html", emoji:"🍕", title:"Nivelul 13: Pizza dragonului", desc:"Fracții: jumătate, sfert, treime" },
+  { id:"m14", file:"lectia-14-masurari.html", emoji:"📏", title:"Nivelul 14: Atelierul meșterului", desc:"Lungime, masă, capacitate" },
+  { id:"m15", file:"lectia-15-timpul.html", emoji:"🕐", title:"Nivelul 15: Turnul cu ceas", desc:"Ceasul, calendarul, durate" },
+  { id:"m16", file:"lectia-16-banii.html", emoji:"💰", title:"Nivelul 16: Piața castelului", desc:"Lei și bani, prețuri și rest" },
+  { id:"m17", file:"lectia-17-marele-turnir.html", emoji:"🏆", title:"Nivelul 17: MARELE TURNIR", desc:"Date, figuri și corpuri + turneul final" },
+];
+function getProgress(){
+  try { return JSON.parse(localStorage.getItem("mate3Progress")) || {}; } catch(e){ return {}; }
+}
+function render(){
+  const p = getProgress();
+  const doneCount = lessons.filter(l=>p[l.id]).length;
+  document.getElementById("map-progress").textContent =
+    doneCount === lessons.length
+      ? "👑 Toate emblemele cucerite — ești Cavaler al Numerelor!"
+      : `🛡️ Embleme de cavaler cucerite: ${doneCount} din ${lessons.length}`;
+  document.getElementById("shield-wall").innerHTML = lessons.map((l,i)=>{
+    const done = !!p[l.id];
+    return `<div class="shield ${done?'won':''}">${done?"🛡️":"⬜"}<small>Niv. ${i+1}</small></div>`;
+  }).join("");
+  document.getElementById("diploma").style.display = doneCount===lessons.length ? "block" : "none";
+  document.getElementById("lessons").innerHTML = lessons.map(l=>{
+    const done = !!p[l.id];
+    return `<a class="lesson ${done?'done':''}" href="${l.file}">
+      <span class="emoji">${l.emoji}</span>
+      <span>${l.title}<br><span class="desc">${l.desc}</span></span>
+      <span class="badge">${done?"✅":"⚔️"}</span>
+    </a>`;
+  }).join("");
+}
+function resetProgress(){
+  if(confirm("Sigur ștergi tot progresul?")){
+    localStorage.removeItem("mate3Progress");
+    render();
+  }
+}
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 12 – Probleme rezolvate cu metoda grafică</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🕵️</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 12: Harta problemelor</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Problemele cu poveste par încurcate… până le <strong>desenezi</strong>!
+      Cavalerii deștepți transformă povestea în <strong>segmente</strong> (dreptunghiuri) —
+      și dintr-odată răspunsul se vede cu ochiul liber. Se numește <em>metoda grafică</em>. 🗺️</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🗺️ Desenăm problema!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Problema desenată</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Problema:</strong> Ana are 24 de mere. Dan are de 3 ori mai multe.
+      Câte mere au împreună? Privește cum o desenăm:</p>
+    </div>
+    <svg class="svg-fig" width="100%" height="170" viewBox="0 0 700 170" id="bar-svg">
+      <text x="20" y="45" font-size="17" font-weight="bold" fill="#1d4e89">Ana:</text>
+      <rect x="90" y="25" width="120" height="34" fill="#8ecae6" stroke="#1d8fe1" stroke-width="2"/>
+      <text x="130" y="48" font-size="15" font-weight="bold">24</text>
+      <text x="20" y="105" font-size="17" font-weight="bold" fill="#1d4e89">Dan:</text>
+      <rect x="90" y="85" width="120" height="34" fill="#ffb703" stroke="#e08a1e" stroke-width="2"/>
+      <rect x="210" y="85" width="120" height="34" fill="#ffb703" stroke="#e08a1e" stroke-width="2"/>
+      <rect x="330" y="85" width="120" height="34" fill="#ffb703" stroke="#e08a1e" stroke-width="2"/>
+      <text x="130" y="108" font-size="15" font-weight="bold">24</text>
+      <text x="250" y="108" font-size="15" font-weight="bold">24</text>
+      <text x="370" y="108" font-size="15" font-weight="bold">24</text>
+      <text x="470" y="108" font-size="15" fill="#a05a00">de 3 ori mai multe = 3 segmente!</text>
+      <text x="90" y="155" font-size="16" fill="#333">În total: 4 segmente egale → 4 × 24 = <tspan font-weight="bold">96 de mere</tspan></text>
+    </svg>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Vezi? „De 3 ori mai multe” = segmentul Anei desenat de 3 ori. Numeri segmentele: 1 + 3 = 4,
+      apoi 4 × 24 = 96. Desenul rezolvă problema!</p>
+    </div>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Ce truc bun! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Dicționarul detectivului de probleme</h2>
+    <div class="guide"><div class="face">🐉</div><p>Cuvintele-cheie și traducerea lor:</p></div>
+    <div class="learned">
+      <ul>
+        <li>➕ „cu 15 <strong>mai mult</strong>” → aduni 15.</li>
+        <li>➖ „cu 15 <strong>mai puțin</strong>” → scazi 15.</li>
+        <li>✖️ „<strong>de</strong> 3 ori <strong>mai mult</strong>” → înmulțești cu 3 (desenezi 3 segmente!).</li>
+        <li>➗ „<strong>de</strong> 3 ori <strong>mai puțin</strong>” → împarți la 3.</li>
+        <li>🗺️ Pașii: 1) citesc, 2) desenez segmentele, 3) calculez pe etape, 4) verific dacă răspunsul are sens.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Misterul de la brutărie!</h2>
+    <div class="guide">
+      <div class="face">🥐</div>
+      <p>O problemă mare, rezolvată ca un detectiv: în 3 pași mici. Fii atent la fiecare indiciu!</p>
+      <br>
+    </div>
+    <div class="guide" style="background:#eef4fb;">
+      <div class="face">📜</div>
+      <p><strong>Problema:</strong> Brutarul a copt dimineața 120 de covrigi. La prânz a copt de 2 ori
+      mai mulți decât dimineața. Până seara a vândut 250. Câți covrigi i-au rămas?</p>
+    </div>
+    <div id="ch-series"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Mister rezolvat! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 12!</h1>
+      <p>A douăsprezecea emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>🗺️ Metoda grafică: desenezi povestea cu segmente.</li>
+        <li>🔑 „cu … mai mult/puțin” = + / −; „de … ori mai mult/puțin” = × / :.</li>
+        <li>🪜 Problemele mari se rezolvă în pași mici.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea pe hârtie:</strong> desenează cu segmente: „Mama are 36 de ani, iar fiul de 4 ori
+      mai puțin. Câți ani au împreună?” (Desenează segmentul mamei, împarte-l în 4…)</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-13-fractii.html" class="btn-primary">Nivelul 13 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 12 · Matematică clasa a III-a · Probleme rezolvate prin metoda reprezentării grafice</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m12";
+
+function figBars(rows){
+  // rows = [{label, segs:[val,...], color}]
+  const colors = {b:["#8ecae6","#1d8fe1"], o:["#ffb703","#e08a1e"]};
+  let y = 20, out = "";
+  rows.forEach(r=>{
+    const c = colors[r.color];
+    out += `<text x="10" y="${y+23}" font-size="15" font-weight="bold" fill="#1d4e89">${r.label}</text>`;
+    let x = 90;
+    r.segs.forEach(s=>{
+      out += `<rect x="${x}" y="${y}" width="80" height="30" fill="${c[0]}" stroke="${c[1]}" stroke-width="2"/>
+        <text x="${x+30}" y="${y+21}" font-size="14" font-weight="bold">${s}</text>`;
+      x += 80;
+    });
+    y += 45;
+  });
+  return `<svg class="svg-fig" width="100%" height="${y}" viewBox="0 0 400 ${y}">${out}</svg>`;
+}
+
+const questions = [
+  { title:"Vlad are 30 de bile, iar Mihai cu 15 mai multe. Câte bile are Mihai?",
+    fig:()=>figBars([{label:"Vlad", segs:[30], color:"b"},{label:"Mihai", segs:[30,"+15"], color:"o"}]),
+    choices:["15","45","30"], correct:1,
+    hint:"„Cu 15 mai multe” = segmentul lui Vlad + o bucată de 15.",
+    explain:"30 + 15 = 45 de bile." },
+  { title:"Ana a citit 60 de pagini, iar Ioana cu 25 mai puține. Câte a citit Ioana?",
+    fig:null, choices:["85","35","45"], correct:1,
+    hint:"„Mai puține” = scazi.",
+    explain:"60 − 25 = 35 de pagini." },
+  { title:"Un cal costă 400 de galbeni, iar o armură de 2 ori mai mult. Cât costă armura?",
+    fig:()=>figBars([{label:"Cal", segs:[400], color:"b"},{label:"Armura", segs:[400,400], color:"o"}]),
+    choices:["200","800","600"], correct:1,
+    hint:"„De 2 ori mai mult” = două segmente de 400.",
+    explain:"2 × 400 = 800 de galbeni." },
+  { title:"Bunicul are 72 de ani, iar nepotul de 8 ori mai puțin. Câți ani are nepotul?",
+    fig:null, choices:["9","64","8"], correct:0,
+    hint:"„DE 8 ori mai puțin” = împarți la 8.",
+    explain:"72 : 8 = 9 ani." },
+  { title:"Robotul Bip rezolvă: „am 20 de mere, cu 5 mai puține pere” prin 20 : 5 = 4. Corect?",
+    fig:null, choices:["Da","Nu — „CU 5 mai puține” înseamnă scădere: 20 − 5 = 15"], correct:1,
+    hint:"„CU” = adunare/scădere. „DE ori” = înmulțire/împărțire.",
+    explain:"Bip a confundat „cu” și „de ori”! „Cu 5 mai puține” = 20 − 5 = 15 pere." },
+  { title:"Ana are 24 de mere, Dan de 3 ori mai multe. Câte au ÎMPREUNĂ? (problema desenată!)",
+    fig:()=>figBars([{label:"Ana", segs:[24], color:"b"},{label:"Dan", segs:[24,24,24], color:"o"}]),
+    choices:["72","96","48"], correct:1,
+    hint:"Numără toate segmentele: 1 + 3 = 4…",
+    explain:"Dan: 3×24=72. Împreună: 24+72 = 96 (sau direct 4×24)." },
+  { title:"Într-o livadă sunt 35 de meri, iar peri de 5 ori mai puțini. Câți pomi în total?",
+    fig:null, choices:["42","40","28"], correct:0,
+    hint:"Întâi perii: 35 : 5. Apoi aduni.",
+    explain:"Peri: 35:5=7. Total: 35+7 = 42 de pomi. Două etape!" },
+  { title:"Care desen se potrivește cu „Maria are de 4 ori mai mulți bani decât Ion”?",
+    fig:null,
+    choices:["Ion: 1 segment · Maria: 4 segmente egale","Ion: 4 segmente · Maria: 1 segment","Amândoi câte 4 segmente"], correct:0,
+    hint:"Cine are mai mult? De câte ori?",
+    explain:"Maria = 4 segmente identice cu al lui Ion. Desenul corect e jumătate din rezolvare!" },
+];
+
+let chDone = false;
+window.onShow = function(id){
+  if(id==="screen-challenge" && !chDone){
+    chDone = true;
+    startSeries("ch-series", [
+      { q:"Pasul 1: Câți covrigi a copt la prânz? (de 2 ori mai mulți decât cei 120 de dimineață)",
+        choices:["240","60","122"], correct:0, hint:"„De 2 ori mai mulți” = 2 × 120.", explain:"2 × 120 = 240 de covrigi la prânz." },
+      { q:"Pasul 2: Câți covrigi a copt în total?",
+        choices:["240","360","120"], correct:1, hint:"Dimineața + prânz: 120 + 240.", explain:"120 + 240 = 360 de covrigi în total." },
+      { q:"Pasul 3: A vândut 250. Câți i-au rămas?",
+        choices:["110","100","610"], correct:0, hint:"360 − 250.", explain:"360 − 250 = 110 covrigi rămași. Mister rezolvat în 3 pași!" },
+    ], ()=>{
+      document.getElementById("ch-series").innerHTML =
+        `<div class="feedback good">🥐 Caz închis! Ai spart problema mare în 3 pași mici — exact ca un detectiv adevărat!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    });
+  }
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nivelul 15 – Timpul: ceasul și calendarul</title>
+<link rel="stylesheet" href="comun.css">
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="index.html">🏰 Turnir</a> <a href="../index.html">🎒 Toate cursurile</a></div>
+
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">🕐</div>
+      <h1>Turnirul Numerelor</h1>
+      <p><strong>Nivelul 15: Turnul cu ceas</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>În turnul castelului e un ceas uriaș. Paznicul a adormit și ceasul s-a oprit!
+      Doar cine știe să citească și să potrivească ceasul poate porni timpul la loc.
+      Tic-tac, la treabă!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">⏰ Urc în turn!</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🔍 Ceasul din turn</h2>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p>Apasă butoanele și mișcă acele! Observă: acul MIC arată ora, acul MARE arată minutele.
+      Când acul mare face un tur complet, trece o oră întreagă!</p>
+    </div>
+    <canvas id="clock" width="600" height="340"></canvas>
+    <p class="center" style="font-size:1.4rem;font-weight:800;color:#1d4e89;" id="clock-digital"></p>
+    <div class="center">
+      <button class="btn-primary" onclick="tickMin(5)">+5 minute</button>
+      <button class="btn-primary" onclick="tickMin(15)">+15 minute</button>
+      <button class="btn-primary" onclick="tickMin(60)">+1 oră</button>
+    </div>
+    <div class="center" style="margin-top:14px;">
+      <button class="btn-primary" onclick="show('screen-learn')">Tic-tac, am înțeles! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-learn">
+    <h2>✏️ Legile timpului</h2>
+    <div class="guide"><div class="face">🐉</div><p>Tot ce trebuie să știi despre timp:</p></div>
+    <div class="learned">
+      <ul>
+        <li>🕐 Acul mic = ORA · acul mare = MINUTELE. 1 oră = 60 de minute · 1 minut = 60 de secunde.</li>
+        <li>🕧 Acul mare pe 6 = „și jumătate” (30 min) · pe 3 = „și un sfert” (15 min) · pe 9 = „fără un sfert” (45 min).</li>
+        <li>📅 O zi = 24 de ore · o săptămână = 7 zile · un an = 12 luni = 365 de zile.</li>
+        <li>⏱️ Durata = de la ce oră până la ce oră: de la 9:00 la 11:30 → 2 ore și 30 min.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Sunt gata de luptă! 🎮</button></div>
+  </div>
+
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Provocarea finală: Pornește ceasul turnului!</h2>
+    <div class="guide">
+      <div class="face">⏰</div>
+      <p>Potrivește ceasul la ora cerută cu butoanele, apoi apasă „Pornește!”. Trei ore de potrivit!</p>
+    </div>
+    <p class="center" style="font-size:1.2rem;font-weight:700;color:#1d4e89;" id="ch-target"></p>
+    <canvas id="ch-clock" width="600" height="340"></canvas>
+    <p class="center" style="font-size:1.3rem;font-weight:800;color:#1d4e89;" id="ch-digital"></p>
+    <div class="center">
+      <button class="btn-primary" onclick="chTick(5)">+5 min</button>
+      <button class="btn-primary" onclick="chTick(60)">+1 oră</button>
+      <button class="btn-primary" id="ch-go" onclick="startClock()" style="background:#35b653;box-shadow:0 4px 0 #1b6b2e;">▶ Pornește!</button>
+    </div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-end')">Timpul curge din nou! 🎉</button>
+    </div>
+  </div>
+
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🛡️</div>
+      <h1>Ai cucerit Nivelul 15!</h1>
+      <p>A cincisprezecea emblemă de cavaler este a ta.</p>
+    </div>
+    <div class="learned">
+      <p><strong>Azi ai învățat:</strong></p>
+      <ul>
+        <li>🕐 Citirea ceasului: ora (acul mic) și minutele (acul mare).</li>
+        <li>⏱️ 1 oră = 60 min; „și jumătate”, „și un sfert”, „fără un sfert”.</li>
+        <li>📅 Ziua, săptămâna, luna, anul + calculul duratelor.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">🐉</div>
+      <p><strong>Misiunea practică:</strong> timp de o zi, fii paznicul timpului: citește ceasul (cu ace!)
+      la micul dejun, la prânz și la cină și notează orele. Cât timp a trecut între mese?</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia nivelul</button>
+      <a href="lectia-16-banii.html" class="btn-primary">Nivelul 16 ➜</a>
+      <a href="index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🏰 Turnir</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Nivelul 15 · Matematică clasa a III-a · Ora, calendarul, durate de timp</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+window.LESSON_ID = "m15";
+
+/* ---------- desen ceas ---------- */
+function drawClock(cv, h, m){
+  const ctx = cv.getContext("2d");
+  const CX = cv.width/2, CY = 170, R = 140;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.beginPath(); ctx.arc(CX,CY,R,0,7);
+  ctx.fillStyle="#fffdf5"; ctx.fill();
+  ctx.strokeStyle="#8a6b3d"; ctx.lineWidth=6; ctx.stroke();
+  ctx.fillStyle="#333"; ctx.textAlign="center"; ctx.textBaseline="middle";
+  for(let i=1;i<=12;i++){
+    const a = i*Math.PI/6 - Math.PI/2;
+    ctx.font="bold 22px Segoe UI";
+    ctx.fillText(String(i), CX+Math.cos(a)*(R-28), CY+Math.sin(a)*(R-28));
+  }
+  for(let i=0;i<60;i++){
+    const a = i*Math.PI/30;
+    const r0 = i%5===0 ? R-14 : R-8;
+    ctx.beginPath();
+    ctx.moveTo(CX+Math.cos(a)*r0, CY+Math.sin(a)*r0);
+    ctx.lineTo(CX+Math.cos(a)*(R-3), CY+Math.sin(a)*(R-3));
+    ctx.strokeStyle="#999"; ctx.lineWidth = i%5===0?3:1; ctx.stroke();
+  }
+  const ah = (h%12 + m/60)*Math.PI/6 - Math.PI/2;
+  ctx.beginPath(); ctx.moveTo(CX,CY);
+  ctx.lineTo(CX+Math.cos(ah)*R*0.5, CY+Math.sin(ah)*R*0.5);
+  ctx.strokeStyle="#1d4e89"; ctx.lineWidth=8; ctx.lineCap="round"; ctx.stroke();
+  const am = m*Math.PI/30 - Math.PI/2;
+  ctx.beginPath(); ctx.moveTo(CX,CY);
+  ctx.lineTo(CX+Math.cos(am)*R*0.75, CY+Math.sin(am)*R*0.75);
+  ctx.strokeStyle="#e05555"; ctx.lineWidth=5; ctx.stroke();
+  ctx.beginPath(); ctx.arc(CX,CY,7,0,7); ctx.fillStyle="#333"; ctx.fill();
+  ctx.textAlign="start"; ctx.textBaseline="alphabetic";
+}
+function fmt(h,m){ return String(h).padStart(2,"0")+":"+String(m).padStart(2,"0"); }
+
+/* explorare */
+let eh = 9, em = 0;
+function tickMin(d){
+  em += d;
+  while(em >= 60){ em -= 60; eh = (eh+1)%24; }
+  drawExplore();
+}
+function drawExplore(){
+  drawClock(document.getElementById("clock"), eh, em);
+  const names = {0:"fix",15:"și un sfert",30:"și jumătate",45:"fără un sfert (ora următoare!)"};
+  document.getElementById("clock-digital").textContent =
+    fmt(eh,em) + (names[em]!==undefined ? ` — ora ${eh%12||12} ${names[em]}` : "");
+}
+drawExplore();
+
+/* figuri quiz: ceas SVG */
+function figClock(h,m){
+  const CX=200, CY=95, R=85;
+  let marks = "";
+  for(let i=1;i<=12;i++){
+    const a = i*Math.PI/6 - Math.PI/2;
+    marks += `<text x="${CX+Math.cos(a)*(R-18)}" y="${CY+Math.sin(a)*(R-18)+5}" font-size="14" font-weight="bold" text-anchor="middle">${i}</text>`;
+  }
+  const ah = (h%12 + m/60)*Math.PI/6 - Math.PI/2;
+  const am = m*Math.PI/30 - Math.PI/2;
+  return `<svg class="svg-fig" width="100%" height="195" viewBox="0 0 400 195">
+    <circle cx="${CX}" cy="${CY}" r="${R}" fill="#fffdf5" stroke="#8a6b3d" stroke-width="4"/>
+    ${marks}
+    <line x1="${CX}" y1="${CY}" x2="${CX+Math.cos(ah)*R*0.5}" y2="${CY+Math.sin(ah)*R*0.5}" stroke="#1d4e89" stroke-width="6" stroke-linecap="round"/>
+    <line x1="${CX}" y1="${CY}" x2="${CX+Math.cos(am)*R*0.75}" y2="${CY+Math.sin(am)*R*0.75}" stroke="#e05555" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="${CX}" cy="${CY}" r="5" fill="#333"/>
+  </svg>`;
+}
+
+const questions = [
+  { title:"Ce oră arată ceasul?",
+    fig:()=>figClock(3,0), choices:["Ora 3 fix","Ora 12 și 3 minute","Ora 6"], correct:0,
+    hint:"Acul mic (albastru) pe 3, acul mare (roșu) pe 12.",
+    explain:"Acul mare pe 12 = fix. Acul mic pe 3 = ora 3 fix!" },
+  { title:"Și acum?",
+    fig:()=>figClock(7,30), choices:["7 și jumătate","6 și jumătate","7 și 6 minute"], correct:0,
+    hint:"Acul mare pe 6 = 30 de minute. Acul mic a trecut de 7…",
+    explain:"7:30 — șapte și jumătate. Acul mare pe 6 înseamnă mereu „și jumătate”." },
+  { title:"Și acesta?",
+    fig:()=>figClock(10,15), choices:["10 și un sfert","3 și 10 minute","10 fără un sfert"], correct:0,
+    hint:"Acul mare pe 3 = 15 minute = un sfert de oră.",
+    explain:"10:15 — zece și un sfert." },
+  { title:"Câte minute are o oră?",
+    fig:null, choices:["100","60","30"], correct:1,
+    hint:"Ca la grade și minute, la geometrie… tot 60!",
+    explain:"1 oră = 60 de minute. Iar 1 minut = 60 de secunde." },
+  { title:"Filmul începe la 9:00 și ține până la 11:30. Cât durează?",
+    fig:null, choices:["2 ore și 30 min","1 oră și 30 min","3 ore"], correct:0,
+    hint:"De la 9 la 11 sunt 2 ore, plus…",
+    explain:"9:00 → 11:00 = 2 ore, apoi încă 30 min. Total: 2 ore și 30 de minute." },
+  { title:"Robotul Bip zice: „O zi are 12 ore, cât arată ceasul.” Corect?",
+    fig:null, choices:["Da","Nu — ziua are 24 de ore; ceasul face DOUĂ tururi pe zi"], correct:1,
+    hint:"Ceasul arată 1–12, dar după prânz orele continuă…",
+    explain:"Bip greșește! Ziua întreagă are 24 de ore. Acul mic face de două ori turul cadranului." },
+  { title:"Câte zile are o săptămână? Dar un an câte luni?",
+    fig:null, choices:["7 zile și 12 luni","5 zile și 10 luni","7 zile și 10 luni"], correct:0,
+    hint:"Luni-duminică… ianuarie-decembrie…",
+    explain:"Săptămâna are 7 zile, anul are 12 luni (și 365 de zile)." },
+  { title:"Un sfert de oră înseamnă…",
+    fig:null, choices:["15 minute","25 de minute","45 de minute"], correct:0,
+    hint:"60 : 4…",
+    explain:"60 : 4 = 15 minute. Fracțiile de la pizza funcționează și la timp!" },
+];
+
+/* provocarea */
+const chTargets = [
+  {h:7, m:30, label:"șapte și jumătate (7:30)"},
+  {h:10, m:15, label:"zece și un sfert (10:15)"},
+  {h:16, m:45, label:"17 fără un sfert (16:45)"},
+];
+let ci = 0, chH = 6, chM = 0, chSolved = false;
+function chTick(d){
+  if(chSolved) return;
+  chM += d;
+  while(chM >= 60){ chM -= 60; chH = (chH+1)%24; }
+  drawCh();
+}
+function drawCh(){
+  drawClock(document.getElementById("ch-clock"), chH, chM);
+  document.getElementById("ch-digital").textContent = fmt(chH,chM);
+  if(!chSolved) document.getElementById("ch-target").textContent =
+    `Ora ${ci+1} din ${chTargets.length}: potrivește ceasul la ${chTargets[ci].label}`;
+}
+function startClock(){
+  if(chSolved) return;
+  const t = chTargets[ci];
+  const fb = document.getElementById("ch-feedback");
+  if(chH === t.h && chM === t.m){
+    ci++;
+    if(ci >= chTargets.length){
+      chSolved = true;
+      document.getElementById("ch-target").textContent = "Ceasul turnului bate din nou!";
+      document.getElementById("ch-go").classList.add("hidden");
+      fb.innerHTML = `<div class="feedback good">🔔 BANG-BANG! Ceasul turnului răsună peste tot castelul — timpul curge din nou datorită ție!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else {
+      fb.innerHTML = `<div class="feedback good">🔔 Perfect potrivit! Următoarea oră…</div>`;
+      chH = 6; chM = 0;
+      drawCh();
+    }
+  } else {
+    fb.innerHTML = `<div class="feedback hint">Ceasul arată ${fmt(chH,chM)}, dar trebuie ${fmt(t.h,t.m)}. ${chM>t.m||chH>t.h ? "Ai trecut de oră? Continuă înainte — ceasul merge doar înainte!" : "Mai adaugă minute!"}</div>`;
+  }
+}
+window.onShow = function(id){
+  if(id==="screen-explore") drawExplore();
+  if(id==="screen-challenge") drawCh();
+};
+</script>
+</body>
+</html>
