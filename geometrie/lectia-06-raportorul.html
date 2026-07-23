@@ -135,7 +135,7 @@ function drawProtractor(ctx, cx, cy, R){
     ctx.strokeStyle="#567"; ctx.lineWidth= d%30===0?2.5:1.5; ctx.stroke();
     if(d%30===0){
       ctx.font="bold 16px Segoe UI";
-      ctx.fillText(String(d), cx+Math.cos(a)*(R-40), cy-Math.sin(a)*(R-40)+6);
+      ctx.fillText(String(180-d), cx+Math.cos(a)*(R-40), cy-Math.sin(a)*(R-40)+6);
     }
   }
   // linia de bază și centrul
