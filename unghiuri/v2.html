@@ -1080,47 +1080,65 @@ const questions = [
 ];
 
 /* ═══════════ V2: motorul de povestire ═══════════
-   Propozițiile apar pe rând, evidențiate (stil karaoke).
-   Dacă browserul chiar are o voce ROMÂNEASCĂ, se și aude; altfel — doar ritmul vizual. */
-function voceRo(){
-  try{ return (speechSynthesis.getVoices()||[]).find(v=>/^ro/i.test(v.lang)) || null; }
-  catch(e){ return null; }
-}
-try{ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = ()=>{}; }catch(e){}
+   Redă naratțiunea MP3 (vocea Erinome, generată cu Gemini) și sincronizează
+   propozițiile pe ecran cu audio-ul. Dacă audio nu pornește — ritm vizual. */
 let povesteActiva = 0;
-function opresteVocea(){ try{ speechSynthesis.cancel(); }catch(e){} }
+let audioCurent = null;
+function opresteVocea(){
+  if(audioCurent){ try{ audioCurent.pause(); }catch(e){} audioCurent = null; }
+}
 addEventListener("beforeunload", opresteVocea);
 
-function povesteste(containerId, pasi, onDone){
+function povesteste(containerId, pasi, onDone, numeAudio){
   /* pasi = [{t: "text", fa: functieOptionala}] */
   const el = document.getElementById(containerId);
   el.innerHTML = "";
   opresteVocea();
-  const idPoveste = ++povesteActiva;
-  const voce = voceRo();
+  const idP = ++povesteActiva;
   let i = 0;
-  function next(){
-    if(idPoveste !== povesteActiva) return;      // s-a pornit altă poveste
+  function arataUrmatorul(){
+    if(idP !== povesteActiva || i >= pasi.length) return;
     const par = el.querySelector("p.activ");
     if(par){ par.classList.remove("activ"); par.classList.add("gata"); }
-    if(i >= pasi.length){ if(onDone) onDone(); return; }
     const pas = pasi[i]; i++;
     const p = document.createElement("p");
     p.className = "activ";
     p.textContent = pas.t;
     el.appendChild(p);
     if(pas.fa) try{ pas.fa(); }catch(e){}
-    if(voce){
-      const u = new SpeechSynthesisUtterance(pas.t);
-      u.voice = voce; u.lang = voce.lang; u.rate = 0.93;
-      u.onend = ()=> setTimeout(next, 250);
-      u.onerror = ()=> setTimeout(next, 900 + pas.t.length*45);
-      speechSynthesis.speak(u);
-    } else {
-      setTimeout(next, 1100 + pas.t.length*52);
-    }
   }
-  next();
+  function termina(){
+    if(idP !== povesteActiva) return;
+    while(i < pasi.length) arataUrmatorul();
+    const par = el.querySelector("p.activ");
+    if(par){ par.classList.remove("activ"); par.classList.add("gata"); }
+    if(onDone) onDone();
+  }
+  function faraAudio(){
+    if(idP !== povesteActiva) return;
+    arataUrmatorul();
+    if(i >= pasi.length){ setTimeout(termina, 1400); return; }
+    setTimeout(faraAudio, 1100 + pasi[i-1].t.length*52);
+  }
+  /* praguri proporționale cu lungimea propozițiilor, raportate la durata MP3-ului */
+  const ponderi = pasi.map(p => p.t.length + 20);
+  const total = ponderi.reduce((a,b)=>a+b, 0);
+  const praguri = []; let cum = 0;
+  ponderi.forEach(w => { cum += w; praguri.push(cum/total); });
+  if(numeAudio){
+    const a = new Audio("audio/" + numeAudio + ".mp3");
+    audioCurent = a;
+    a.addEventListener("timeupdate", ()=>{
+      if(idP !== povesteActiva || !a.duration) return;
+      const f = a.currentTime / a.duration;
+      while(i < pasi.length && (i === 0 || f >= praguri[i-1]*0.97)) arataUrmatorul();
+    });
+    a.addEventListener("ended", termina);
+    a.addEventListener("error", faraAudio);
+    a.play().then(arataUrmatorul).catch(faraAudio);
+  } else {
+    faraAudio();
+  }
 }
 
 /* ═══════════ V2 · Partea 1: repetarea calmă (înainte de Misiunea 7) ═══════════ */
@@ -1135,7 +1153,7 @@ function pornesteRepetare2(){
     { t:"Acest punct special se numește VÂRFUL unghiului." },
     { t:"Iar semidreptele sunt LATURILE lui." },
     { t:"Atât. Două semidrepte și un punct — simplu și frumos, ca un zbor lin. 💙", fa:()=>lumineaza("rep2-inima","1") },
-  ]);
+  ], null, "rep2");
 }
 
 /* ═══════════ V2 · Partea 3: povestea babilonienilor ═══════════ */
@@ -1152,7 +1170,7 @@ function pornestePoveste360(){
     { t:"Gândește-te așa: un cerc este ca o pizza întreagă. 🍕 Babilonienii au tăiat pizza în 360 de felii foarte mici. Fiecare felie reprezintă UN GRAD." },
     { t:"Asta făcea calculele foarte simple, pentru că 360 se împarte și la 9, și la 10, și la 12, și la 8, și la 6, și la 2, și la 3." },
     { t:"Acum… poți să-ți dai seama, știind că cercul are 360 de grade, câte grade are un unghi DREPT? Și un unghi ALUNGIT?" },
-  ], ()=>{ if(!s360Done){ s360Done = true; startS360(); } });
+  ], ()=>{ if(!s360Done){ s360Done = true; startS360(); } }, "s360");
 }
 function startS360(){
   startSeries("s360-series", [
@@ -1177,7 +1195,7 @@ function pornesteGluma(){
     { t:"👨‍🏫 „Cum adică… depinde?!”" },
     { t:"🧒 „Păi… dacă e iarnă și îl lași afară, poate avea chiar și MINUS zece grade!” 🥶" },
     { t:"👨‍🏫 Profesorul râde: „Ha-ha! Acelea sunt grade de TEMPERATURĂ! Eu vorbeam despre gradele cercului: 360!”" },
-  ], ()=> document.getElementById("gluma-next").classList.remove("hidden"));
+  ], ()=> document.getElementById("gluma-next").classList.remove("hidden"), "gluma");
 }
 
 /* ═══════════ V2 · Partea 5: Regele Cerc ═══════════ */
@@ -1192,7 +1210,7 @@ function pornesteRege(){
     { t:"După 270 de pași, privea spre stânga." },
     { t:"După 360 de pași… ajunsese exact de unde pornise!" },
     { t:"De atunci, ori de câte ori cineva voia să știe cât s-a rotit ceva, întreba: „Câte grade ai făcut?”. Și așa s-au născut unghiurile." },
-  ], ()=> document.getElementById("rege-q").classList.remove("hidden"));
+  ], ()=> document.getElementById("rege-q").classList.remove("hidden"), "rege");
 }
 function regeAnswer(btn, ok){
   const fb = document.getElementById("rege-fb");
