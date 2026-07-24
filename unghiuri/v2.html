@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misiunea Unghiurilor V2 · Școala de Piloți</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  .mission-card { background:#f7fbff; border:3px solid #c9dcf5; border-radius:16px; padding:16px; margin-bottom:14px; }
+  .mission-card h3 { color:#1d4e89; margin-bottom:8px; font-size:1.1rem; }
+  .mission-card .reveal { margin-top:10px; }
+  .counter-big { font-size:2rem; font-weight:800; color:#1d4e89; margin:0 12px; vertical-align:middle; }
+  .notatie { background:#f2f7fd; border-radius:12px; padding:12px 16px; text-align:center; font-size:1.3rem; font-weight:700; color:#1d4e89; margin:10px 0; }
+  table.clasif { width:100%; border-collapse:collapse; margin:12px 0; }
+  table.clasif th, table.clasif td { border:2px solid #c9dcf5; padding:10px; text-align:center; font-size:1.02rem; }
+  table.clasif th { background:#eef4fb; color:#1d4e89; }
+  .fisa li { margin:10px 0 10px 22px; font-size:1.02rem; line-height:1.45; }
+  .badge-tip { display:inline-block; padding:4px 12px; border-radius:10px; font-weight:700; margin:2px; }
+  .tabel-ex { width:100%; border-collapse:collapse; margin:10px 0; }
+  .tabel-ex td { border:2px solid #c9dcf5; padding:10px; font-size:1.02rem; }
+  .tabel-ex input { width:100%; border:2px solid #a8c6e8; border-radius:8px; padding:8px; font-size:1.05rem; font-weight:700; color:#1d4e89; text-transform:uppercase; }
+  .tabel-ex td.ok-cell { background:#d8f7dd; }
+  .tabel-ex td.bad-cell { background:#ffe1e1; }
+  .semafor { display:flex; gap:10px; justify-content:center; margin:10px 0; }
+  .semafor span { width:34px; height:34px; border-radius:50%; background:#e2e9f2; border:3px solid #b9c6d4; }
+  .semafor span.rosu { background:#e05555; }
+  .semafor span.verde { background:#35b653; }
+  .btn-toggle { background:#f0f5ff; color:#1d4e89; border:3px solid #c9dcf5; margin:4px; padding:12px 18px; }
+  .btn-toggle.sel { background:#1d8fe1; color:#fff; border-color:#156bb0; }
+  .rima { text-align:center; font-size:1.6rem; line-height:1.9; font-weight:800; color:#1d4e89; padding:34px 10px; }
+  @keyframes rotesc { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+  .orbit-wrap { position:relative; width:260px; height:260px; margin:12px auto; }
+  .orbit-wrap .soare { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:3rem; }
+  .orbit-wrap .orbita { position:absolute; inset:14px; border:2px dashed #c9dcf5; border-radius:50%; }
+  .orbit-wrap .rotor { position:absolute; inset:0; animation:rotesc 12s linear infinite; }
+  .orbit-wrap .pamant { position:absolute; left:50%; top:0; transform:translateX(-50%); font-size:2rem; }
+  .castel-wrap { position:relative; width:260px; height:260px; margin:12px auto; }
+  .castel-wrap .cerc { position:absolute; inset:14px; border:4px solid #c9a95e; border-radius:50%; }
+  .castel-wrap .castel { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:3rem; }
+  .castel-wrap .rotor { position:absolute; inset:0; animation:rotesc 8s linear infinite; }
+  .castel-wrap .ac { position:absolute; left:calc(50% - 2px); top:18px; width:4px; height:100px; background:#e05555; border-radius:2px; }
+  .fig-alege { display:inline-block; background:#f7fbff; border:3px solid #c9dcf5; border-radius:14px; margin:8px; padding:8px; cursor:pointer; transition:transform .1s; }
+  .fig-alege:active { transform:scale(.96); }
+  .fig-alege.corect { border-color:#35b653; background:#d8f7dd; }
+  .fig-alege.gresit { border-color:#e05555; background:#ffe1e1; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="home-bar center"><a href="../index.html">🎒 Toate cursurile</a> <a href="index.html">🅰️ Vezi varianta 1</a></div>
+
+  <!-- ═══════════ START ═══════════ -->
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="big-emoji">✈️</div>
+      <h1>Misiunea Unghiurilor</h1>
+      <p><strong>Școala de Piloți · lecție specială de geometrie</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Salut, cadet! Sunt <strong>Căpitanul Vector</strong>, pilot de încercare.
+      Ai auzit vreodată expresia <em>„a privi ceva sub un anumit unghi”</em> sau
+      <em>„avionul aterizează sub un unghi mic”</em>? În aviație, unghiurile sunt viață și moarte:
+      un unghi greșit la aterizare — și pista e istorie! Azi înveți TOT despre unghiuri.
+      Prima misiune: turnul de control te așteaptă!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-avion')">🛫 Prima misiune!</button></div>
+  </div>
+
+  <!-- ═══════════ 1. EXPLORARE: AVIONUL ═══════════ -->
+  <div class="card screen hidden" id="screen-avion">
+    <h2>🛬 Misiunea 1: Aterizarea</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p><strong>Trage de avion în sus și în jos</strong> și privește cum se schimbă deschiderea
+      dintre drumul lui și pistă. Încearcă o aterizare lină, una normală și un picaj!
+      (Nu-ți spun încă nimic — descoperă singur ce se schimbă.)</p>
+    </div>
+    <canvas id="avion" width="800" height="380"></canvas>
+    <div class="center"><span class="status-badge warn" id="avion-status">…</span></div>
+    <div class="center" style="margin-top:12px;" id="avion-q-wrap">
+      <p style="font-weight:600;color:#1d4e89;">Întrebarea turnului de control: la care aterizare a fost
+      deschiderea dintre drum și pistă cea mai MICĂ?</p>
+      <button class="btn-primary" onclick="avionAnswer(this,false)">La picaj</button>
+      <button class="btn-primary" onclick="avionAnswer(this,true)">La aterizarea lină</button>
+    </div>
+    <div id="avion-fb"></div>
+    <div class="center hidden" id="avion-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-deseneaza')">Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ 1b. DESENEAZĂ TU ═══════════ -->
+  <div class="card screen hidden" id="screen-deseneaza">
+    <h2>✏️ Misiunea 2: Desenează tu!</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Deschiderea aceea dintre două linii care pornesc din același punct are un nume:
+      <strong>UNGHI</strong>. Acum desenează tu unul: <strong>trage de cele două puncte albastre</strong>
+      și fă un unghi mic, unul mare, unul cât un colț de foaie…</p>
+    </div>
+    <canvas id="sandbox" width="800" height="380"></canvas>
+    <div class="center"><span class="status-badge warn" id="sandbox-status">…</span></div>
+    <div class="center" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-formatie')">Am desenat! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ V2: REPETAREA 1 — ZBORUL ÎN FORMAȚIE ═══════════ -->
+  <div class="card screen hidden" id="screen-formatie">
+    <h2>🛩️ Zborul în formație — prima lecție de la turn</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>La spectacolele aeriene, avioanele se așază deseori în forma unui <strong>unghi ascuțit</strong>,
+      ca să „spargă” aerul mai ușor. Cine mai face asta? <strong>Păsările migratoare!</strong>
+      Ele zboară natural în formă de V: pasărea din față — cea mai puternică — sparge rezistența aerului,
+      iar celelalte obosesc mai puțin. Natura știe geometrie! 🐦</p>
+    </div>
+    <svg class="svg-fig" width="100%" height="180" viewBox="0 0 700 180">
+      <line x1="80" y1="90" x2="330" y2="30" stroke="#c9dcf5" stroke-width="2" stroke-dasharray="6 5"/>
+      <line x1="80" y1="90" x2="330" y2="150" stroke="#c9dcf5" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="62" y="98" font-size="26">✈️</text>
+      <text x="140" y="84" font-size="20">✈️</text><text x="140" y="130" font-size="20">✈️</text>
+      <text x="210" y="66" font-size="20">✈️</text><text x="210" y="150" font-size="20">✈️</text>
+      <text x="280" y="50" font-size="20">✈️</text><text x="280" y="168" font-size="20">✈️</text>
+      <line x1="420" y1="90" x2="650" y2="35" stroke="#c9dcf5" stroke-width="2" stroke-dasharray="6 5"/>
+      <line x1="420" y1="90" x2="650" y2="145" stroke="#c9dcf5" stroke-width="2" stroke-dasharray="6 5"/>
+      <text x="404" y="98" font-size="24">🐦</text>
+      <text x="475" y="84" font-size="17">🐦</text><text x="475" y="122" font-size="17">🐦</text>
+      <text x="540" y="68" font-size="17">🐦</text><text x="540" y="140" font-size="17">🐦</text>
+      <text x="605" y="52" font-size="17">🐦</text><text x="605" y="158" font-size="17">🐦</text>
+    </svg>
+    <div class="learned">
+      <p><strong>📖 Hai să reținem (o dată pentru totdeauna!):</strong></p>
+      <ul>
+        <li>📐 <strong>Unghiul</strong> este figura geometrică determinată de <strong>două semidrepte cu aceeași origine</strong>.</li>
+        <li>🔴 Originea comună a celor două semidrepte se numește <strong>vârful unghiului</strong>.</li>
+        <li>➡️ Cele două semidrepte se numesc <strong>laturile unghiului</strong>.</li>
+      </ul>
+    </div>
+    <svg class="svg-fig" width="100%" height="200" viewBox="0 0 700 200">
+      <line x1="150" y1="160" x2="430" y2="160" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="430,160 416,153 416,167" fill="#1d8fe1"/>
+      <line x1="150" y1="160" x2="380" y2="45" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="380,45 365,48 372,60" fill="#1d8fe1"/>
+      <circle cx="150" cy="160" r="9" fill="#e05555"/>
+      <text x="118" y="182" font-size="20" font-weight="bold" fill="#a02525">O (vârf)</text>
+      <circle cx="330" cy="70" r="6" fill="#333"/><text x="340" y="62" font-size="18" font-weight="bold">A</text>
+      <circle cx="360" cy="160" r="6" fill="#333"/><text x="352" y="188" font-size="18" font-weight="bold">B</text>
+      <text x="470" y="70" font-size="18" fill="#333">Notăm: <tspan font-weight="bold">∡AOB</tspan> sau <tspan font-weight="bold">∡O</tspan></text>
+      <text x="470" y="105" font-size="16" fill="#333">• cu 3 litere → vârful e mereu</text>
+      <text x="485" y="127" font-size="16" fill="#333">litera <tspan font-weight="bold">din centru</tspan></text>
+      <text x="470" y="160" font-size="16" fill="#333">• cu 1 literă → e chiar vârful!</text>
+    </svg>
+    <div class="center"><button class="btn-primary" onclick="show('screen-dac')">Formație perfectă! Mai departe ➜</button></div>
+  </div>
+
+  <!-- ═══════════ V2: EXERCIȚIUL-TABEL DAC ═══════════ -->
+  <div class="card screen hidden" id="screen-dac">
+    <h2>📋 Fișa de bord: unghiul DAC</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Completează fișa de bord pentru unghiul din desen! Scrie răspunsurile în casete,
+      apoi apasă „Verifică fișa”.</p>
+    </div>
+    <svg class="svg-fig" width="100%" height="260" viewBox="0 0 700 260">
+      <path d="M 160 210 L 480 210 L 428 85 Z" fill="#fff3cd"/>
+      <line x1="160" y1="210" x2="560" y2="210" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="560,210 546,203 546,217" fill="#1d8fe1"/>
+      <line x1="160" y1="210" x2="470" y2="55" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="470,55 455,58 462,71" fill="#1d8fe1"/>
+      <circle cx="160" cy="210" r="8" fill="#e05555"/>
+      <text x="132" y="232" font-size="19" font-weight="bold">A</text>
+      <circle cx="400" cy="90" r="6" fill="#333"/><text x="410" y="84" font-size="18" font-weight="bold">D</text>
+      <circle cx="480" cy="210" r="6" fill="#333"/><text x="473" y="238" font-size="18" font-weight="bold">C</text>
+      <circle cx="320" cy="180" r="6" fill="#35b653"/><text x="330" y="176" font-size="16" font-weight="bold" fill="#1b6b2e">I</text>
+      <circle cx="380" cy="150" r="6" fill="#35b653"/><text x="390" y="146" font-size="16" font-weight="bold" fill="#1b6b2e">F</text>
+      <circle cx="200" cy="60" r="6" fill="#7a4de0"/><text x="210" y="56" font-size="16" font-weight="bold" fill="#7a4de0">E</text>
+      <circle cx="600" cy="100" r="6" fill="#7a4de0"/><text x="610" y="96" font-size="16" font-weight="bold" fill="#7a4de0">L</text>
+      <circle cx="350" cy="245" r="6" fill="#7a4de0"/><text x="360" y="241" font-size="16" font-weight="bold" fill="#7a4de0">X</text>
+    </svg>
+    <table class="tabel-ex">
+      <tr><td>Unghiul desenat se numește…</td><td id="dac-c0"><input id="dac-0" placeholder="scrie aici"></td></tr>
+      <tr><td>Vârful unghiului este…</td><td id="dac-c1"><input id="dac-1" placeholder="scrie aici"></td></tr>
+      <tr><td>Laturile unghiului sunt…</td><td id="dac-c2"><input id="dac-2" placeholder="ex.: .. și .."></td></tr>
+      <tr><td>Punctele situate în interiorul unghiului sunt…</td><td id="dac-c3"><input id="dac-3" placeholder="scrie aici"></td></tr>
+      <tr><td>Punctele situate în exteriorul unghiului sunt…</td><td id="dac-c4"><input id="dac-4" placeholder="scrie aici"></td></tr>
+    </table>
+    <div class="center"><button class="btn-primary" onclick="verificaDac()">✅ Verifică fișa</button></div>
+    <div id="dac-fb"></div>
+    <div class="center hidden" id="dac-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-decolare')">Fișă completă! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ V2: DECOLAREA SPRE PARIS ═══════════ -->
+  <div class="card screen hidden" id="screen-decolare">
+    <h2>🗼 Zbor spre Paris — permisiunea de decolare</h2>
+    <div class="guide">
+      <div class="face">🎙️</div>
+      <p><strong>Turnul de control:</strong> „Pilot Cristian, aici turnul! Nu poți decola spre Paris
+      până nu ne arăți că stăpânești unghiurile. Aprinde ambele lumini verzi ale semaforului!”</p>
+    </div>
+    <div class="semafor"><span id="sem-0" class="rosu"></span><span id="sem-1" class="rosu"></span></div>
+
+    <div class="mission-card" id="dec-ex1">
+      <h3>Proba 1: În figura alăturată este desenat unghiul EVA (V e vârful). Cum mai poate fi citit și scris? <em>Bifează TOATE variantele corecte!</em></h3>
+      <svg class="svg-fig" width="100%" height="150" viewBox="0 0 400 150">
+        <line x1="90" y1="120" x2="340" y2="120" stroke="#1d8fe1" stroke-width="4"/>
+        <polygon points="340,120 326,113 326,127" fill="#1d8fe1"/>
+        <line x1="90" y1="120" x2="300" y2="30" stroke="#1d8fe1" stroke-width="4"/>
+        <polygon points="300,30 285,33 292,46" fill="#1d8fe1"/>
+        <circle cx="90" cy="120" r="7" fill="#e05555"/><text x="66" y="140" font-size="18" font-weight="bold">V</text>
+        <circle cx="255" cy="49" r="6" fill="#333"/><text x="264" y="44" font-size="17" font-weight="bold">E</text>
+        <circle cx="270" cy="120" r="6" fill="#333"/><text x="263" y="146" font-size="17" font-weight="bold">A</text>
+      </svg>
+      <div class="center">
+        <button class="btn-toggle" onclick="this.classList.toggle('sel')" data-i="0">a) ∡E</button>
+        <button class="btn-toggle" onclick="this.classList.toggle('sel')" data-i="1">b) ∡V</button>
+        <button class="btn-toggle" onclick="this.classList.toggle('sel')" data-i="2">c) ∡VAE</button>
+        <button class="btn-toggle" onclick="this.classList.toggle('sel')" data-i="3">d) ∡AVE</button>
+      </div>
+      <div class="center" style="margin-top:8px;"><button class="btn-primary" onclick="verificaDec1()">📡 Trimite la turn</button></div>
+      <div id="dec1-fb"></div>
+    </div>
+
+    <div class="mission-card hidden" id="dec-ex2">
+      <h3>Proba 2: În figura alăturată este desenat unghiul BAC (A e vârful). Stabilește valoarea de adevăr a propozițiilor:</h3>
+      <svg class="svg-fig" width="100%" height="140" viewBox="0 0 400 140">
+        <line x1="90" y1="115" x2="340" y2="115" stroke="#1d8fe1" stroke-width="4"/>
+        <polygon points="340,115 326,108 326,122" fill="#1d8fe1"/>
+        <line x1="90" y1="115" x2="310" y2="28" stroke="#1d8fe1" stroke-width="4"/>
+        <polygon points="310,28 295,31 302,44" fill="#1d8fe1"/>
+        <circle cx="90" cy="115" r="7" fill="#e05555"/><text x="66" y="135" font-size="18" font-weight="bold">A</text>
+        <circle cx="260" cy="48" r="6" fill="#333"/><text x="269" y="43" font-size="17" font-weight="bold">B</text>
+        <circle cx="270" cy="115" r="6" fill="#333"/><text x="263" y="141" font-size="17" font-weight="bold">C</text>
+      </svg>
+      <div id="dec2-props"></div>
+      <div class="center" style="margin-top:8px;"><button class="btn-primary" onclick="verificaDec2()">📡 Trimite la turn</button></div>
+      <div id="dec2-fb"></div>
+    </div>
+
+    <div class="center hidden" id="dec-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-drept')">🛫 DECOLARE! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ 2a. UNGHIUL DREPT ═══════════ -->
+  <div class="card screen hidden" id="screen-drept">
+    <h2>📐 Misiunea 3: Vânătoarea unghiului DREPT</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Piloții au nevoie de repere precise. Cel mai faimos unghi din lume e <strong>unghiul drept</strong>.
+      Hai să-l descoperi cu corpul și cu mâinile tale — 4 provocări de teren:</p>
+    </div>
+    <div class="mission-card">
+      <h3>🧍 Provocarea 1: Stai drept!</h3>
+      <p>Ridică-te în picioare, perfect vertical. Tu acum… stai <em>drept</em>? Exact! Corpul tău vertical
+      formează cu solul orizontal un unghi special — chiar de aici vine numele: <strong>unghi drept</strong>.</p>
+    </div>
+    <div class="mission-card">
+      <h3>📄 Provocarea 2: Detectorul de unghiuri drepte</h3>
+      <p>Ia o foaie de hârtie. În ce fel de unghi se întâlnesc marginile ei? Da — unghi drept!
+      Acum folosește colțul foii ca <strong>detector</strong>: plimbă-l prin casă și potrivește-l pe colțuri.
+      Găsește minim 10 unghiuri drepte! Numără-le aici:</p>
+      <div class="center" style="margin-top:8px;">
+        <button class="btn-small" onclick="huntCount(-1)">−</button>
+        <span class="counter-big" id="hunt-count">0 / 10</span>
+        <button class="btn-small" onclick="huntCount(1)">+</button>
+      </div>
+      <div id="hunt-fb" class="center"></div>
+    </div>
+    <div class="mission-card">
+      <h3>🧱 Provocarea 3: Misterul pieselor Kapla</h3>
+      <p>De ce crezi că piesele de construit (Kapla, cuburi, cărămizi) se îmbină atât de ușor și frumos?</p>
+      <button class="btn-primary reveal" onclick="this.nextElementSibling.classList.remove('hidden');this.classList.add('hidden')">Arată răspunsul</button>
+      <div class="feedback explain hidden">Pentru că toate colțurile lor sunt <strong>unghiuri drepte</strong>!
+      Unghiurile drepte se lipesc perfect unul de altul, fără goluri — de aceea construcțiile stau stabile și arată ordonat.</div>
+    </div>
+    <div class="mission-card">
+      <h3>🌿 Provocarea 4: Dar în natură?</h3>
+      <p>În casă ai găsit zeci de unghiuri drepte. Oare în natură — la copaci, pietre, frunze — se găsesc la fel de multe?</p>
+      <button class="btn-primary reveal" onclick="this.nextElementSibling.classList.remove('hidden');this.classList.add('hidden')">Arată răspunsul</button>
+      <div class="feedback explain hidden">Aproape deloc! Natura preferă forme neregulate și curbe.
+      Unghiul drept este <strong>semnătura omului</strong>: unde vezi multe unghiuri drepte, a construit un om.
+      De aceea orașele văzute din avion arată ca un caiet de matematică! 🏙️</div>
+    </div>
+    <p class="center" style="font-weight:700;color:#1d4e89;font-size:1.1rem;">📐 Ține minte: unghiul drept are exact 90 de grade (90°).</p>
+    <div class="center"><button class="btn-primary" onclick="show('screen-tipuri')">Detector calibrat! Mai departe ➜</button></div>
+  </div>
+
+  <!-- ═══════════ 2b+2c. ASCUȚIT & OBTUZ ═══════════ -->
+  <div class="card screen hidden" id="screen-tipuri">
+    <h2>✏️ Misiunea 4: Familia unghiurilor</h2>
+    <div class="mission-card">
+      <h3>✏️ Unghiul ASCUȚIT</h3>
+      <p>Când scriem cu un creion, cel mai plăcut e imediat după ce l-am ascuțit — vârful lui e
+      <em>ascuțit</em> ca un ac! Privește vârful unui creion proaspăt ascuțit: laturile lui formează un unghi
+      <strong>mai mic decât unghiul drept</strong>. Unghiurile mai mici de 90° se numesc <strong>unghiuri ascuțite</strong>.</p>
+      <svg class="svg-fig" width="100%" height="90" viewBox="0 0 500 90">
+        <rect x="150" y="25" width="280" height="40" rx="6" fill="#f4b942" stroke="#c98a2e" stroke-width="2"/>
+        <polygon points="150,25 90,45 150,65" fill="#e8d5b5" stroke="#c98a2e" stroke-width="2"/>
+        <polygon points="112,38 90,45 112,52" fill="#333"/>
+        <path d="M 130 32 A 22 22 0 0 0 130 58" fill="none" stroke="#e05555" stroke-width="2.5"/>
+        <text x="440" y="52" font-size="15" fill="#666">← vârf ascuțit!</text>
+      </svg>
+    </div>
+    <div class="mission-card">
+      <h3>🛋️ Unghiul OBTUZ</h3>
+      <p>Acum gândește-te la un <strong>șezlong de plajă</strong>: ca să stai comod, lași spătarul pe spate.
+      Între spătar și locul unde șezi se face un unghi <em>larg, leneș, mai deschis decât un colț de foaie</em>.
+      La fel și capacul laptopului deschis mult pe spate, sau ușa deschisă larg de tot.
+      Unghiurile <strong>mai mari de 90° dar mai mici de 180°</strong> se numesc <strong>unghiuri obtuze</strong> —
+      unghiurile confortului! 😎</p>
+      <svg class="svg-fig" width="100%" height="120" viewBox="0 0 500 120">
+        <line x1="120" y1="95" x2="330" y2="95" stroke="#8a6b3d" stroke-width="6" stroke-linecap="round"/>
+        <line x1="120" y1="95" x2="40" y2="30" stroke="#8a6b3d" stroke-width="6" stroke-linecap="round"/>
+        <path d="M 160 95 A 40 40 0 0 0 90 71" fill="none" stroke="#e05555" stroke-width="2.5"/>
+        <text x="150" y="65" font-size="14" fill="#a02525">obtuz</text>
+        <text x="345" y="100" font-size="26">🏖️</text>
+        <circle cx="120" cy="95" r="5" fill="#333"/>
+        <text x="55" y="105" font-size="14" fill="#666">șezlongul relaxat</text>
+      </svg>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-casa')">Le știu! La provocare ➜</button></div>
+  </div>
+
+  <!-- ═══════════ PROVOCAREA CASEI ═══════════ -->
+  <div class="card screen hidden" id="screen-casa">
+    <h2>🏠 Misiunea 5: Inspecția casei</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Zbor de recunoaștere deasupra unei case! <strong>Atinge pe rând cerculețele roșii</strong>
+      și spune ce fel de unghi e fiecare. Toate 5 — și misiunea e completă!</p>
+    </div>
+    <div class="center">
+      <svg width="100%" height="330" viewBox="0 0 520 330" id="casa-svg">
+        <rect x="120" y="150" width="280" height="150" fill="#ffe9c7" stroke="#c98a2e" stroke-width="3"/>
+        <polygon points="100,150 260,50 420,150" fill="#e05555" opacity=".85" stroke="#a02525" stroke-width="3"/>
+        <rect x="230" y="220" width="60" height="80" fill="#8a6b3d" stroke="#5a4527" stroke-width="2"/>
+        <rect x="150" y="180" width="50" height="45" fill="#bde0fe" stroke="#5a83a8" stroke-width="2"/>
+        <rect x="320" y="180" width="50" height="45" fill="#bde0fe" stroke="#5a83a8" stroke-width="2"/>
+        <g id="casa-markers"></g>
+      </svg>
+    </div>
+    <p class="center" style="font-weight:600;color:#1d4e89;" id="casa-progress"></p>
+    <div class="center" id="casa-buttons"></div>
+    <div id="casa-fb"></div>
+    <div class="center hidden" id="casa-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-teorie')">Inspecție completă! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ 3. TEORIE: DEFINIȚIE, NOTAȚIE, INTERIOR/EXTERIOR ═══════════ -->
+  <div class="card screen hidden" id="screen-teorie">
+    <h2>📖 Manualul pilotului: definiția oficială</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Ai explorat destul — acum, definițiile din manual. Le-ai descoperit deja pe toate singur!</p>
+    </div>
+    <div class="learned">
+      <ul>
+        <li>📐 <strong>Unghiul</strong> = figura geometrică formată din <strong>două semidrepte care au aceeași origine</strong>.</li>
+        <li>➡️ <strong>Laturile unghiului</strong> = cele două semidrepte (AB și AC).</li>
+        <li>🔴 <strong>Vârful unghiului</strong> = originea comună a celor două semidrepte (punctul A).</li>
+      </ul>
+    </div>
+    <svg class="svg-fig" width="100%" height="240" viewBox="0 0 700 240">
+      <path d="M 100 190 L 320 190 A 95 95 0 0 0 283 118" fill="#fff3cd"/>
+      <line x1="100" y1="190" x2="400" y2="190" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="400,190 386,183 386,197" fill="#1d8fe1"/>
+      <line x1="100" y1="190" x2="340" y2="70" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="340,70 325,72 332,85" fill="#1d8fe1"/>
+      <circle cx="100" cy="190" r="8" fill="#e05555"/>
+      <text x="72" y="212" font-size="20" font-weight="bold">A</text>
+      <circle cx="280" cy="100" r="6" fill="#333"/><text x="290" y="95" font-size="18" font-weight="bold">B</text>
+      <circle cx="310" cy="190" r="6" fill="#333"/><text x="303" y="218" font-size="18" font-weight="bold">C</text>
+      <text x="185" y="170" font-size="15" fill="#a05a00" font-weight="bold">interiorul unghiului</text>
+      <text x="150" y="50" font-size="15" fill="#678">exteriorul unghiului</text>
+      <text x="440" y="80" font-size="17" fill="#333">• vârful: punctul <tspan font-weight="bold">A</tspan></text>
+      <text x="440" y="110" font-size="17" fill="#333">• laturile: semidreptele <tspan font-weight="bold">AB</tspan> și <tspan font-weight="bold">AC</tspan></text>
+      <text x="440" y="140" font-size="17" fill="#333">• interiorul: <tspan font-weight="bold">Int(∡BAC)</tspan> — zona</text>
+      <text x="455" y="162" font-size="17" fill="#333">colorată dintre laturi</text>
+      <text x="440" y="192" font-size="17" fill="#333">• exteriorul: <tspan font-weight="bold">Ext(∡BAC)</tspan> — restul</text>
+      <text x="455" y="214" font-size="17" fill="#333">planului, fără laturi</text>
+    </svg>
+    <div class="notatie">Scriem: ∡BAC sau ∡CAB sau, pe scurt, ∡A · Citim: „unghiul BAC”<br>
+      <span style="font-size:1rem;font-weight:400;color:#678;">Litera vârfului stă ÎNTOTDEAUNA la mijloc!</span></div>
+    <div class="learned">
+      <ul>
+        <li>🌅 Dacă laturile sunt <strong>semidrepte opuse</strong> (formează o linie dreaptă) → <strong>unghi alungit</strong>.</li>
+        <li>😴 Dacă laturile sunt <strong>semidrepte identice</strong> (suprapuse) → <strong>unghi nul</strong>.</li>
+      </ul>
+    </div>
+    <svg class="svg-fig" width="100%" height="110" viewBox="0 0 700 110">
+      <line x1="30" y1="55" x2="300" y2="55" stroke="#35b653" stroke-width="4"/>
+      <polygon points="30,55 44,48 44,62" fill="#35b653"/>
+      <polygon points="300,55 286,48 286,62" fill="#35b653"/>
+      <circle cx="165" cy="55" r="7" fill="#e05555"/>
+      <text x="60" y="42" font-size="16" font-weight="bold">A</text>
+      <text x="160" y="35" font-size="16" font-weight="bold">B</text>
+      <text x="265" y="42" font-size="16" font-weight="bold">C</text>
+      <text x="55" y="95" font-size="15" fill="#333">∡ABC = unghi alungit (180°)</text>
+      <line x1="420" y1="55" x2="650" y2="55" stroke="#e08a1e" stroke-width="4"/>
+      <polygon points="650,55 636,48 636,62" fill="#e08a1e"/>
+      <circle cx="420" cy="55" r="7" fill="#e05555"/>
+      <text x="412" y="40" font-size="16" font-weight="bold">A</text>
+      <text x="530" y="45" font-size="16" font-weight="bold">B, C suprapuse</text>
+      <text x="440" y="95" font-size="15" fill="#333">∡BAC = unghi nul (0°)</text>
+    </svg>
+    <div class="center"><button class="btn-primary" onclick="show('screen-intext')">Am citit manualul! La joc ➜</button></div>
+  </div>
+
+  <!-- ═══════════ JOC INTERIOR/EXTERIOR ═══════════ -->
+  <div class="card screen hidden" id="screen-intext">
+    <h2>🎯 Misiunea 6: Radarul — înăuntru sau în afară?</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Pe radarul unghiului BAC au apărut 4 avioane: M, N, P și Q. Pentru fiecare, spune dacă zboară
+      prin <strong>interiorul</strong> sau prin <strong>exteriorul</strong> unghiului!</p>
+    </div>
+    <div id="intext-series"></div>
+    <div class="center hidden" id="intext-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-repetare2')">Radar citit! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ V2: REPETAREA 2 — AUDIO + DESEN SINCRONIZAT ═══════════ -->
+  <div class="card screen hidden" id="screen-repetare2">
+    <h2>🎧 Un moment de liniște la turn…</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Înainte de instrumentele de zbor, ascultă cu atenție. Apasă pe buton, închide o clipă ochii…
+      apoi privește desenul: se luminează exact ce auzi. 💙</p>
+    </div>
+    <div class="center"><button class="btn-primary" id="rep2-btn" onclick="repetare2()">🔊 Ascultă și privește</button></div>
+    <svg class="svg-fig" width="100%" height="240" viewBox="0 0 700 240">
+      <g id="rep2-l1" opacity="0.25">
+        <line x1="180" y1="190" x2="560" y2="190" stroke="#1d8fe1" stroke-width="6"/>
+        <polygon points="560,190 544,182 544,198" fill="#1d8fe1"/>
+      </g>
+      <g id="rep2-l2" opacity="0.25">
+        <line x1="180" y1="190" x2="500" y2="45" stroke="#1d8fe1" stroke-width="6"/>
+        <polygon points="500,45 484,49 492,63" fill="#1d8fe1"/>
+      </g>
+      <g id="rep2-v" opacity="0.25">
+        <circle cx="180" cy="190" r="11" fill="#e05555"/>
+        <text x="140" y="220" font-size="20" font-weight="bold" fill="#a02525">vârful</text>
+      </g>
+    </svg>
+    <p class="center" id="rep2-text" style="font-weight:600;color:#1d4e89;min-height:30px;"></p>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" onclick="show('screen-masura')">Am simțit unghiul! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ 4. MĂSURA UNGHIULUI ═══════════ -->
+  <div class="card screen hidden" id="screen-masura">
+    <h2>🌡️ Misiunea 7: Instrumentul de bord — raportorul</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Când măsurăm un unghi, măsurăm <strong>deschiderea dintre laturile lui</strong> — cu un instrument
+      numit <strong>raportor</strong>. <strong>Rotește brațul albastru</strong> și privește cum se schimbă
+      măsura ȘI numele unghiului!</p>
+    </div>
+    <canvas id="raportor" width="800" height="420"></canvas>
+    <div class="center"><span class="status-badge warn" id="raportor-status">…</span></div>
+    <div class="learned" style="margin-top:14px;">
+      <p><strong>Cum măsori cu raportorul (3 pași):</strong></p>
+      <ul>
+        <li>1️⃣ Așezi <strong>centrul raportorului</strong> pe <strong>vârful</strong> unghiului (punctul B).</li>
+        <li>2️⃣ Potrivești o latură (BC) în dreptul diviziunii <strong>0°</strong>.</li>
+        <li>3️⃣ Citești numărul de grade în dreptul celeilalte laturi (BA). Dacă citești 50, scrii: <strong>∡ABC = 50°</strong>.</li>
+      </ul>
+      <p style="margin-top:8px;">🔬 Unitatea de măsură: <strong>gradul sexagesimal (1°)</strong>, ales astfel încât unghiul alungit
+      să aibă 180°. Iar 1° = 60 de minute (60′), 1′ = 60 de secunde (60″) — ca la ceas!</p>
+    </div>
+    <table class="clasif">
+      <tr><th>Unghi</th><th>nul</th><th>ascuțit</th><th>drept</th><th>obtuz</th><th>alungit</th></tr>
+      <tr><td><strong>Măsura</strong></td><td>0°</td><td>între 0° și 90°</td><td>exact 90°</td><td>între 90° și 180°</td><td>180°</td></tr>
+      <tr><td><strong>Ca...</strong></td><td>😴 creion închis</td><td>✏️ vârf de creion</td><td>📐 colț de foaie</td><td>🏖️ șezlong</td><td>🌅 orizontul</td></tr>
+    </table>
+    <div class="center"><button class="btn-primary" onclick="show('screen-dece-masuram')">Instrument calibrat! Mai departe ➜</button></div>
+  </div>
+
+  <!-- ═══════════ V2: DE CE MĂSURĂM UNGHIURILE ═══════════ -->
+  <div class="card screen hidden" id="screen-dece-masuram">
+    <h2>📷 De ce măsurăm unghiurile?</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Câteodată avem nevoie să <strong>comparăm</strong> unghiuri — și pentru asta trebuie să le putem
+      <strong>măsura</strong>. Uite: vreau să cumpăr un aparat foto. Fiecare aparat are un anumit
+      <strong>unghi de vizualizare</strong>. Eu vreau unul cu unghi MARE, ca să încapă mult în fotografie.
+      Dar cum aflu care e mai bun… dacă nu pot măsura unghiul?</p>
+    </div>
+    <svg class="svg-fig" width="100%" height="210" viewBox="0 0 700 210">
+      <path d="M 110 110 L 300 25 L 300 195 Z" fill="#d8f7dd" opacity=".8"/>
+      <line x1="110" y1="110" x2="300" y2="25" stroke="#35b653" stroke-width="3"/>
+      <line x1="110" y1="110" x2="300" y2="195" stroke="#35b653" stroke-width="3"/>
+      <text x="80" y="118" font-size="30">📷</text>
+      <text x="120" y="205" font-size="15" fill="#1b6b2e">unghi de vizualizare MARE — încape tot peisajul!</text>
+      <path d="M 450 110 L 640 75 L 640 145 Z" fill="#ffe1e1" opacity=".8"/>
+      <line x1="450" y1="110" x2="640" y2="75" stroke="#e05555" stroke-width="3"/>
+      <line x1="450" y1="110" x2="640" y2="145" stroke="#e05555" stroke-width="3"/>
+      <text x="420" y="118" font-size="30">📷</text>
+      <text x="460" y="185" font-size="15" fill="#a02525">unghi îngust — încape doar o bucățică</text>
+    </svg>
+    <div class="learned">
+      <ul>
+        <li>📏 La comparat unghiuri <strong>NU ne interesează lungimile laturilor</strong> — laturile sunt semidrepte, deci nesfârșite: nu pot fi măsurate!</li>
+        <li>👐 Ne interesează doar <strong>cât de mare este deschiderea</strong> dintre laturi.</li>
+        <li>🎓 Cea mai folosită unitate: <strong>gradul sexagesimal (1°)</strong>. Numele vine de la faptul că minutul este de <strong>60</strong> de ori mai mic decât gradul: 1° = 60′.</li>
+        <li>🔢 <strong>Măsura unui unghi</strong> = numărul care arată de câte ori se cuprinde unitatea de măsură (1°) în acel unghi.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-360')">Logic! Mai departe ➜</button></div>
+  </div>
+
+  <!-- ═══════════ V2: DE CE CERCUL ARE 360° ═══════════ -->
+  <div class="card screen hidden" id="screen-360">
+    <h2>🌍 De ce cercul are 360 de grade?</h2>
+    <div class="orbit-wrap">
+      <div class="orbita"></div>
+      <div class="soare">☀️</div>
+      <div class="rotor"><div class="pamant">🌍</div></div>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="povesteste360()">🔊 Ascultă povestea babilonienilor</button></div>
+    <div class="guide" style="margin-top:12px;">
+      <div class="face">🏺</div>
+      <p>Oamenii din vechime priveau cerul în fiecare noapte: soarele, luna și stelele păreau să se miște
+      <strong>pe un cerc</strong>. Și au observat că un an are cam <strong>360 de zile</strong> (azi știm: 365!).
+      Acum 4000 de ani, <strong>babilonienii</strong> — un popor tare bun la mate și astronomie — au împărțit
+      cercul în <strong>360 de părți</strong>, câte una pentru fiecare zi. De ce tocmai 360? Pentru că se împarte
+      ușor la 2, 3, 4, 5, 6, 8, 9, 10 și 12! Nicio lege a naturii nu cere 360 — a fost ales fiindcă e
+      <em>practic</em>, iar alegerea a rămas până azi. 🍕 Gândește-te așa: cercul e o pizza întreagă, tăiată
+      în 360 de feliuțe minuscule — fiecare felie e <strong>1 grad</strong>.</p>
+    </div>
+    <p class="center" style="font-weight:700;color:#1d4e89;">Acum că știi că cercul are 360°… hai să vedem dacă poți deduce restul!</p>
+    <div id="s360-series"></div>
+    <div class="center hidden" id="s360-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-gluma')">Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ V2: GLUMA ═══════════ -->
+  <div class="card screen hidden" id="screen-gluma">
+    <h2>😄 Pauză de râs la cantina piloților</h2>
+    <div class="center" style="font-size:4rem;margin:10px;">👨‍🏫 🧒</div>
+    <div class="center"><button class="btn-primary" onclick="spuneGluma()">🔊 Ascultă gluma</button></div>
+    <div class="guide" style="margin-top:14px;">
+      <div class="face">👨‍🏫</div>
+      <p>Profesorul îl întreabă pe Matei: „Câte grade are un cerc?”</p>
+    </div>
+    <div class="guide">
+      <div class="face">🧒</div>
+      <p>„Depinde…”</p>
+    </div>
+    <div class="guide">
+      <div class="face">👨‍🏫</div>
+      <p>„Cum adică depinde?!”</p>
+    </div>
+    <div class="guide">
+      <div class="face">🧒</div>
+      <p>„Păi… dacă e iarnă și îl lași afară, poate avea chiar și MINUS zece grade!” 🥶</p>
+    </div>
+    <div class="guide">
+      <div class="face">👨‍🏫</div>
+      <p>„Ha-ha! Acelea sunt grade de temperatură, Matei! Eu vorbeam despre gradele cercului: 360!”</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-rege-cerc')">😂 Mai departe ➜</button></div>
+  </div>
+
+  <!-- ═══════════ V2: POVESTEA REGELUI CERC ═══════════ -->
+  <div class="card screen hidden" id="screen-rege-cerc">
+    <h2>👑 Povestea Regelui Cerc</h2>
+    <div class="castel-wrap">
+      <div class="cerc"></div>
+      <div class="castel">🏰</div>
+      <div class="rotor"><div class="ac"></div></div>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="povesteRege()">🔊 Ascultă povestea</button></div>
+    <div class="guide" style="margin-top:12px;">
+      <div class="face">👑</div>
+      <p>A fost odată un rege pe numele lui <strong>Cerc</strong>. Castelul lui era perfect rotund.
+      În mijloc trăia cavalerul <strong>Ac</strong>, cu o singură misiune: să se rotească și să arate toate direcțiile.
+      Într-o zi, regele a spus: <em>„Ca să știm exact cât te-ai întors, împărțim castelul în 360 de pași egali.
+      Fiecare pas se va numi un GRAD.”</em> Cavalerul a început să se rotească: după <strong>90 de pași</strong> privea spre dreapta,
+      după <strong>180</strong> era întors cu spatele, după <strong>270</strong> privea spre stânga, iar după
+      <strong>360 de pași</strong> ajunsese exact de unde pornise. De atunci, oricine vrea să știe cât s-a rotit ceva,
+      întreabă: <em>„Câte grade ai făcut?”</em> — și așa s-au născut unghiurile!</p>
+    </div>
+    <p class="center" style="font-weight:700;color:#1d4e89;">Întrebarea regelui: dacă te-ai rotit 180 de pași, ai ajuns în același loc… sau în cel opus?</p>
+    <div class="center">
+      <button class="btn-primary" onclick="regeAnswer(this,false)">În același loc</button>
+      <button class="btn-primary" onclick="regeAnswer(this,true)">În locul opus</button>
+    </div>
+    <div id="rege-fb"></div>
+    <div class="center hidden" id="rege-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-este-unghi')">Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ V2: REPETAREA 3 — ESTE SAU NU UNGHI? ═══════════ -->
+  <div class="card screen hidden" id="screen-este-unghi">
+    <h2>🔍 Este sau nu unghi?</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Ultima verificare de la turn! Dintre cele patru desene, doar UNUL este un unghi.
+      <strong>Apasă pe el!</strong></p>
+    </div>
+    <div class="center">
+      <div class="fig-alege" onclick="alegeUnghi(this,true)">
+        <svg width="150" height="110" viewBox="0 0 150 110">
+          <line x1="25" y1="90" x2="135" y2="90" stroke="#1d8fe1" stroke-width="3"/>
+          <polygon points="135,90 124,85 124,95" fill="#1d8fe1"/>
+          <line x1="25" y1="90" x2="115" y2="20" stroke="#1d8fe1" stroke-width="3"/>
+          <polygon points="115,20 104,23 110,32" fill="#1d8fe1"/>
+          <circle cx="25" cy="90" r="5" fill="#e05555"/>
+        </svg>
+      </div>
+      <div class="fig-alege" onclick="alegeUnghi(this,false,'Liniile paralele nu se întâlnesc niciodată — nu au origine comună, deci nu formează un unghi.')">
+        <svg width="150" height="110" viewBox="0 0 150 110">
+          <line x1="20" y1="35" x2="130" y2="35" stroke="#35b653" stroke-width="3"/>
+          <line x1="20" y1="75" x2="130" y2="75" stroke="#35b653" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="fig-alege" onclick="alegeUnghi(this,false,'Segmentele acestea nu se ating — fără punct comun, fără unghi!')">
+        <svg width="150" height="110" viewBox="0 0 150 110">
+          <line x1="20" y1="80" x2="70" y2="30" stroke="#e08a1e" stroke-width="3"/>
+          <line x1="90" y1="85" x2="135" y2="45" stroke="#e08a1e" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="fig-alege" onclick="alegeUnghi(this,false,'Aproape! Dar acestea sunt două DREPTE care se intersectează — un unghi are două SEMIDREPTE care pornesc din același punct.')">
+        <svg width="150" height="110" viewBox="0 0 150 110">
+          <line x1="20" y1="20" x2="130" y2="90" stroke="#7a4de0" stroke-width="3"/>
+          <line x1="20" y1="90" x2="130" y2="20" stroke="#7a4de0" stroke-width="3"/>
+        </svg>
+      </div>
+    </div>
+    <div id="este-fb"></div>
+    <div class="center hidden" id="este-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-rima')">Exact! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ V2: RIMA ═══════════ -->
+  <div class="card screen hidden" id="screen-rima">
+    <div class="rima">
+      Două semidrepte la un loc<br>
+      Dintr-un punct pornesc pe loc<br>
+      Când se-ntâlnesc, să știi precis:<br>
+      Un unghi s-a născut, cum am zis! 🎉
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-congruente')">Mai departe ➜</button></div>
+  </div>
+
+  <!-- ═══════════ 5. CONGRUENTE + OBSERVAȚII ═══════════ -->
+  <div class="card screen hidden" id="screen-congruente">
+    <h2>👯 Misiunea 8: Unghiurile gemene și secretele piloților</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Două unghiuri cu <strong>măsuri egale</strong> se numesc <strong>unghiuri congruente</strong> —
+      gemene! Nu contează încotro sunt întoarse sau cât de lungi le-am desenat laturile — contează doar deschiderea.</p>
+    </div>
+    <svg class="svg-fig" width="100%" height="170" viewBox="0 0 700 170">
+      <line x1="80" y1="130" x2="260" y2="130" stroke="#1d8fe1" stroke-width="4"/>
+      <line x1="80" y1="130" x2="215" y2="30" stroke="#1d8fe1" stroke-width="4"/>
+      <path d="M 130 130 A 50 50 0 0 0 120 100" fill="none" stroke="#e05555" stroke-width="2.5"/>
+      <circle cx="80" cy="130" r="6" fill="#e05555"/>
+      <text x="60" y="152" font-size="16" font-weight="bold">B</text>
+      <text x="220" y="25" font-size="16" font-weight="bold">A</text><text x="255" y="152" font-size="16" font-weight="bold">C</text>
+      <text x="130" y="112" font-size="13" fill="#a02525">36°</text>
+      <line x1="450" y1="40" x2="620" y2="140" stroke="#35b653" stroke-width="4"/>
+      <line x1="450" y1="40" x2="650" y2="40" stroke="#35b653" stroke-width="4"/>
+      <path d="M 500 40 A 50 50 0 0 1 493 65" fill="none" stroke="#e05555" stroke-width="2.5"/>
+      <circle cx="450" cy="40" r="6" fill="#e05555"/>
+      <text x="430" y="30" font-size="16" font-weight="bold">N</text>
+      <text x="625" y="155" font-size="16" font-weight="bold">P</text><text x="655" y="45" font-size="16" font-weight="bold">M</text>
+      <text x="505" y="70" font-size="13" fill="#a02525">36°</text>
+      <text x="270" y="90" font-size="22" font-weight="bold" fill="#1d4e89">∡ABC ≡ ∡MNP</text>
+    </svg>
+    <div class="learned">
+      <p><strong>🕵️ Trei secrete de pilot (observații importante):</strong></p>
+      <ul>
+        <li>✍️ Notația ∡BAC înseamnă, după context, atât <em>unghiul</em>, cât și <em>măsura lui</em>.</li>
+        <li>📏 Ca să arăți că punctele A, B, C sunt <strong>coliniare</strong> (în această ordine), e de-ajuns să arăți că ∡ABC este <strong>alungit</strong> (180°)!</li>
+        <li>✚ Dacă ∡AOB = 90° (drept), atunci dreptele OA și OB sunt <strong>perpendiculare</strong>. Se scrie OA ⊥ OB.</li>
+      </ul>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">Gata de examen! 🎮</button></div>
+  </div>
+
+  <!-- ═══════════ QUIZ ═══════════ -->
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ PROVOCARE FINALĂ: CONSTRUIEȘTE UNGHIURI ═══════════ -->
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Examenul de zbor: construiește unghiurile!</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Ultima probă înainte de brevet: turnul de control îți cere unghiuri EXACTE.
+      Rotește brațul pe raportor, apoi apasă <strong>„Fixează!”</strong> — 4 unghiuri de construit!</p>
+    </div>
+    <p class="center" style="font-size:1.2rem;font-weight:700;color:#1d4e89;" id="ch-target"></p>
+    <canvas id="ch-raportor" width="800" height="420"></canvas>
+    <div class="center" style="margin-top:10px;">
+      <button class="btn-primary" id="ch-fix" onclick="fixAngle()">📌 Fixează!</button>
+    </div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-barcuta')">Brevetul e aproape! ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ V2: BĂRCUȚA — UNGHIUL MĂSOARĂ O ÎNTOARCERE ═══════════ -->
+  <div class="card screen hidden" id="screen-barcuta">
+    <h2>⛵ Unghiul măsoară o ÎNTOARCERE, nu doar un colț!</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Privește bărcuța de sus: naviga liniștită… și la un moment dat și-a schimbat cursul!
+      Unghiul dintre drumul vechi și cel nou arată <strong>cât s-a rotit direcția ei</strong>.
+      Unghiul nu e doar un colț desenat pe hârtie — e o măsură a întoarcerii!</p>
+    </div>
+    <svg class="svg-fig" width="100%" height="230" viewBox="0 0 700 230">
+      <rect x="0" y="0" width="700" height="230" fill="#dff0ff" rx="14"/>
+      <line x1="80" y1="150" x2="380" y2="150" stroke="#1d8fe1" stroke-width="3" stroke-dasharray="10 8"/>
+      <polygon points="380,150 366,143 366,157" fill="#1d8fe1"/>
+      <line x1="380" y1="150" x2="600" y2="55" stroke="#e05555" stroke-width="3" stroke-dasharray="10 8"/>
+      <polygon points="600,55 585,58 592,71" fill="#e05555"/>
+      <path d="M 440 150 A 60 60 0 0 0 435 126" fill="none" stroke="#e08a1e" stroke-width="3"/>
+      <text x="450" y="130" font-size="15" fill="#a05a00" font-weight="bold">cât m-am rotit?</text>
+      <text x="358" y="163" font-size="30">⛵</text>
+      <text x="95" y="140" font-size="14" fill="#156bb0">drumul vechi</text>
+      <text x="480" y="95" font-size="14" fill="#a02525">drumul nou</text>
+    </svg>
+    <div id="barca-series"></div>
+    <div class="center hidden" id="barca-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-lungime')">Cârma e a mea! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ V2: LUNGIMEA LATURILOR NU SCHIMBĂ UNGHIUL ═══════════ -->
+  <div class="card screen hidden" id="screen-lungime">
+    <h2>📏 Lungimea laturilor NU schimbă unghiul!</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Privește cele două unghiuri. Unul are laturi foarte lungi, celălalt — scurte.
+      <strong>Care unghi este mai deschis?</strong></p>
+    </div>
+    <svg class="svg-fig" width="100%" height="240" viewBox="0 0 700 240" id="lung-svg">
+      <g id="lung-g1">
+        <line x1="60" y1="200" x2="380" y2="200" stroke="#1d8fe1" stroke-width="4"/>
+        <line x1="60" y1="200" x2="330" y2="45" stroke="#1d8fe1" stroke-width="4"/>
+        <circle cx="60" cy="200" r="7" fill="#e05555"/>
+        <text x="150" y="230" font-size="15" fill="#156bb0">laturi luuungi</text>
+      </g>
+      <g id="lung-g2">
+        <line x1="480" y1="200" x2="600" y2="200" stroke="#35b653" stroke-width="4"/>
+        <line x1="480" y1="200" x2="580" y2="142" stroke="#35b653" stroke-width="4"/>
+        <circle cx="480" cy="200" r="7" fill="#e05555"/>
+        <text x="490" y="230" font-size="15" fill="#1b6b2e">laturi scurte</text>
+      </g>
+      <g id="lung-overlay" class="hidden">
+        <line x1="60" y1="200" x2="180" y2="200" stroke="#35b653" stroke-width="8" opacity=".8"/>
+        <line x1="60" y1="200" x2="160" y2="142" stroke="#35b653" stroke-width="8" opacity=".8"/>
+        <text x="400" y="110" font-size="19" font-weight="bold" fill="#1b6b2e">Suprapuse: deschiderea e ACEEAȘI!</text>
+      </g>
+    </svg>
+    <div class="center" id="lung-buttons">
+      <button class="btn-primary" onclick="lungAnswer(this,false)">Cel cu laturi lungi</button>
+      <button class="btn-primary" onclick="lungAnswer(this,false)">Cel cu laturi scurte</button>
+      <button class="btn-primary" onclick="lungAnswer(this,true)">Sunt la fel de deschise!</button>
+    </div>
+    <div id="lung-fb"></div>
+    <p class="center hidden" id="lung-fraza" style="font-size:1.3rem;font-weight:800;color:#1d4e89;margin-top:12px;">
+      💡 Unghiul depinde de DESCHIDERE, nu de lungimea laturilor!</p>
+    <div class="center hidden" id="lung-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-comparare')">Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ V2: COMPARARE FĂRĂ RAPORTOR ═══════════ -->
+  <div class="card screen hidden" id="screen-comparare">
+    <h2>👀 Unghiurile pot fi comparate și FĂRĂ raportor!</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Ochiul de pilot antrenat vede imediat! Privește cele trei unghiuri și răspunde:</p>
+    </div>
+    <svg class="svg-fig" width="100%" height="200" viewBox="0 0 700 200">
+      <line x1="50" y1="160" x2="200" y2="160" stroke="#1d8fe1" stroke-width="4"/>
+      <line x1="50" y1="160" x2="190" y2="105" stroke="#1d8fe1" stroke-width="4"/>
+      <circle cx="50" cy="160" r="6" fill="#e05555"/>
+      <text x="110" y="192" font-size="19" font-weight="bold" fill="#1d4e89">a</text>
+      <line x1="290" y1="160" x2="440" y2="160" stroke="#35b653" stroke-width="4"/>
+      <line x1="290" y1="160" x2="305" y2="25" stroke="#35b653" stroke-width="4"/>
+      <circle cx="290" cy="160" r="6" fill="#e05555"/>
+      <text x="350" y="192" font-size="19" font-weight="bold" fill="#1d4e89">b</text>
+      <line x1="520" y1="160" x2="670" y2="160" stroke="#e08a1e" stroke-width="4"/>
+      <line x1="520" y1="160" x2="380" y2="135" stroke="#e08a1e" stroke-width="4"/>
+      <circle cx="520" cy="160" r="6" fill="#e05555"/>
+      <text x="560" y="192" font-size="19" font-weight="bold" fill="#1d4e89">c</text>
+    </svg>
+    <div id="comp-series"></div>
+    <div class="center hidden" id="comp-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-fisa')">Ochi de vultur! Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ FIȘA DE LUCRU PE CAIET ═══════════ -->
+  <div class="card screen hidden" id="screen-fisa">
+    <h2>📓 Misiuni pe caiet (cu riglă și raportor adevărat!)</h2>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p>Un pilot adevărat se antrenează și pe hârtie! Ia caietul de geometrie, rigla și raportorul.
+      Rezolvă misiunile — apoi apasă butonul de la final ca să-ți iei brevetul.</p>
+    </div>
+    <div class="learned">
+      <ol class="fisa">
+        <li>Construiește un unghi cu măsura de: a) 80° · b) 150° · c) 45° · d) 90°.</li>
+        <li>a) Construiește un unghi de 30° și <strong>patru puncte</strong> în interiorul lui.
+            b) Construiește un unghi de 110° și <strong>trei puncte</strong> în exteriorul lui.</li>
+        <li>Completează: a) 30° = …′ · b) 90° = 89°…′ · c) 65′ = …°…′ · d) 10°31′ = …′ · e) 180° = 179°…′
+            <em>(amintește-ți: 1° = 60′)</em></li>
+        <li>Ce unghi formează orarul și minutarul ceasului la: a) 6:00 · b) 9:00 · c) 15:00?
+            Desenează ceasurile și verifică cu raportorul!</li>
+        <li>a) Construiește punctele A, B, C, D astfel încât ∡ABC = 40° și ∡CBD = 100°.
+            b) Măsoară unghiul ABD. <em>Atenție: sunt două cazuri — D poate fi de o parte sau de alta!</em></li>
+        <li>a) Construiește M, N, P, Q astfel încât ∡MNP = 60° și ∡MNQ = 120°.
+            b) Măsoară ∡PNQ. Ce observi? Analizează toate cazurile!</li>
+        <li>Construiește unghiurile ABC, BCD și CDE astfel încât ∡ABC ≡ ∡BCD ≡ ∡CDE și ∡CDE = 30°.</li>
+        <li>Construiește două unghiuri care au: a) vârful comun și nicio latură comună;
+            b) o latură comună, iar celelalte două laturi sunt semidrepte opuse.</li>
+        <li>Construiește dreptele a, b, c astfel încât a ⊥ b și b ⊥ c. Ce observi despre dreptele a și c?</li>
+        <li>🌟 Misiune de maestru: construiește o configurație în care ∡AOB e alungit, ∡AOM = 120°,
+            iar punctul N e pe semidreapta AB astfel încât ∡OMN = 90°. Apoi află: sunt A, O, N coliniare?
+            Cât are ∡NMO? Dar ∡MOA?</li>
+      </ol>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-end')">Am fișa! Brevetul, te rog! 🎓</button></div>
+  </div>
+
+  <!-- ═══════════ FINAL ═══════════ -->
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🎖️</div>
+      <h1>BREVET DE PILOT AL UNGHIURILOR!</h1>
+      <p>Căpitanul Vector îți strânge mâna: misiune îndeplinită, cadet… pardon, <strong>PILOT</strong>!</p>
+    </div>
+    <div class="learned">
+      <p><strong>Ce ai învățat în această misiune:</strong></p>
+      <ul>
+        <li>📐 <strong>Unghiul</strong>: două semidrepte cu aceeași origine; vârf + laturi; notația ∡BAC (vârful la mijloc!).</li>
+        <li>🎨 <strong>Interiorul</strong> Int(∡BAC) și <strong>exteriorul</strong> Ext(∡BAC).</li>
+        <li>🌡️ <strong>Măsura</strong> se citește cu raportorul, în grade; 1° = 60′, 1′ = 60″.</li>
+        <li>👨‍👩‍👧‍👦 <strong>Clasificarea</strong>: nul 0° · ascuțit &lt;90° · drept 90° · obtuz 90°–180° · alungit 180°.</li>
+        <li>👯 <strong>Unghiuri congruente</strong> = măsuri egale: ∡ABC ≡ ∡MNP.</li>
+        <li>🕵️ Unghi alungit → puncte coliniare; unghi drept → drepte perpendiculare (⊥).</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">👨‍✈️</div>
+      <p><strong>Ultima transmisiune de la turn:</strong> explică-i cuiva din familie diferența dintre un unghi
+      ascuțit, unul drept și unul obtuz — folosind doar mâinile tale ca laturi. Dacă persoana înțelege,
+      brevetul tău e definitiv! Zbor lin, pilotule! ✈️</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia misiunea</button>
+      <a href="../index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🎒 Toate cursurile</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Misiunea Unghiurilor · VARIANTA 2 (cu feedbackul audio implementat) · unghi, interior/exterior, măsură, congruență, clasificare</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+
+/* ═══════════ 1. avionul care aterizează ═══════════ */
+const av = document.getElementById("avion");
+const avx = av.getContext("2d");
+const TD = {x:120, y:320};           // punctul de aterizare
+const avH = { H:{x:600, y:120} };    // mânerul (avionul)
+let avTried = {lin:false, picaj:false};
+function avDeg(){
+  return clamp(Math.round(Math.atan2(TD.y-avH.H.y, avH.H.x-TD.x)*180/Math.PI), 2, 88);
+}
+function drawAvion(){
+  avx.clearRect(0,0,av.width,av.height);
+  // cer + pista
+  avx.fillStyle="#dff0ff"; avx.fillRect(0,0,av.width,320);
+  avx.fillStyle="#9aa5b1"; avx.fillRect(0,320,av.width,60);
+  avx.fillStyle="#fff";
+  for(let x=20;x<av.width;x+=70) avx.fillRect(x,345,36,6);
+  const deg = avDeg();
+  const a = deg*Math.PI/180;
+  // linia de coborâre
+  avx.strokeStyle="#1d8fe1"; avx.lineWidth=4; avx.setLineDash([10,8]);
+  avx.beginPath(); avx.moveTo(TD.x,TD.y);
+  avx.lineTo(TD.x+Math.cos(a)*700, TD.y-Math.sin(a)*700); avx.stroke();
+  avx.setLineDash([]);
+  // pista (latura orizontală)
+  avx.strokeStyle="#e08a1e"; avx.lineWidth=4;
+  avx.beginPath(); avx.moveTo(TD.x,TD.y); avx.lineTo(TD.x+560,TD.y); avx.stroke();
+  // arcul unghiului
+  avx.beginPath(); avx.arc(TD.x,TD.y,60,-a,0);
+  avx.strokeStyle="#e05555"; avx.lineWidth=3; avx.stroke();
+  // avionul pe linie
+  avH.H.x = TD.x+Math.cos(a)*420;
+  avH.H.y = TD.y-Math.sin(a)*420;
+  avx.font="36px Segoe UI";
+  avx.fillText("🛬", avH.H.x-20, avH.H.y+12);
+  avx.font="bold 24px Segoe UI"; avx.fillStyle="#1d4e89";
+  avx.fillText(deg+"°", TD.x+72, TD.y-16);
+  let msg, cls="warn";
+  if(deg<20){ msg="Aterizare LINĂ ca o pană — deschidere mică!"; avTried.lin=true; cls="ok"; }
+  else if(deg<=50){ msg="Aterizare normală."; }
+  else { msg="PICAJ! Deschidere uriașă — pasagerii țipă! 😱"; avTried.picaj=true; }
+  const b=document.getElementById("avion-status");
+  b.textContent = msg; b.className="status-badge "+cls;
+}
+enableDrag(av, ()=>avH, drawAvion, -2000);
+function avionAnswer(btn, ok){
+  const fb=document.getElementById("avion-fb");
+  if(ok){
+    btn.style.background="#35b653";
+    fb.innerHTML=`<div class="feedback good">✅ Exact! La aterizarea lină, deschiderea dintre drum și pistă e cea mai mică. Această „deschidere” e chiar ideea de UNGHI — și tocmai ai comparat unghiuri fără să știi încă numele lor!</div>`;
+    document.getElementById("avion-next").classList.remove("hidden");
+  } else {
+    fb.innerHTML=`<div class="feedback hint">🤔 Mai încearcă! Trage avionul jos de tot (aterizare lină) și sus de tot (picaj) și compară deschiderile.</div>`;
+  }
+}
+
+/* ═══════════ 1b. sandbox: desenează un unghi ═══════════ */
+const sb = document.getElementById("sandbox");
+const sbx = sb.getContext("2d");
+const sbO = {x:400, y:300};
+const sbPts = { A:{x:650,y:120}, B:{x:150,y:150} };
+function drawSandbox(){
+  sbx.clearRect(0,0,sb.width,sb.height);
+  const a1=Math.atan2(sbO.y-sbPts.A.y, sbPts.A.x-sbO.x);
+  const a2=Math.atan2(sbO.y-sbPts.B.y, sbPts.B.x-sbO.x);
+  let d = Math.round(Math.abs(a1-a2)*180/Math.PI);
+  if(d>180) d = 360-d;
+  sbx.lineWidth=4; sbx.lineCap="round"; sbx.strokeStyle="#1d8fe1";
+  for(const k of ["A","B"]){
+    const [,e]=extendLine(sbO, sbPts[k], false);
+    sbx.beginPath(); sbx.moveTo(sbO.x,sbO.y); sbx.lineTo(e.x,e.y); sbx.stroke();
+  }
+  drawPoint(sbx,sbO,"","#e05555");
+  drawPoint(sbx,sbPts.A,"","#1d8fe1");
+  drawPoint(sbx,sbPts.B,"","#1d8fe1");
+  const b=document.getElementById("sandbox-status");
+  b.textContent = `Deschiderea unghiului tău: ${d}°` + (d<9?" — aproape închis!":"") + (d>170?" — aproape o linie dreaptă!":"");
+  b.className="status-badge ok";
+}
+enableDrag(sb, ()=>sbPts, drawSandbox);
+
+/* ═══════════ 2a. vânătoarea de unghiuri drepte ═══════════ */
+let hunt = 0;
+function huntCount(d){
+  hunt = clamp(hunt+d, 0, 20);
+  document.getElementById("hunt-count").textContent = hunt + " / 10";
+  document.getElementById("hunt-fb").innerHTML =
+    hunt>=10 ? `<div class="feedback good">🏅 Detectiv de unghiuri drepte cu insignă de aur! Uși, mese, cărți, ferestre, gresie… omul construiește TOTUL cu 90°.</div>` : "";
+}
+
+/* ═══════════ casa: inspecția unghiurilor ═══════════ */
+const casaAngles = [
+  {x:260, y:60,  tip:"obtuz",   nume:"vârful acoperișului"},
+  {x:105, y:148, tip:"ascutit", nume:"streașina din stânga"},
+  {x:415, y:148, tip:"ascutit", nume:"streașina din dreapta"},
+  {x:122, y:297, tip:"drept",   nume:"colțul de jos-stânga al casei"},
+  {x:398, y:297, tip:"drept",   nume:"colțul de jos-dreapta al casei"},
+];
+let casaDone = new Set(), casaSel = null;
+function drawCasa(){
+  document.getElementById("casa-markers").innerHTML = casaAngles.map((c,i)=>{
+    const done = casaDone.has(i);
+    return `<circle cx="${c.x}" cy="${c.y}" r="14" fill="${done?'#35b653':(casaSel===i?'#ffb703':'#e05555')}"
+      stroke="#fff" stroke-width="3" style="cursor:pointer" onclick="casaPick(${i})"/>
+      ${done?`<text x="${c.x-6}" y="${c.y+6}" font-size="14" fill="#fff" style="pointer-events:none">✓</text>`:""}`;
+  }).join("");
+  document.getElementById("casa-progress").textContent =
+    casaDone.size===casaAngles.length ? "Toate cele 5 unghiuri identificate!" :
+    casaSel===null ? `Atinge un cerculeț roșu (${casaDone.size}/5 gata)` :
+    `Ce fel de unghi e la ${casaAngles[casaSel].nume}?`;
+  document.getElementById("casa-buttons").innerHTML = casaSel===null ? "" : `
+    <button class="btn-primary" onclick="casaClassify('ascutit')">✏️ Ascuțit</button>
+    <button class="btn-primary" onclick="casaClassify('drept')">📐 Drept</button>
+    <button class="btn-primary" onclick="casaClassify('obtuz')">🏖️ Obtuz</button>`;
+}
+function casaPick(i){
+  if(casaDone.has(i)) return;
+  casaSel = i;
+  document.getElementById("casa-fb").innerHTML = "";
+  drawCasa();
+}
+function casaClassify(tip){
+  const c = casaAngles[casaSel];
+  const fb = document.getElementById("casa-fb");
+  if(tip === c.tip){
+    casaDone.add(casaSel);
+    const expl = {obtuz:"acoperișul se deschide larg, peste 90°", ascutit:"acoperișul întâlnește peretele într-un vârf mai mic de 90°", drept:"pereții casei stau perfect vertical pe sol — 90° fix"};
+    fb.innerHTML=`<div class="feedback good">✅ Corect, e ${tip==="ascutit"?"ascuțit":tip}: ${expl[c.tip]}!</div>`;
+    casaSel = null;
+    if(casaDone.size===casaAngles.length){
+      fb.innerHTML=`<div class="feedback good">🏠 Inspecție completă! Casa are unghiuri drepte la colțuri, ascuțite la streșini și unul obtuz în vârful acoperișului.</div>`;
+      document.getElementById("casa-next").classList.remove("hidden");
+    }
+  } else {
+    fb.innerHTML=`<div class="feedback hint">🤔 Compară cu detectorul tău (colțul de foaie): la ${c.nume}, deschiderea e mai mică, egală sau mai mare decât colțul foii?</div>`;
+  }
+  drawCasa();
+}
+
+/* ═══════════ interior / exterior ═══════════ */
+function figIntExt(hl){
+  const pts = {M:{x:205,y:128}, N:{x:150,y:148}, P:{x:120,y:40}, Q:{x:270,y:185}};
+  let dots = "";
+  for(const k in pts){
+    const p = pts[k];
+    const cur = k===hl;
+    dots += `<circle cx="${p.x}" cy="${p.y}" r="${cur?9:6}" fill="${cur?'#e05555':'#999'}" ${cur?'stroke="#a02525" stroke-width="3"':''}/>
+      <text x="${p.x+11}" y="${p.y+5}" font-size="16" font-weight="bold" fill="${cur?'#a02525':'#888'}">${k} ${cur?"✈️":""}</text>`;
+  }
+  return `<svg class="svg-fig" width="100%" height="210" viewBox="0 0 400 210">
+    <path d="M 40 180 L 340 180 L 297 60 Z" fill="#fff3cd"/>
+    <line x1="40" y1="180" x2="370" y2="180" stroke="#1d8fe1" stroke-width="4"/>
+    <polygon points="370,180 356,173 356,187" fill="#1d8fe1"/>
+    <line x1="40" y1="180" x2="310" y2="50" stroke="#1d8fe1" stroke-width="4"/>
+    <polygon points="310,50 295,53 302,66" fill="#1d8fe1"/>
+    <circle cx="40" cy="180" r="7" fill="#e05555"/>
+    <text x="18" y="200" font-size="17" font-weight="bold">A</text>
+    <text x="268" y="45" font-size="17" font-weight="bold">B</text>
+    <text x="330" y="205" font-size="17" font-weight="bold">C</text>
+    ${dots}
+  </svg>`;
+}
+let intextStarted = false;
+function startIntExt(){
+  if(intextStarted) return;
+  intextStarted = true;
+  startSeries("intext-series", [
+    { q:"Avionul M — interior sau exterior?", fig:figIntExt("M"),
+      choices:["Int(∡BAC) — interior","Ext(∡BAC) — exterior"], correct:0,
+      hint:"E între cele două laturi, în zona colorată?",
+      explain:"M e în zona dintre laturi → interiorul unghiului, Int(∡BAC)." },
+    { q:"Avionul N — interior sau exterior?", fig:figIntExt("N"),
+      choices:["Int(∡BAC) — interior","Ext(∡BAC) — exterior"], correct:0,
+      hint:"Tot în zona colorată?",
+      explain:"Și N e în interior — zboară în siguranță prin Int(∡BAC)." },
+    { q:"Avionul P — interior sau exterior?", fig:figIntExt("P"),
+      choices:["Int(∡BAC) — interior","Ext(∡BAC) — exterior"], correct:1,
+      hint:"P e deasupra laturii AB…",
+      explain:"P a ieșit din unghi — e în exteriorul lui, Ext(∡BAC)." },
+    { q:"Avionul Q — interior sau exterior?", fig:figIntExt("Q"),
+      choices:["Int(∡BAC) — interior","Ext(∡BAC) — exterior"], correct:1,
+      hint:"Q e sub latura AC…",
+      explain:"Q e sub latura AC, în afara zonei dintre laturi → Ext(∡BAC). Radar citit perfect!" },
+  ], ()=>{
+    document.getElementById("intext-series").innerHTML =
+      `<div class="feedback good">📡 Patru avioane, patru citiri corecte — radarul tău funcționează impecabil!</div>`;
+    document.getElementById("intext-next").classList.remove("hidden");
+  });
+}
+
+/* ═══════════ raportor (explorare + provocare) ═══════════ */
+function drawProtractor(ctx, cx, cy, R){
+  ctx.beginPath(); ctx.arc(cx,cy,R,Math.PI,2*Math.PI); ctx.closePath();
+  ctx.fillStyle="rgba(190,215,245,.4)"; ctx.fill();
+  ctx.strokeStyle="#7aa3cf"; ctx.lineWidth=2; ctx.stroke();
+  ctx.fillStyle="#345"; ctx.textAlign="center";
+  for(let d=0; d<=180; d+=10){
+    const a=Math.PI - d*Math.PI/180;
+    const inner = d%30===0 ? R-24 : R-14;
+    ctx.beginPath();
+    ctx.moveTo(cx+Math.cos(a)*R, cy-Math.sin(a)*R);
+    ctx.lineTo(cx+Math.cos(a)*inner, cy-Math.sin(a)*inner);
+    ctx.strokeStyle="#567"; ctx.lineWidth= d%30===0?2.5:1.5; ctx.stroke();
+    if(d%30===0){
+      ctx.font="bold 16px Segoe UI";
+      ctx.fillText(String(180-d), cx+Math.cos(a)*(R-40), cy-Math.sin(a)*(R-40)+6);
+    }
+  }
+  ctx.beginPath(); ctx.moveTo(cx-R,cy); ctx.lineTo(cx+R,cy); ctx.strokeStyle="#7aa3cf"; ctx.lineWidth=2; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx,cy,4,0,7); ctx.fillStyle="#345"; ctx.fill();
+  ctx.textAlign="start";
+}
+function classify(deg){
+  if(deg<=2) return "NUL (0°)";
+  if(deg<88) return "ASCUȚIT ✏️";
+  if(deg<=92) return "DREPT 📐 (90°)";
+  if(deg<178) return "OBTUZ 🏖️";
+  return "ALUNGIT 🌅 (180°)";
+}
+function makeProtractorLab(canvasId, statusCb){
+  const cv = document.getElementById(canvasId);
+  const ctx = cv.getContext("2d");
+  const CX=400, CY=360, R=300;
+  const h = { H:{x:620,y:180} };
+  function deg(){ return clamp(Math.round(Math.atan2(CY-h.H.y, h.H.x-CX)*180/Math.PI),0,180); }
+  function draw(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    drawProtractor(ctx,CX,CY,R);
+    const d = deg(), a = d*Math.PI/180;
+    ctx.strokeStyle="#e08a1e"; ctx.lineWidth=5; ctx.lineCap="round";
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(CX+R-20,CY); ctx.stroke();
+    ctx.strokeStyle="#1d8fe1";
+    ctx.beginPath(); ctx.moveTo(CX,CY);
+    ctx.lineTo(CX+Math.cos(a)*(R-20), CY-Math.sin(a)*(R-20)); ctx.stroke();
+    h.H.x = CX+Math.cos(a)*(R-60); h.H.y = CY-Math.sin(a)*(R-60);
+    drawPoint(ctx,h.H,"","#1d8fe1");
+    if(d>2){ ctx.beginPath(); ctx.arc(CX,CY,50,-a,0); ctx.strokeStyle="#e05555"; ctx.lineWidth=3; ctx.stroke(); }
+    ctx.font="bold 26px Segoe UI"; ctx.fillStyle="#1d4e89";
+    ctx.fillText(d+"°", 40, 60);
+    statusCb(d);
+  }
+  enableDrag(cv, ()=>h, draw, -2000);
+  return { draw, deg };
+}
+const lab = makeProtractorLab("raportor", d=>{
+  const b=document.getElementById("raportor-status");
+  b.textContent = `∡ = ${d}° → unghi ${classify(d)}`;
+  b.className = "status-badge ok";
+});
+
+/* provocarea finală */
+const chLab = makeProtractorLab("ch-raportor", ()=>{});
+const chTargets = [80, 150, 45, 90];
+let tIdx = 0, chSolved = false;
+function drawChTarget(){
+  if(!chSolved) document.getElementById("ch-target").textContent =
+    `Unghiul ${tIdx+1} din ${chTargets.length}: construiește exact ${chTargets[tIdx]}°`;
+}
+function fixAngle(){
+  if(chSolved) return;
+  const d = chLab.deg(), want = chTargets[tIdx];
+  const fb = document.getElementById("ch-feedback");
+  if(Math.abs(d-want) <= 2){
+    tIdx++;
+    if(tIdx >= chTargets.length){
+      chSolved = true;
+      document.getElementById("ch-target").textContent = "Toate unghiurile construite!";
+      document.getElementById("ch-fix").classList.add("hidden");
+      fb.innerHTML = `<div class="feedback good">🎖️ Patru unghiuri perfecte — inclusiv unghiul drept de 90°! Turnul de control aprobă brevetul!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else {
+      fb.innerHTML = `<div class="feedback good">📌 Fixat la ${want}°! Următorul…</div>`;
+      drawChTarget();
+    }
+  } else {
+    fb.innerHTML = `<div class="feedback hint">Brațul e la ${d}°, dar ținta e ${want}°. ${d<want?"Mai deschide":"Mai închide"} unghiul — citește scala raportorului!</div>`;
+  }
+}
+
+/* ═══════════ quiz ═══════════ */
+const questions = [
+  { title:"Adevărat sau fals: „Un unghi este format din două DREPTE concurente.”",
+    fig:null, choices:["Adevărat","Fals — din două SEMIDREPTE cu aceeași origine"], correct:1,
+    hint:"Amintește-ți definiția din manualul pilotului: ce fel de linii sunt laturile?",
+    explain:"Fals! Unghiul = două semidrepte cu aceeași origine. Semidreptele au un capăt (vârful) — dreptele nu au niciunul." },
+  { title:"Adevărat sau fals: „Vârful unghiului AOB este punctul O.”",
+    fig:null, choices:["Adevărat — litera din mijloc e vârful","Fals"], correct:0,
+    hint:"Care literă stă la mijloc în notație?",
+    explain:"Adevărat! În notația ∡AOB, vârful e mereu litera din mijloc: O." },
+  { title:"Adevărat sau fals: „Laturile unui unghi se pot măsura cu rigla.”",
+    fig:null, choices:["Adevărat","Fals — sunt semidrepte, deci nesfârșite!"], correct:1,
+    hint:"Laturile sunt semidrepte… au capăt la ambele capete?",
+    explain:"Fals! Laturile sunt semidrepte — continuă la nesfârșit, nu au lungime. La un unghi măsurăm doar DESCHIDEREA, cu raportorul." },
+  { title:"Adevărat sau fals: „Două unghiuri sunt congruente dacă au același vârf.”",
+    fig:null, choices:["Adevărat","Fals — congruente înseamnă MĂSURI egale"], correct:1,
+    hint:"Ce trebuie să fie egal la unghiurile gemene?",
+    explain:"Fals! Congruența cere măsuri egale (aceeași deschidere), indiferent unde le e vârful. ∡ABC ≡ ∡MNP dacă au același număr de grade." },
+  { title:"∡AOB este congruent cu ∡BOA?",
+    fig:null, choices:["Da — e exact același unghi, scris invers","Nu, sunt unghiuri diferite"], correct:0,
+    hint:"În ambele notații, cine e la mijloc?",
+    explain:"Da! ∡AOB și ∡BOA au același vârf O și aceleași laturi — e același unghi, deci sigur congruent cu el însuși." },
+  { title:"Dacă ∡MNP = 180°, cât este ∡PNM?",
+    fig:null, choices:["0°","180° — același unghi!","90°"], correct:1,
+    hint:"∡MNP și ∡PNM — e vreo diferență?",
+    explain:"∡PNM e același unghi ca ∡MNP, doar citit invers: tot 180° (alungit)." },
+  { title:"30° = câte minute?",
+    fig:null, choices:["300′","1 800′","30′"], correct:1,
+    hint:"1° = 60′, deci 30 × 60…",
+    explain:"30° = 30 × 60′ = 1 800′." },
+  { title:"90° se mai poate scrie ca…",
+    fig:null, choices:["89°60′","90°60′","89°30′"], correct:0,
+    hint:"60′ = 1° întreg…",
+    explain:"89° + 60′ = 89° + 1° = 90°. Truc de aur pentru scăderi!" },
+  { title:"Ce unghi formează acele ceasului la ora 6:00 fix?",
+    fig:null, choices:["90° (drept)","180° (alungit)","0° (nul)"], correct:1,
+    hint:"Orarul pe 6, minutarul pe 12 — sunt în prelungire…",
+    explain:"La 6:00, acele sunt semidrepte opuse → unghi alungit, 180°. Iar la 9:00 și 15:00? Câte 90° — unghiuri drepte!" },
+  { title:"Dacă ∡AOB = 90°, ce poți spune despre dreptele OA și OB?",
+    fig:null, choices:["Sunt paralele","Sunt perpendiculare: OA ⊥ OB","Sunt identice"], correct:1,
+    hint:"Secretul 3 al piloților…",
+    explain:"Unghi drept → drepte perpendiculare. Se scrie OA ⊥ OB — semnul ⊥ chiar arată ca două drepte în unghi drept!" },
+];
+
+/* ═══════════ V2: text-to-speech (vocea browserului, în română) ═══════════ */
+function vorbeste(text, onEnd){
+  try{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "ro-RO"; u.rate = 0.92;
+    const voci = speechSynthesis.getVoices().filter(v=>v.lang.startsWith("ro"));
+    if(voci.length) u.voice = voci[0];
+    if(onEnd) u.onend = onEnd;
+    speechSynthesis.speak(u);
+  }catch(e){ if(onEnd) onEnd(); }
+}
+addEventListener("beforeunload", ()=>{ try{speechSynthesis.cancel();}catch(e){} });
+
+/* ═══════════ V2: fișa DAC (validare flexibilă) ═══════════ */
+function normDac(s){
+  let t = (s||"").toUpperCase();
+  t = t.replace(/UNGHIUL|UNGHI|PUNCTUL|PUNCTELE|SEMIDREPTELE|SEMIDREAPTA|LATURILE|LATURA|\bSI\b|ȘI|ŞI/g," ");
+  return t.replace(/[^A-Z]/g,"");
+}
+function literSet(s){ return normDac(s).split("").sort().join(""); }
+function verificaDac(){
+  const raspunsuri = [
+    v => ["DAC","CAD","A"].includes(normDac(v)),
+    v => normDac(v) === "A",
+    v => { const t=normDac(v); return t==="ADAC"||t==="ACAD"; },
+    v => literSet(v) === "FI",
+    v => literSet(v) === "ELX",
+  ];
+  let toateOk = true;
+  raspunsuri.forEach((check,i)=>{
+    const val = document.getElementById("dac-"+i).value;
+    const cell = document.getElementById("dac-c"+i);
+    const ok = check(val);
+    cell.classList.toggle("ok-cell", ok);
+    cell.classList.toggle("bad-cell", !ok);
+    if(!ok) toateOk = false;
+  });
+  const fb = document.getElementById("dac-fb");
+  if(toateOk){
+    fb.innerHTML = `<div class="feedback good">📋 Fișă de bord impecabilă! Numele (DAC, CAD sau A), vârful A, laturile AD și AC, punctele I, F înăuntru și E, L, X în afară — totul corect!</div>`;
+    document.getElementById("dac-next").classList.remove("hidden");
+  } else {
+    fb.innerHTML = `<div class="feedback hint">🤔 Casetele roșii mai au nevoie de atenție! Amintește-ți: numele unghiului are vârful la MIJLOC (sau doar litera vârfului); laturile pornesc din A; punctele verzi sunt în zona colorată.</div>`;
+  }
+}
+
+/* ═══════════ V2: decolarea spre Paris ═══════════ */
+let dec1Done=false, dec2Done=false;
+function updateSemafor(){
+  document.getElementById("sem-0").className = dec1Done ? "verde" : "rosu";
+  document.getElementById("sem-1").className = dec2Done ? "verde" : "rosu";
+  if(dec1Done && dec2Done){
+    document.getElementById("dec-next").classList.remove("hidden");
+  }
+}
+function verificaDec1(){
+  const sel = [...document.querySelectorAll("#dec-ex1 .btn-toggle")].map(b=>b.classList.contains("sel"));
+  const fb = document.getElementById("dec1-fb");
+  if(sel[1] && sel[3] && !sel[0] && !sel[2]){
+    dec1Done = true;
+    fb.innerHTML = `<div class="feedback good">📡 „Recepționat! ∡V (litera vârfului) și ∡AVE (V la mijloc) sunt corecte. Prima lumină: VERDE!”</div>`;
+    document.getElementById("dec-ex2").classList.remove("hidden");
+  } else {
+    fb.innerHTML = `<div class="feedback explain">📡 „Negativ, pilot! Regula: cu o literă — doar vârful (∡V); cu trei litere — vârful stă la MIJLOC (∡AVE ✓, dar ∡VAE ✗, pentru că A nu e vârful; ∡E ✗, pentru că E nu e vârful). Mai încearcă o dată!”</div>`;
+    document.querySelectorAll("#dec-ex1 .btn-toggle").forEach(b=>b.classList.remove("sel"));
+  }
+  updateSemafor();
+}
+const dec2Props = [
+  { text:"a) Unghiul BAC poate fi citit ∡CAB sau ∡A.", adevarat:true,
+    expl:"Adevărat — vârful A rămâne la mijloc (sau singur)." },
+  { text:"b) Unghiul BAC are vârful în punctul A.", adevarat:true,
+    expl:"Adevărat — litera din mijloc e vârful." },
+  { text:"c) Latura AB poate fi citită BA.", adevarat:false,
+    expl:"Fals — latura e o SEMIDREAPTĂ cu originea A: originea se scrie prima, deci doar AB!" },
+  { text:"d) Latura AB este mai scurtă decât latura AC.", adevarat:false,
+    expl:"Fals — laturile sunt semidrepte nesfârșite: nu au lungime, deci nu pot fi comparate!" },
+];
+let dec2Sel = [null,null,null,null];
+function drawDec2(){
+  document.getElementById("dec2-props").innerHTML = dec2Props.map((p,i)=>`
+    <p style="margin:8px 0 4px;">${p.text}</p>
+    <button class="btn-toggle ${dec2Sel[i]===true?'sel':''}" onclick="dec2Pick(${i},true)">Adevărat</button>
+    <button class="btn-toggle ${dec2Sel[i]===false?'sel':''}" onclick="dec2Pick(${i},false)">Fals</button>`).join("");
+}
+function dec2Pick(i,v){ dec2Sel[i]=v; drawDec2(); }
+function verificaDec2(){
+  const fb = document.getElementById("dec2-fb");
+  if(dec2Sel.some(v=>v===null)){
+    fb.innerHTML = `<div class="feedback hint">📡 „Răspunde la toate cele patru propoziții, pilot!”</div>`;
+    return;
+  }
+  const ok = dec2Props.every((p,i)=>dec2Sel[i]===p.adevarat);
+  if(ok){
+    dec2Done = true;
+    fb.innerHTML = `<div class="feedback good">📡 „Turnul de control este ÎNCÂNTAT să vă ofere culoar de zbor, pentru că sunteți un pilot minunat! Decolare aprobată spre Paris!” 🗼</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback explain">📡 „Negativ! Iată explicațiile: ${dec2Props.map(p=>p.expl).join(" ")} Mai încearcă o dată!”</div>`;
+    dec2Sel = [null,null,null,null];
+    drawDec2();
+  }
+  updateSemafor();
+}
+
+/* ═══════════ V2: repetarea 2 — audio + desen sincronizat ═══════════ */
+function repetare2(){
+  const l1=document.getElementById("rep2-l1"), l2=document.getElementById("rep2-l2"), v=document.getElementById("rep2-v");
+  const txt=document.getElementById("rep2-text");
+  [l1,l2,v].forEach(g=>g.setAttribute("opacity","0.25"));
+  txt.textContent = "";
+  vorbeste("Un unghi... este format din două semidrepte...", ()=>{
+    l1.setAttribute("opacity","1"); l2.setAttribute("opacity","1");
+    txt.textContent = "…două semidrepte…";
+    vorbeste("care pornesc din același punct.", ()=>{
+      v.setAttribute("opacity","1");
+      txt.textContent = "…care pornesc din același punct!";
+      vorbeste("Acest punct special se numește vârful unghiului. Iar semidreptele sunt laturile lui. Atât. Simplu și frumos, ca un zbor lin.", ()=>{
+        txt.textContent = "Vârful + două laturi = unghiul. Simplu și frumos! 💙";
+      });
+    });
+  });
+}
+
+/* ═══════════ V2: povestea 360 + întrebări ═══════════ */
+function povesteste360(){
+  vorbeste("Imaginați-vă că oamenii din vechime se uitau foarte mult la stele și la soare. Ei observau cerul în fiecare noapte, și au văzut că soarele, luna și stelele par să se miște pe un cerc. Au observat și că un an are aproximativ trei sute șaizeci de zile. Acum patru mii de ani, babilonienii, un popor tare priceput la matematică și astronomie, au împărțit cercul în trei sute șaizeci de părți, câte una pentru fiecare zi. Nimeni nu a găsit o lege a naturii care să ceară trei sute șaizeci. Numărul a fost ales pentru că este atât de practic: se împarte ușor la doi, la trei, la patru, la cinci, la șase, la nouă, la zece și la doisprezece. Gândește-te așa: un cerc este ca o pizza întreagă, tăiată în trei sute șaizeci de felii foarte mici. Fiecare felie reprezintă un grad.");
+}
+let s360Started=false;
+function startS360(){
+  if(s360Started) return;
+  s360Started=true;
+  startSeries("s360-series", [
+    { q:"Cercul întreg are 360°. Unghiul DREPT e un sfert de rotație. Câte grade are?",
+      choices:["90°","180°","60°"], correct:0, hint:"360 împărțit la 4…",
+      explain:"360 : 4 = 90°. De-asta unghiul drept are 90 de grade — e un sfert de cerc!" },
+    { q:"Și unghiul ALUNGIT — o jumătate de rotație?",
+      choices:["90°","180°","270°"], correct:1, hint:"360 împărțit la 2…",
+      explain:"360 : 2 = 180°. Jumătate de pizza = unghiul alungit!" },
+  ], ()=>{
+    document.getElementById("s360-series").innerHTML =
+      `<div class="feedback good">🏺 Le-ai dedus singur, exact ca babilonienii! 90° și 180° nu mai sunt numere de memorat — acum știi DE CE.</div>`;
+    document.getElementById("s360-next").classList.remove("hidden");
+  });
+}
+
+/* ═══════════ V2: gluma + regele Cerc ═══════════ */
+function spuneGluma(){
+  vorbeste("Profesorul îl întreabă pe Matei: Câte grade are un cerc? Matei răspunde: Depinde. Cum adică depinde? îl întreabă profesorul. Iar Matei răspunde: Păi, dacă e iarnă și îl lași afară, poate avea chiar și minus zece grade! Profesorul râde și spune: Acelea sunt grade de temperatură, Matei! Eu vorbeam despre gradele cercului: trei sute șaizeci!");
+}
+function povesteRege(){
+  vorbeste("A fost odată un rege pe numele lui, Cerc. Castelul lui era perfect rotund. În mijlocul castelului trăia cavalerul Ac. El avea o singură misiune: să se rotească și să arate toate direcțiile. Într-o zi, regele a spus: ca să știm exact cât te-ai întors, împărțim castelul în trei sute șaizeci de pași egali. Fiecare pas se va numi un grad. Cavalerul a început să se rotească. După nouăzeci de pași, privea spre dreapta. După o sută optzeci de pași, era întors cu spatele. După două sute șaptezeci de pași, privea spre stânga. După trei sute șaizeci de pași, ajunsese exact de unde pornise. De atunci, ori de câte ori cineva voia să știe cât s-a rotit ceva, întreba: câte grade ai făcut? Și așa s-au născut unghiurile.");
+}
+function regeAnswer(btn, ok){
+  const fb = document.getElementById("rege-fb");
+  if(ok){
+    btn.style.background="#35b653";
+    fb.innerHTML = `<div class="feedback good">👑 Exact! După 180 de pași (180°) ești întors cu spatele — în locul OPUS. De-asta unghiul alungit, care e o linie dreaptă, are fix 180°!</div>`;
+    document.getElementById("rege-next").classList.remove("hidden");
+  } else {
+    fb.innerHTML = `<div class="feedback hint">🤔 Gândește-te la cavalerul Ac: după 360 de pași ajungea la fel ca la început. Dar după DOAR jumătate din ei?</div>`;
+  }
+}
+
+/* ═══════════ V2: este sau nu unghi ═══════════ */
+function alegeUnghi(el, corect, expl){
+  const fb = document.getElementById("este-fb");
+  if(corect){
+    el.classList.add("corect");
+    fb.innerHTML = `<div class="feedback good">🎯 Da! Două semidrepte cu aceeași origine = UNGHI. Celelalte: paralelele nu se ating; segmentele n-au punct comun; iar X-ul e făcut din drepte, nu din semidrepte cu origine comună.</div>`;
+    document.getElementById("este-next").classList.remove("hidden");
+  } else {
+    el.classList.add("gresit");
+    fb.innerHTML = `<div class="feedback hint">🤔 ${expl} Caută desenul cu două semidrepte care pornesc din același punct!</div>`;
+    setTimeout(()=>el.classList.remove("gresit"), 900);
+  }
+}
+
+/* ═══════════ V2: bărcuța ═══════════ */
+let barcaStarted=false;
+function startBarca(){
+  if(barcaStarted) return;
+  barcaStarted=true;
+  startSeries("barca-series", [
+    { q:"Dacă mă uit înainte și apoi mă întorc DOAR PUȚIN, cam cât m-am rotit?",
+      choices:["Un unghi mic — vreo 30°","180°","360°"], correct:0,
+      hint:"O întoarcere mică = un unghi mic…",
+      explain:"O întoarcere mică înseamnă un unghi mic — vreo 30°. Unghiul măsoară exact cât s-a rotit direcția!" },
+    { q:"Dar dacă mă întorc COMPLET, până privesc iar în aceeași direcție?",
+      choices:["90°","180°","360°"], correct:2,
+      hint:"Amintește-ți de cavalerul Ac — câți pași făcea până revenea la început?",
+      explain:"O rotire completă = 360°! Iar întors cu spatele ar fi fost 180°. Unghiul e o măsură a întoarcerii." },
+  ], ()=>{
+    document.getElementById("barca-series").innerHTML =
+      `<div class="feedback good">⛵ Cârmă sigură! Ai înțeles marele secret: unghiul arată cât s-a ROTIT o direcție.</div>`;
+    document.getElementById("barca-next").classList.remove("hidden");
+  });
+}
+
+/* ═══════════ V2: lungimea laturilor ═══════════ */
+function lungAnswer(btn, corect){
+  const fb = document.getElementById("lung-fb");
+  document.getElementById("lung-overlay").classList.remove("hidden");
+  if(corect){
+    btn.style.background="#35b653";
+    fb.innerHTML = `<div class="feedback good">🎯 Bravo, nu te-a păcălit! Privește suprapunerea: micuțul verde intră perfect în cel albastru — deschiderea e identică.</div>`;
+  } else {
+    fb.innerHTML = `<div class="feedback explain">💡 Privește suprapunerea: unghiul verde intră PERFECT în cel albastru! Laturile lungi doar par mai impunătoare — deschiderea e aceeași.</div>`;
+  }
+  document.getElementById("lung-fraza").classList.remove("hidden");
+  document.getElementById("lung-next").classList.remove("hidden");
+  document.querySelectorAll("#lung-buttons button").forEach(b=>b.disabled=true);
+}
+
+/* ═══════════ V2: comparare fără raportor ═══════════ */
+let compStarted=false;
+function startComp(){
+  if(compStarted) return;
+  compStarted=true;
+  startSeries("comp-series", [
+    { q:"Care unghi este cel mai DESCHIS?",
+      choices:["a","b","c"], correct:2, hint:"Care se apropie cel mai mult de o linie dreaptă?",
+      explain:"c — e aproape întins de tot!" },
+    { q:"Care unghi este APROAPE DREPT?",
+      choices:["a","b","c"], correct:1, hint:"Care seamănă cu un colț de foaie?",
+      explain:"b — e aproape 90°, ca un colț de foaie ușor înclinat." },
+    { q:"Care unghi este APROAPE ÎNTINS (alungit)?",
+      choices:["a","b","c"], correct:2, hint:"Aproape o linie dreaptă…",
+      explain:"c — mai are puțin și devine o linie perfectă de 180°. Ochiul tău e deja raportor!" },
+  ], ()=>{
+    document.getElementById("comp-series").innerHTML =
+      `<div class="feedback good">👀 Trei din trei fără raportor — ochi de vultur, pilotule!</div>`;
+    document.getElementById("comp-next").classList.remove("hidden");
+  });
+}
+
+/* navigare cu redesenări */
+window.onShow = function(id){
+  if(id==="screen-avion") drawAvion();
+  if(id==="screen-deseneaza") drawSandbox();
+  if(id==="screen-decolare") drawDec2();
+  if(id==="screen-casa") drawCasa();
+  if(id==="screen-intext") startIntExt();
+  if(id==="screen-masura") lab.draw();
+  if(id==="screen-360") startS360();
+  if(id==="screen-barcuta") startBarca();
+  if(id==="screen-comparare") startComp();
+  if(id==="screen-challenge"){ chLab.draw(); drawChTarget(); }
+};
+drawAvion();
+</script>
+</body>
+</html>
