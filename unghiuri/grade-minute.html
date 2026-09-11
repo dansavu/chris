@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misiunea Gaura Neagră · Calcule cu grade și minute</title>
+<link rel="stylesheet" href="comun.css">
+<style>
+  body { background: linear-gradient(160deg, #0b1026, #1a1f4a 60%, #2a1a4a); }
+  .card { background:#fff; }
+  .space-bar a { display:inline-block; background:#ffffffcc; color:#1d4e89; font-weight:600; text-decoration:none; padding:8px 16px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,.3); margin:0 4px; }
+  .footer-note { color:#c9d4ff; }
+  .calc { font-family:Consolas,monospace; font-size:1.75rem; font-weight:700; color:#1d4e89; text-align:center; line-height:1.45; margin:12px 0; white-space:pre; }
+  .calc .rosu { color:#e05555; }
+  .exemplu { background:#f7fbff; border:3px solid #c9dcf5; border-radius:16px; padding:14px 16px; margin-bottom:14px; }
+  .exemplu h3 { color:#1d4e89; font-size:1.05rem; margin-bottom:6px; }
+  .pas { background:#eef4fb; border-radius:10px; padding:8px 12px; margin:6px 0; font-size:1rem; color:#1d4e89; }
+  .pas.atentie { background:#fff3cd; color:#7a5c00; }
+  .pas.final { background:#d8f7dd; color:#1b6b2e; font-weight:700; }
+  .in-grade { display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; margin:10px 0; }
+  .in-grade input { width:80px; font-size:1.4rem; font-weight:800; color:#1d4e89; text-align:center; border:3px solid #a8c6e8; border-radius:10px; padding:8px; }
+  .in-grade .unit { font-size:1.5rem; font-weight:800; color:#1d4e89; }
+  .in-grade input.ok { border-color:#35b653; background:#d8f7dd; }
+  .in-grade input.bad { border-color:#e05555; background:#ffe1e1; }
+  .stars { position:fixed; inset:0; pointer-events:none; z-index:-1; }
+  .hole { width:160px; height:160px; margin:10px auto; border-radius:50%; background:radial-gradient(circle, #000 0 38%, #3b1f6e 44%, #ff9d3d 52%, #ffd27a 56%, transparent 62%); box-shadow:0 0 40px #ff9d3d88; animation:spin 9s linear infinite; }
+  @keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+  .fact { background:linear-gradient(135deg,#1a1f4a,#2a1a4a); color:#e8ecff; border-radius:14px; padding:14px 16px; margin:12px 0; font-size:1.02rem; line-height:1.5; }
+  .fact strong { color:#ffd27a; }
+</style>
+</head>
+<body>
+<canvas class="stars" id="stars"></canvas>
+<div class="app">
+  <div class="space-bar center" style="margin-bottom:10px;"><a href="../index.html">🎒 Toate cursurile</a> <a href="v2.html">✈️ Misiunea Unghiurilor</a></div>
+
+  <!-- ═══════════ START ═══════════ -->
+  <div class="card screen" id="screen-start">
+    <div class="center">
+      <div class="hole"></div>
+      <h1>Misiunea Gaura Neagră</h1>
+      <p><strong>Școala de Piloți · zbor spațial · calcule cu grade și minute</strong></p>
+    </div>
+    <div class="guide">
+      <div class="face">👨‍🚀</div>
+      <p>Pilot, aici comandantul <strong>Vector</strong> — de azi, comandant de navă spațială! Misiunea noastră:
+      să ocolim <strong>gaura neagră Sagittarius A*</strong>, din centrul galaxiei noastre.
+      O gaură neagră e un loc unde gravitația e atât de puternică încât <em>nici lumina nu mai scapă</em>.
+      Ca să n-o luăm razna spre ea, trebuie să calculăm unghiurile de zbor <strong>la minut</strong> — nu doar la grad!
+      Un grad greșit lângă o gaură neagră… și devenim spaghete cosmice. 🍝</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-explore')">🚀 Lansare!</button></div>
+  </div>
+
+  <!-- ═══════════ 1. EXPLORARE: DOUĂ UNGHIURI CU LATURĂ COMUNĂ ═══════════ -->
+  <div class="card screen hidden" id="screen-explore">
+    <h2>🛸 Misiunea 1: Traiectoria în două etape</h2>
+    <div class="guide">
+      <div class="face">👨‍🚀</div>
+      <p>Nava trebuie să vireze de două ori ca să ocolească gaura neagră. Pe radar, cele două viraje sunt
+      <strong>două unghiuri cu o latură comună</strong> (latura din mijloc). Pe fiecare e scrisă măsura.
+      <strong>Trage de brațele albastre</strong> și privește: cum se schimbă unghiul MARE, cel dintre laturile exterioare?</p>
+    </div>
+    <canvas id="lab" width="800" height="400"></canvas>
+    <div class="center"><span class="status-badge warn" id="lab-status">…</span></div>
+    <div class="center" style="margin-top:10px;">
+      <p style="font-weight:600;color:#1d4e89;">Întrebarea comandantului: cum obținem unghiul mare din cele două mici?</p>
+      <button class="btn-primary" onclick="explAnswer(this,false)">Le scădem</button>
+      <button class="btn-primary" onclick="explAnswer(this,true)">Le adunăm</button>
+      <button class="btn-primary" onclick="explAnswer(this,false)">Le înmulțim</button>
+    </div>
+    <div id="expl-fb"></div>
+    <div class="center hidden" id="expl-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-problema')">Mai departe ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ 2. PROBLEMA: CALCULEAZĂ UNGHIUL MARE ═══════════ -->
+  <div class="card screen hidden" id="screen-problema">
+    <h2>📐 Misiunea 2: Calculează unghiul de ocolire</h2>
+    <div class="guide">
+      <div class="face">👨‍🚀</div>
+      <p>Radarul arată două viraje: <strong>∡AOB = 37°25′</strong> și <strong>∡BOC = 41°20′</strong>, cu latura comună OB.
+      Cât măsoară unghiul mare <strong>∡AOC</strong>, format de laturile exterioare OA și OC?</p>
+    </div>
+    <svg class="svg-fig" width="100%" height="300" viewBox="0 0 700 300">
+      <path d="M 120 250 L 560 250 A 440 440 0 0 0 480 115 Z" fill="#fff3cd" opacity=".7"/>
+      <path d="M 120 250 L 480 115 A 440 440 0 0 0 300 60 Z" fill="#e3edff" opacity=".7"/>
+      <line x1="120" y1="250" x2="620" y2="250" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="620,250 606,243 606,257" fill="#1d8fe1"/>
+      <line x1="120" y1="250" x2="530" y2="97" stroke="#e08a1e" stroke-width="4"/>
+      <polygon points="530,97 515,101 521,114" fill="#e08a1e"/>
+      <line x1="120" y1="250" x2="320" y2="40" stroke="#1d8fe1" stroke-width="4"/>
+      <polygon points="320,40 306,45 316,55" fill="#1d8fe1"/>
+      <circle cx="120" cy="250" r="8" fill="#e05555"/>
+      <text x="92" y="275" font-size="20" font-weight="bold">O</text>
+      <text x="600" y="278" font-size="18" font-weight="bold">C</text>
+      <text x="540" y="92" font-size="18" font-weight="bold">B</text>
+      <text x="325" y="35" font-size="18" font-weight="bold">A</text>
+      <text x="300" y="228" font-size="17" font-weight="bold" fill="#a05a00">41°20′</text>
+      <text x="255" y="150" font-size="17" font-weight="bold" fill="#156bb0">37°25′</text>
+      <text x="640" y="190" font-size="30">🕳️</text>
+      <text x="585" y="225" font-size="13" fill="#666">gaura neagră</text>
+      <text x="40" y="60" font-size="15" fill="#666">Latura comună: OB (portocalie)</text>
+    </svg>
+    <p class="center" style="font-weight:700;color:#1d4e89;">∡AOC = ∡AOB + ∡BOC = 37°25′ + 41°20′ = ?</p>
+    <div class="in-grade">
+      <input type="number" id="p1-g" placeholder="°" min="0" max="180"><span class="unit">°</span>
+      <input type="number" id="p1-m" placeholder="′" min="0" max="59"><span class="unit">′</span>
+      <button class="btn-primary" onclick="verificaP1()">✅ Verifică</button>
+    </div>
+    <div id="p1-fb"></div>
+    <div class="center hidden" id="p1-next" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-adunare')">Traiectorie calculată! ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ 3. ADUNAREA — 2 EXEMPLE SIMPLE + 2 CU TRECERE ═══════════ -->
+  <div class="card screen hidden" id="screen-adunare">
+    <h2>➕ Manualul de bord: ADUNAREA măsurilor de unghiuri</h2>
+    <div class="guide">
+      <div class="face">👨‍🚀</div>
+      <p>Regula de aur: <strong>gradele cu gradele, minutele cu minutele</strong>. Iar dacă minutele trec de 60…
+      se transformă într-un grad — ca la ceas, când 60 de minute fac o oră!</p>
+    </div>
+
+    <div class="exemplu">
+      <h3>Exemplul 1 — simplu</h3>
+      <div class="calc">  20°10′
++ 15°30′
+────────
+  35°40′</div>
+      <div class="pas">Grade: 20° + 15° = 35°. Minute: 10′ + 30′ = 40′. Gata: <strong>35°40′</strong>.</div>
+    </div>
+
+    <div class="exemplu">
+      <h3>Exemplul 2 — simplu</h3>
+      <div class="calc">  48°15′
++ 31°25′
+────────
+  79°40′</div>
+      <div class="pas">Grade: 48° + 31° = 79°. Minute: 15′ + 25′ = 40′. Rezultat: <strong>79°40′</strong>.</div>
+    </div>
+
+    <div class="exemplu" style="border-color:#e08a1e;">
+      <h3>Exemplul 3 — ⚠️ minutele trec peste 60!</h3>
+      <div class="calc">  25°40′
++ 15°30′
+────────
+  40°<span class="rosu">70′</span> → 41°10′</div>
+      <div class="pas">Grade: 25° + 15° = 40°. Minute: 40′ + 30′ = <strong>70′</strong>.</div>
+      <div class="pas atentie">70′ e mai mult de 60′! Scriem 70′ = 60′ + 10′ = <strong>1° și 10′</strong>.</div>
+      <div class="pas final">Gradul în plus urcă la grade: 40° + 1° = 41°. Rezultat: 41°10′.</div>
+    </div>
+
+    <div class="exemplu" style="border-color:#e08a1e;">
+      <h3>Exemplul 4 — ⚠️ din nou peste 60</h3>
+      <div class="calc">  62°55′
++ 27°35′
+────────
+  89°<span class="rosu">90′</span> → 90°30′</div>
+      <div class="pas">Grade: 62° + 27° = 89°. Minute: 55′ + 35′ = <strong>90′</strong>.</div>
+      <div class="pas atentie">90′ = 60′ + 30′ = <strong>1° și 30′</strong>.</div>
+      <div class="pas final">89° + 1° = 90°. Rezultat: 90°30′ — abia am trecut de unghiul drept!</div>
+    </div>
+
+    <div class="center"><button class="btn-primary" onclick="show('screen-scadere')">Am prins adunarea! ➜</button></div>
+  </div>
+
+  <!-- ═══════════ 4. SCĂDEREA — 2 SIMPLE + 2 CU ÎMPRUMUT ═══════════ -->
+  <div class="card screen hidden" id="screen-scadere">
+    <h2>➖ Manualul de bord: SCĂDEREA măsurilor de unghiuri</h2>
+    <div class="guide">
+      <div class="face">👨‍🚀</div>
+      <p>Aceeași regulă: grade cu grade, minute cu minute. Iar când minutele de sus nu ajung…
+      <strong>împrumutăm un grad</strong> și îl transformăm în 60 de minute!</p>
+    </div>
+
+    <div class="exemplu">
+      <h3>Exemplul 1 — simplu</h3>
+      <div class="calc">  50°45′
+− 20°15′
+────────
+  30°30′</div>
+      <div class="pas">Grade: 50° − 20° = 30°. Minute: 45′ − 15′ = 30′. Rezultat: <strong>30°30′</strong>.</div>
+    </div>
+
+    <div class="exemplu">
+      <h3>Exemplul 2 — simplu</h3>
+      <div class="calc">  87°50′
+− 32°20′
+────────
+  55°30′</div>
+      <div class="pas">Grade: 87° − 32° = 55°. Minute: 50′ − 20′ = 30′. Rezultat: <strong>55°30′</strong>.</div>
+    </div>
+
+    <div class="exemplu" style="border-color:#e08a1e;">
+      <h3>Exemplul 3 — ⚠️ minutele nu ajung — împrumutăm!</h3>
+      <div class="calc">  40°10′ = <span class="rosu">39°70′</span>
+− 15°30′
+────────
+  24°40′</div>
+      <div class="pas">Minute: 10′ − 30′ — nu se poate! Împrumutăm 1° din cele 40°.</div>
+      <div class="pas atentie">40°10′ = 39° + 1° + 10′ = 39° + 60′ + 10′ = <strong>39°70′</strong>.</div>
+      <div class="pas final">Acum: 70′ − 30′ = 40′ și 39° − 15° = 24°. Rezultat: 24°40′.</div>
+    </div>
+
+    <div class="exemplu" style="border-color:#e08a1e;">
+      <h3>Exemplul 4 — ⚠️ scădem dintr-un unghi drept</h3>
+      <div class="calc">  90°    = <span class="rosu">89°60′</span>
+− 25°40′
+────────
+  64°20′</div>
+      <div class="pas">90° are 0′, iar noi vrem să scădem 40′. Împrumutăm!</div>
+      <div class="pas atentie">90° = 89° + 60′ = <strong>89°60′</strong> (truc de aur, îl vei folosi des!).</div>
+      <div class="pas final">60′ − 40′ = 20′ și 89° − 25° = 64°. Rezultat: 64°20′.</div>
+    </div>
+
+    <div class="center"><button class="btn-primary" onclick="show('screen-quiz-intro')">Am prins scăderea! ➜</button></div>
+  </div>
+
+  <!-- ═══════════ 5. FAPTE DESPRE GĂURI NEGRE + intro la antrenament ═══════════ -->
+  <div class="card screen hidden" id="screen-quiz-intro">
+    <h2>🕳️ Pauză de informare: ce e o gaură neagră?</h2>
+    <div class="hole"></div>
+    <div class="fact">🌟 O gaură neagră se naște când o <strong>stea uriașă</strong> (mult mai mare decât Soarele) își termină combustibilul și se prăbușește în ea însăși, strivindu-se într-un punct incredibil de mic și de greu.</div>
+    <div class="fact">🚫 Gravitația ei e atât de mare încât <strong>nici lumina</strong> — cel mai rapid lucru din univers — nu mai poate ieși. De-aceea e „neagră”: n-o vedem direct, vedem doar discul strălucitor de gaze care se rotesc în jurul ei.</div>
+    <div class="fact">📸 În 2019, oamenii au făcut <strong>prima fotografie</strong> a unei găuri negre (M87*). Ca s-o „vadă”, au unit telescoape de pe toată planeta într-un telescop cât Pământul — și au măsurat unghiuri de <strong>milionimi de secundă de arc</strong>! Exact de-asta contează minutele și secundele de unghi. 🔬</div>
+    <div class="fact">🍝 Dacă un astronaut s-ar apropia prea mult, gravitația i-ar trage picioarele mult mai tare decât capul și l-ar întinde ca pe un spaghete. Oamenii de știință chiar îi spun <strong>„spaghetificare”</strong>!</div>
+    <div class="guide" style="margin-top:14px;">
+      <div class="face">👨‍🚀</div>
+      <p>Acum înțelegi de ce nu glumim cu minutele. Antrenament de simulator: 8 calcule rapide, apoi misiunea reală!</p>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="startQuiz()">🎮 Simulatorul!</button></div>
+  </div>
+
+  <!-- ═══════════ QUIZ ═══════════ -->
+  <div class="card screen hidden" id="screen-quiz">
+    <div class="progress" id="quiz-progress"></div>
+    <h2 id="q-title"></h2>
+    <div id="q-figure"></div>
+    <div id="q-choices"></div>
+    <div id="q-feedback"></div>
+    <div class="center hidden" id="q-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="nextQuestion()">Următoarea ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ 6. PROVOCAREA: COPILUL FACE EL EXEMPLELE ═══════════ -->
+  <div class="card screen hidden" id="screen-challenge">
+    <h2>🏆 Misiunea finală: Ocolirea găurii negre!</h2>
+    <div class="guide">
+      <div class="face">👨‍🚀</div>
+      <p>Acum tu ești la comenzi. Patru manevre — două adunări (una simplă, una cu trecere peste 60′)
+      și două scăderi (una simplă, una cu împrumut). Calculează pe caiet, apoi introdu rezultatul.
+      La fiecare manevră corectă, nava se depărtează de gaura neagră!</p>
+    </div>
+    <canvas id="nava" width="800" height="200"></canvas>
+    <p class="center" style="font-size:1.15rem;font-weight:700;color:#1d4e89;" id="ch-title"></p>
+    <div class="calc" id="ch-calc"></div>
+    <div class="in-grade">
+      <input type="number" id="ch-g" placeholder="°" min="0" max="360"><span class="unit">°</span>
+      <input type="number" id="ch-m" placeholder="′" min="0" max="59"><span class="unit">′</span>
+      <button class="btn-primary" id="ch-btn" onclick="verificaCh()">🚀 Execută manevra</button>
+    </div>
+    <div id="ch-feedback"></div>
+    <div class="center hidden" id="ch-next-wrap" style="margin-top:12px;">
+      <button class="btn-primary" onclick="show('screen-fisa')">Am scăpat! ➜</button>
+    </div>
+  </div>
+
+  <!-- ═══════════ FIȘA PE CAIET ═══════════ -->
+  <div class="card screen hidden" id="screen-fisa">
+    <h2>📓 Jurnalul de bord (pe caiet)</h2>
+    <div class="guide">
+      <div class="face">👨‍🚀</div>
+      <p>Orice comandant își scrie calculele în jurnal. Rezolvă în caiet, cu numerele scrise unul sub altul:</p>
+    </div>
+    <div class="learned">
+      <ol style="margin-left:20px;line-height:1.7;">
+        <li>Calculează: a) 34°20′ + 25°15′ · b) 47°45′ + 38°30′ · c) 18°55′ + 41°5′.</li>
+        <li>Calculează: a) 76°50′ − 24°30′ · b) 60°15′ − 22°40′ · c) 180° − 63°35′.</li>
+        <li>Două unghiuri cu o latură comună au 52°30′ și 47°30′. Cât are unghiul mare? Ce fel de unghi este?</li>
+        <li>Unghiul mare AOC are 120°. ∡AOB = 45°50′. Cât are ∡BOC? <em>(unghiul mare minus cel mic!)</em></li>
+        <li>Transformă: a) 2° = …′ · b) 150′ = …°…′ · c) 1°1′ = …′.</li>
+        <li>🌌 Provocare cosmică: telescopul rotește 89°45′, apoi încă 0°15′ ca să prindă gaura neagră. La ce unghi se oprește? Ce fel de unghi e acela?</li>
+      </ol>
+    </div>
+    <div class="center"><button class="btn-primary" onclick="show('screen-end')">Jurnalul e scris! 🎖️</button></div>
+  </div>
+
+  <!-- ═══════════ FINAL ═══════════ -->
+  <div class="card screen hidden" id="screen-end">
+    <div class="center">
+      <div class="big-emoji">🎖️</div>
+      <h1>COMANDANT DE NAVĂ SPAȚIALĂ!</h1>
+      <p>Ai ocolit gaura neagră cu precizie de minut. Vector îți predă comanda navei!</p>
+    </div>
+    <div class="learned">
+      <p><strong>Ce ai învățat în această misiune:</strong></p>
+      <ul>
+        <li>🔗 Două unghiuri cu o latură comună: <strong>unghiul mare = suma celor mici</strong>.</li>
+        <li>➕ Adunare: grade cu grade, minute cu minute; dacă minutele ≥ 60′, transformi 60′ = 1° și îl urci la grade.</li>
+        <li>➖ Scădere: dacă minutele nu ajung, împrumuți 1° = 60′. Trucul: 90° = 89°60′, 180° = 179°60′.</li>
+        <li>🕳️ Găurile negre: gravitație din care nu scapă nici lumina; „fotografiate” măsurând unghiuri minuscule.</li>
+      </ul>
+    </div>
+    <div class="guide">
+      <div class="face">👨‍🚀</div>
+      <p><strong>Ultima transmisiune:</strong> explică-i cuiva din familie de ce 40°70′ „nu se scrie frumos” și cum devine 41°10′.
+      Apoi caută pe internet fotografia găurii negre M87* din 2019 — arată ca un inel de foc! 🔥</p>
+    </div>
+    <div class="end-buttons">
+      <button class="btn-primary" onclick="location.reload()">🔄 Reia misiunea</button>
+      <a href="../index.html" class="btn-primary" style="background:#556e8d;box-shadow:0 4px 0 #3d5064;">🎒 Toate cursurile</a>
+    </div>
+  </div>
+
+  <div class="footer-note">Misiunea Gaura Neagră · Calcule cu măsuri de unghiuri în grade și minute</div>
+</div>
+
+<script src="comun.js"></script>
+<script>
+"use strict";
+
+/* ─── stele pe fundal ─── */
+(function(){
+  const c=document.getElementById("stars"), x=c.getContext("2d");
+  function draw(){
+    c.width=innerWidth; c.height=innerHeight;
+    x.clearRect(0,0,c.width,c.height);
+    for(let i=0;i<160;i++){
+      x.fillStyle=`rgba(255,255,255,${0.3+Math.random()*0.7})`;
+      x.beginPath(); x.arc(Math.random()*c.width, Math.random()*c.height, Math.random()*1.6, 0, 7); x.fill();
+    }
+  }
+  draw(); addEventListener("resize",draw);
+})();
+
+/* ─── utilitare grade/minute ─── */
+function toMin(g,m){ return g*60+m; }
+function fromMin(t){ return {g:Math.floor(t/60), m:t%60}; }
+function fmtGM(g,m){ return m===0 ? g+"°" : g+"°"+m+"′"; }
+
+/* ─── explorare: două unghiuri cu latură comună ─── */
+const lab=document.getElementById("lab"), lx=lab.getContext("2d");
+const O={x:130,y:330};
+const arms={ A:{x:300,y:80}, C:{x:700,y:300} };   // exterioare, mobile
+const Bfix={ang:55};                             // latura comună (grade, fixă)
+function angOf(p){ let a=Math.atan2(O.y-p.y,p.x-O.x)*180/Math.PI; return clamp(a,0,180); }
+function drawLab(){
+  lx.clearRect(0,0,lab.width,lab.height);
+  const aA=angOf(arms.A), aC=angOf(arms.C);
+  const hi=Math.max(aA,aC), lo=Math.min(aA,aC);
+  const b=clamp(Bfix.ang, lo+3, hi-3);
+  const R=1000;
+  const ray=(deg)=>({x:O.x+Math.cos(deg*Math.PI/180)*R, y:O.y-Math.sin(deg*Math.PI/180)*R});
+  // sectoare
+  function sector(a1,a2,color){
+    lx.beginPath(); lx.moveTo(O.x,O.y);
+    lx.arc(O.x,O.y,150,-a2*Math.PI/180,-a1*Math.PI/180); lx.closePath();
+    lx.fillStyle=color; lx.fill();
+  }
+  sector(lo,b,"rgba(255,200,60,.35)");
+  sector(b,hi,"rgba(140,190,255,.35)");
+  lx.lineWidth=4; lx.lineCap="round";
+  for(const [deg,col] of [[lo,"#1d8fe1"],[hi,"#1d8fe1"],[b,"#e08a1e"]]){
+    const e=ray(deg); lx.strokeStyle=col;
+    lx.beginPath(); lx.moveTo(O.x,O.y); lx.lineTo(e.x,e.y); lx.stroke();
+  }
+  drawPoint(lx,O,"O","#e05555");
+  drawPoint(lx,arms.A,"","#1d8fe1"); drawPoint(lx,arms.C,"","#1d8fe1");
+  const m1=Math.round((b-lo)*60), m2=Math.round((hi-b)*60);
+  const s1=fromMin(m1), s2=fromMin(m2), st=fromMin(m1+m2);
+  lx.font="bold 18px Segoe UI"; lx.fillStyle="#a05a00";
+  const mid1=(lo+b)/2*Math.PI/180; lx.fillText(fmtGM(s1.g,s1.m), O.x+Math.cos(mid1)*200-30, O.y-Math.sin(mid1)*200);
+  lx.fillStyle="#156bb0";
+  const mid2=(b+hi)/2*Math.PI/180; lx.fillText(fmtGM(s2.g,s2.m), O.x+Math.cos(mid2)*200-30, O.y-Math.sin(mid2)*200);
+  lx.font="26px Segoe UI"; lx.fillText("🕳️", 720, 60);
+  const badge=document.getElementById("lab-status");
+  badge.textContent=`Unghiul MARE (între laturile albastre): ${fmtGM(st.g,st.m)}`;
+  badge.className="status-badge ok";
+}
+enableDrag(lab, ()=>arms, drawLab);
+function explAnswer(btn, ok){
+  const fb=document.getElementById("expl-fb");
+  if(ok){
+    btn.style.background="#35b653"; btn.style.boxShadow="0 4px 0 #1b6b2e";
+    fb.innerHTML=`<div class="feedback good">✅ Exact! Unghiul mare e format din cele două mici puse cap la cap — deci îl aflăm ADUNÂND măsurile lor. Latura comună e „lipiciul” dintre ele.</div>`;
+    document.getElementById("expl-next").classList.remove("hidden");
+  } else {
+    fb.innerHTML=`<div class="feedback hint">🤔 Privește sectoarele colorate: cel galben și cel albastru, puse unul lângă altul, umplu exact unghiul mare…</div>`;
+  }
+}
+
+/* ─── problema 1: 37°25' + 41°20' ─── */
+function verificaP1(){
+  const g=+document.getElementById("p1-g").value, m=+document.getElementById("p1-m").value;
+  const fb=document.getElementById("p1-fb");
+  const gi=document.getElementById("p1-g"), mi=document.getElementById("p1-m");
+  if(g===78 && m===45){
+    gi.className="ok"; mi.className="ok";
+    fb.innerHTML=`<div class="feedback good">🎯 Corect! 37°+41° = 78°, iar 25′+20′ = 45′. ∡AOC = 78°45′. Traiectoria e sigură — nava trece pe lângă gaura neagră!</div>`;
+    document.getElementById("p1-next").classList.remove("hidden");
+  } else {
+    gi.className = g===78 ? "ok":"bad"; mi.className = m===45 ? "ok":"bad";
+    fb.innerHTML=`<div class="feedback hint">🤔 Adună separat: gradele cu gradele (37+41), minutele cu minutele (25+20). Nu le amesteca!</div>`;
+  }
+}
+
+/* ─── quiz ─── */
+const questions=[
+  { title:"20°10′ + 15°30′ = ?", fig:null, choices:["35°40′","35°04′","36°10′"], correct:0,
+    hint:"Grade: 20+15. Minute: 10+30.", explain:"35°40′ — fără nicio trecere." },
+  { title:"Câte minute are un grad?", fig:null, choices:["100′","60′","90′"], correct:1,
+    hint:"Ca ora și minutele ceasului…", explain:"1° = 60′. Iar 1′ = 60″ (secunde)." },
+  { title:"25°40′ + 15°30′ = ?", fig:null, choices:["40°70′","41°10′","40°10′"], correct:1,
+    hint:"40′+30′ = 70′ — dar minutele nu pot depăși 59!", explain:"70′ = 1°10′, deci 40°+1° = 41° și rămân 10′: 41°10′. „40°70′” nu se scrie niciodată așa!" },
+  { title:"50°45′ − 20°15′ = ?", fig:null, choices:["30°30′","30°60′","70°60′"], correct:0,
+    hint:"Scade separat gradele și minutele.", explain:"50−20 = 30°, 45−15 = 30′ → 30°30′." },
+  { title:"40°10′ − 15°30′ = ?", fig:null, choices:["25°20′","24°40′","25°80′"], correct:1,
+    hint:"10′ − 30′ nu se poate — împrumută un grad: 40°10′ = 39°70′.", explain:"39°70′ − 15°30′ = 24°40′." },
+  { title:"Robotul Bip scrie: „89°60′ este alt unghi decât 90°.” Are dreptate?", fig:null,
+    choices:["Da","Nu — 60′ = 1°, deci 89°60′ = 90°"], correct:1,
+    hint:"Ce se întâmplă când minutele ajung la 60?", explain:"Bip greșește! 89°60′ e doar 90° scris „desfăcut” — trucul perfect pentru scăderi." },
+  { title:"Două unghiuri cu latură comună au 30°20′ și 59°40′. Unghiul mare este…", fig:null,
+    choices:["89°60′ — adică 90°, drept!","89°","90°60′"], correct:0,
+    hint:"Adună: 30+59 și 20+40… apoi transformă.", explain:"89°60′ = 90° — un unghi DREPT format din două ascuțite!" },
+  { title:"180° − 63°35′ = ?", fig:null, choices:["117°35′","116°25′","117°25′"], correct:1,
+    hint:"180° = 179°60′.", explain:"179°60′ − 63°35′ = 116°25′." },
+];
+
+/* ─── provocarea finală: 4 manevre făcute de copil ─── */
+const manevre=[
+  { titlu:"Manevra 1 — adunare simplă", calc:"  42°15′\n+ 23°30′\n────────", g:65, m:45,
+    hint:"Grade cu grade, minute cu minute. Nu trece peste 60 de data asta." },
+  { titlu:"Manevra 2 — adunare cu trecere peste 60′", calc:"  36°45′\n+ 28°35′\n────────", g:65, m:20,
+    hint:"45′+35′ = 80′ = 1°20′. Nu uita să urci gradul!" },
+  { titlu:"Manevra 3 — scădere simplă", calc:"  95°50′\n− 40°20′\n────────", g:55, m:30,
+    hint:"50′ − 20′ merge direct." },
+  { titlu:"Manevra 4 — scădere cu împrumut", calc:"  70°15′\n− 28°40′\n────────", g:41, m:35,
+    hint:"15′ − 40′ nu se poate: 70°15′ = 69°75′." },
+];
+let mIdx=0, chSolved=false, chMistakes=0;
+const nava=document.getElementById("nava"), nx=nava.getContext("2d");
+function drawNava(){
+  nx.clearRect(0,0,nava.width,nava.height);
+  nx.fillStyle="#0b1026"; nx.fillRect(0,0,nava.width,nava.height);
+  for(let i=0;i<50;i++){ nx.fillStyle="rgba(255,255,255,.6)"; nx.fillRect((i*137)%800,(i*71)%200,1.5,1.5); }
+  // gaura neagră în dreapta
+  const grd=nx.createRadialGradient(720,100,10,720,100,80);
+  grd.addColorStop(0,"#000"); grd.addColorStop(.45,"#000"); grd.addColorStop(.55,"#ff9d3d"); grd.addColorStop(.7,"transparent");
+  nx.fillStyle=grd; nx.beginPath(); nx.arc(720,100,80,0,7); nx.fill();
+  // nava: pornește aproape de gaură și se depărtează cu fiecare manevră
+  const x = 560 - mIdx*130;
+  nx.font="40px Segoe UI"; nx.fillText("🚀", x, 115);
+  nx.font="bold 15px Segoe UI"; nx.fillStyle="#c9d4ff";
+  nx.fillText(chSolved ? "Zonă sigură! 🎉" : `Distanță de siguranță: ${mIdx} / 4 manevre`, 20, 30);
+}
+function drawManevra(){
+  const mv=manevre[mIdx];
+  document.getElementById("ch-title").textContent=`${mIdx+1} / 4 · ${mv.titlu}`;
+  document.getElementById("ch-calc").textContent=mv.calc;
+  ["ch-g","ch-m"].forEach(id=>{ const e=document.getElementById(id); e.value=""; e.className=""; });
+  chMistakes=0;
+  drawNava();
+}
+function verificaCh(){
+  if(chSolved) return;
+  const mv=manevre[mIdx];
+  const g=+document.getElementById("ch-g").value, m=+document.getElementById("ch-m").value;
+  const gi=document.getElementById("ch-g"), mi=document.getElementById("ch-m");
+  const fb=document.getElementById("ch-feedback");
+  if(toMin(g,m)===toMin(mv.g,mv.m) && m<60){
+    gi.className="ok"; mi.className="ok";
+    mIdx++;
+    if(mIdx>=manevre.length){
+      chSolved=true; drawNava();
+      document.getElementById("ch-btn").classList.add("hidden");
+      document.getElementById("ch-title").textContent="Toate manevrele executate!";
+      fb.innerHTML=`<div class="feedback good">🌌 Nava e în zonă sigură! Ai stăpânit adunarea și scăderea cu grade și minute — inclusiv trecerile peste 60′!</div>`;
+      document.getElementById("ch-next-wrap").classList.remove("hidden");
+    } else {
+      fb.innerHTML=`<div class="feedback good">🚀 Manevră reușită: ${fmtGM(mv.g,mv.m)}! Nava se depărtează… următoarea!</div>`;
+      setTimeout(drawManevra, 900);
+    }
+  } else {
+    chMistakes++;
+    gi.className = g===mv.g ? "ok":"bad"; mi.className = m===mv.m ? "ok":"bad";
+    if(m>=60) fb.innerHTML=`<div class="feedback hint">⚠️ Minutele nu pot fi 60 sau mai mult! Transformă 60′ într-un grad și urcă-l la grade.</div>`;
+    else if(chMistakes===1) fb.innerHTML=`<div class="feedback hint">🤔 Gaura neagră ne trage! Indiciu: ${mv.hint}</div>`;
+    else fb.innerHTML=`<div class="feedback explain">💡 Răspunsul corect e ${fmtGM(mv.g,mv.m)}. ${mv.hint} Scrie-l și continuăm.</div>`;
+  }
+}
+
+window.onShow=function(id){
+  if(id==="screen-explore") drawLab();
+  if(id==="screen-challenge") drawManevra();
+};
+</script>
+</body>
+</html>
