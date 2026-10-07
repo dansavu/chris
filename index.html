@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Școala lui Chris</title>
+<title>Școala lui Cristian</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
   body { background: linear-gradient(160deg, #eef6ff, #fdf3e7); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
@@ -17,12 +17,29 @@
   a.course .emoji { font-size: 2.4rem; }
   a.course .desc { font-size: .92rem; color: #678; font-weight: 400; }
   a.course.soon { opacity: .5; pointer-events: none; }
+  a.casa { display:flex; align-items:center; gap:18px; background:linear-gradient(135deg,#6cc04a,#3f9631); color:#fff; border-radius:22px;
+    box-shadow:0 6px 0 #2e7424, 0 10px 24px rgba(30,90,30,.25); padding:22px 26px; margin-bottom:28px; text-decoration:none; text-align:left; transition:transform .1s; }
+  a.casa:hover { transform:scale(1.03); }
+  a.casa .emoji { font-size:2.8rem; }
+  a.casa .titlu { font-size:1.3rem; font-weight:800; }
+  a.casa .desc { font-size:.95rem; opacity:.95; }
+  a.casa .cufere { display:inline-block; margin-top:6px; background:#ffd84d; color:#7a3803; font-weight:800; border-radius:10px; padding:3px 10px; font-size:.9rem; }
+  .sectiune { text-align:left; color:#1d4e89; font-weight:800; margin:6px 4px 10px; }
 </style>
 </head>
 <body>
 <div class="app">
-  <h1>🎒 Școala lui Chris</h1>
+  <h1>🎒 Școala lui Cristian</h1>
   <p class="sub">Lecții interactive, pas cu pas</p>
+
+  <a class="casa" href="casa/">
+    <span class="emoji">🏡</span>
+    <span><span class="titlu">Casa lui Cristian</span><br>
+      <span class="desc">Construiește-ți casa în Valea Curcubeului, bloc cu bloc!</span><br>
+      <span class="cufere" id="cufere" style="display:none;"></span></span>
+  </a>
+
+  <p class="sectiune">📚 Lecții</p>
 
   <a class="course" href="geometrie/">
     <span class="emoji">🧭</span>
@@ -54,5 +71,21 @@
       <span class="desc">Geometrie · calcule cu măsuri de unghiuri în grade și minute</span></span>
   </a>
 </div>
+<script>
+"use strict";
+(function(){
+  let terminate = 0, revendicate = [];
+  for(const k of ["geoProgress","mate3Progress","unghiuriProgress"]){
+    try{ const p = JSON.parse(localStorage.getItem(k)) || {}; for(const id in p) if(p[id]) terminate++; }catch(e){}
+  }
+  try{ revendicate = (JSON.parse(localStorage.getItem("casaLuiCristian")) || {}).revendicate || []; }catch(e){}
+  const noi = terminate - revendicate.length;
+  if(noi > 0){
+    const el = document.getElementById("cufere");
+    el.textContent = `🎁 ${noi === 1 ? "Un cufăr te așteaptă" : noi + " cufere te așteaptă"} acasă!`;
+    el.style.display = "inline-block";
+  }
+})();
+</script>
 </body>
 </html>

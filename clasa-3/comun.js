@@ -15,7 +15,18 @@ function show(id){
   document.getElementById(id).classList.remove("hidden");
   if(window.onShow) window.onShow(id);
   if(id === "screen-end" && window.LESSON_ID) markDone(window.LESSON_ID);
+  if(id === "screen-end") adaugaLinkCasa();
   window.scrollTo({top:0});
+}
+function adaugaLinkCasa(){
+  const eb = document.querySelector("#screen-end .end-buttons");
+  if(!eb || eb.querySelector(".casa-link")) return;
+  const a = document.createElement("a");
+  a.href = "../casa/";
+  a.className = "btn-primary casa-link";
+  a.style.cssText = "background:#35b653;box-shadow:0 4px 0 #1b6b2e;";
+  a.textContent = "🏡 Acasă — te așteaptă un cufăr!";
+  eb.appendChild(a);
 }
 
 /* ============ utilitare canvas ============ */

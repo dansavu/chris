@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Casa lui Cristian</title>
+<style>
+  * { box-sizing:border-box; margin:0; padding:0; font-family:'Segoe UI', sans-serif; }
+  html, body { height:100%; overflow:hidden; background:#bfe6ff; touch-action:none; user-select:none; -webkit-user-select:none; }
+  canvas#world { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  .hidden { display:none !important; }
+
+  .topbar { position:fixed; top:8px; left:8px; right:8px; display:flex; gap:8px; align-items:flex-start; z-index:5; pointer-events:none; flex-wrap:wrap; }
+  .topbar > * { pointer-events:auto; }
+  .pill { background:#ffffffee; border-radius:14px; padding:8px 14px; box-shadow:0 3px 10px rgba(0,0,0,.15); font-weight:700; color:#1d4e89; text-decoration:none; font-size:.95rem; border:none; cursor:pointer; }
+  .pill.scoala { background:#1d8fe1; color:#fff; }
+  .quest { background:#fffbe9f2; border:3px solid #e8c15a; border-radius:14px; padding:8px 12px; max-width:430px; font-size:.92rem; color:#5a4300; box-shadow:0 3px 10px rgba(0,0,0,.15); cursor:pointer; }
+  .quest b { color:#7a3803; }
+  .quest .bar { height:8px; background:#f1e2b0; border-radius:4px; margin-top:6px; overflow:hidden; }
+  .quest .bar span { display:block; height:100%; background:#35b653; transition:width .4s; }
+
+  .tools { position:fixed; right:10px; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:7px; z-index:5; }
+  .tool { width:58px; height:56px; border-radius:16px; border:3px solid #fff; background:#ffffffd9; font-size:1.5rem; cursor:pointer; box-shadow:0 3px 10px rgba(0,0,0,.2); line-height:1; }
+  .tool small { display:block; font-size:.58rem; font-weight:800; color:#1d4e89; margin-top:2px; }
+  .tool.sel { background:#1d8fe1; border-color:#156bb0; }
+  .tool.sel small { color:#fff; }
+  .tool.mic { height:42px; font-size:1.2rem; }
+
+  .hotbar { position:fixed; bottom:10px; left:50%; transform:translateX(-50%); display:flex; gap:5px; background:#0000004d; padding:6px; border-radius:14px; z-index:5; max-width:calc(100% - 20px); overflow-x:auto; }
+  .slot { position:relative; width:54px; height:54px; border-radius:10px; border:3px solid #ffffff66; background:#ffffff38; cursor:pointer; flex:0 0 auto; display:flex; align-items:center; justify-content:center; }
+  .slot.sel { border-color:#fff; background:#ffffff99; transform:translateY(-3px); }
+  .slot.gol { opacity:.35; }
+  .slot canvas { width:38px; height:38px; }
+  .slot .n { position:absolute; right:3px; bottom:1px; font-weight:800; color:#fff; text-shadow:0 1px 3px #000; font-size:.85rem; }
+
+  .dpad { position:fixed; left:12px; bottom:84px; display:grid; grid-template-columns:repeat(2,50px); grid-template-rows:repeat(2,50px); gap:6px; z-index:5; transform:rotate(0deg); }
+  .dpad button { border:none; border-radius:14px; background:#ffffffd9; font-size:1.4rem; box-shadow:0 2px 8px rgba(0,0,0,.2); cursor:pointer; }
+
+  .toast { position:fixed; top:74px; left:50%; transform:translateX(-50%); background:#1d4e89ee; color:#fff; padding:10px 18px; border-radius:14px; font-weight:700; z-index:30; transition:opacity .4s; pointer-events:none; text-align:center; max-width:90%; }
+
+  .modal-bg { position:fixed; inset:0; background:#0b1a3a88; display:flex; align-items:center; justify-content:center; z-index:40; padding:14px; }
+  .modal { background:#fff; border-radius:22px; max-width:540px; width:100%; padding:22px; max-height:92vh; overflow:auto; box-shadow:0 10px 40px rgba(0,0,0,.3); }
+  .modal h2 { color:#1d4e89; margin-bottom:10px; font-size:1.3rem; }
+  .modal p { color:#333; line-height:1.5; margin-bottom:10px; font-size:1.03rem; }
+  .npc-head { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+  .npc-head .em { font-size:3rem; }
+  .npc-head .nm { font-weight:800; color:#7a3803; font-size:1.15rem; }
+  .btns { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:12px; }
+  .btn { border:none; border-radius:14px; padding:12px 20px; font-size:1.02rem; font-weight:700; cursor:pointer; background:#1d8fe1; color:#fff; box-shadow:0 4px 0 #156bb0; text-decoration:none; display:inline-block; }
+  .btn.verde { background:#35b653; box-shadow:0 4px 0 #1b6b2e; }
+  .btn.gri { background:#8aa0b6; box-shadow:0 4px 0 #5f7489; }
+  .btn:active { transform:translateY(2px); box-shadow:none; }
+  .choice { display:block; width:100%; text-align:left; background:#f0f5ff; color:#1d4e89; border:3px solid #c9dcf5; border-radius:14px; padding:13px 16px; font-size:1.05rem; font-weight:700; margin-bottom:8px; cursor:pointer; }
+  .choice.ok { background:#d8f7dd; border-color:#35b653; color:#1b6b2e; }
+  .choice.ko { background:#ffe1e1; border-color:#e05555; color:#a02525; }
+  .choice:disabled { cursor:default; }
+  .din-lectia { font-size:.85rem; color:#789; margin-bottom:6px; }
+  .fb { border-radius:12px; padding:10px 12px; margin-top:8px; font-size:.98rem; }
+  .fb.ok { background:#d8f7dd; color:#1b6b2e; }
+  .fb.ko { background:#fff3cd; color:#7a5c00; }
+  .fb a { color:#1d4e89; font-weight:700; }
+  .rewards { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:10px 0; }
+  .rw { background:#f2f7fd; border:2px solid #c9dcf5; border-radius:12px; padding:6px 10px; font-weight:700; color:#1d4e89; display:flex; align-items:center; gap:6px; }
+  .rw canvas { width:26px; height:26px; }
+  .chest-list { text-align:left; margin:8px 0; font-size:.95rem; color:#445; max-height:160px; overflow:auto; background:#fdf9ee; border-radius:12px; padding:8px 12px; }
+  .chest-list div { margin:3px 0; }
+  .help li { margin:6px 0 6px 20px; line-height:1.4; }
+  .confetti { position:fixed; top:-40px; font-size:1.8rem; z-index:50; pointer-events:none; animation:cade linear forwards; }
+  @keyframes cade { to { transform:translateY(110vh) rotate(540deg); } }
+</style>
+</head>
+<body>
+<canvas id="world"></canvas>
+
+<div class="topbar">
+  <a class="pill scoala" href="../index.html">🏫 Școala lui Cristian</a>
+  <div class="quest" id="quest" onclick="arataMisiunea()"></div>
+</div>
+
+<div class="tools">
+  <button class="tool sel" id="t-mergi" onclick="setMode('mergi')">🚶<small>Mergi</small></button>
+  <button class="tool" id="t-construieste" onclick="setMode('construieste')">🧱<small>Pune</small></button>
+  <button class="tool" id="t-aduna" onclick="setMode('aduna')">⛏️<small>Adună</small></button>
+  <button class="tool mic" onclick="roteste(-1)" title="Rotește lumea">↺</button>
+  <button class="tool mic" onclick="roteste(1)" title="Rotește lumea">↻</button>
+  <button class="tool mic" onclick="zoom(1)">🔍＋</button>
+  <button class="tool mic" onclick="zoom(-1)">🔍－</button>
+  <button class="tool mic" onclick="arataAjutor()">❓</button>
+</div>
+
+<div class="dpad">
+  <button onclick="pas(-1,0)">↖</button>
+  <button onclick="pas(0,-1)">↗</button>
+  <button onclick="pas(0,1)">↙</button>
+  <button onclick="pas(1,0)">↘</button>
+</div>
+
+<div class="hotbar" id="hotbar"></div>
+<div class="toast hidden" id="toast"></div>
+
+<div class="modal-bg hidden" id="modal-bg"><div class="modal" id="modal"></div></div>
+
+<script>
+"use strict";
+/* ═════════════════ LUMEA ═════════════════ */
+const N = 16, MAXH = 9;
+const SAVE_KEY = "casaLuiCristian";
+
+const B = {
+  iarba:   { n:"Iarbă",    top:"#6cc04a", l:"#8b5a2b", r:"#74481f", solid:true },
+  pamant:  { n:"Pământ",   top:"#9a6a3a", l:"#8b5a2b", r:"#74481f", solid:true },
+  piatra:  { n:"Piatră",   top:"#b3b9c1", l:"#959ba3", r:"#7d838b", solid:true },
+  trunchi: { n:"Buștean",  top:"#d4ad72", l:"#7a5230", r:"#664324", solid:true },
+  frunze:  { n:"Frunze",   top:"#5cbf48", l:"#47a238", r:"#3b8a2e", solid:true },
+  lemn:    { n:"Scânduri", top:"#e6b67e", l:"#cc985c", r:"#b3814a", solid:true },
+  caramida:{ n:"Cărămidă", top:"#d0664c", l:"#b84f39", r:"#9c412e", solid:true },
+  sticla:  { n:"Sticlă",   top:"rgba(200,236,255,.55)", l:"rgba(165,215,248,.5)", r:"rgba(140,198,238,.5)", solid:true, glass:true },
+  tigla:   { n:"Țiglă",    top:"#e0703a", l:"#c25a28", r:"#a44b20", solid:true },
+  lampa:   { n:"Lampă",    top:"#fff0a8", l:"#ffd84d", r:"#f5c22a", solid:true, glow:true },
+  nisip:   { n:"Nisip",    top:"#f3dfa2", l:"#e0c887", r:"#ccb373", solid:true },
+  apa:     { n:"Apă",      top:"#5ab6f0", l:"#4aa3dc", r:"#3f92c8", solid:true, water:true },
+  usa:     { n:"Ușă",      top:"#a8743f", l:"#a8743f", r:"#8f6233", solid:false, door:true },
+  floare:  { n:"Floare",   solid:false, flower:true },
+};
+const HOTBAR = ["lemn","piatra","pamant","trunchi","frunze","caramida","sticla","usa","tigla","lampa","nisip","floare"];
+const FLORI = ["🌷","🌻","🌼","🌸"];
+
+let world = new Map();
+const K = (x,y,z) => x+","+y+","+z;
+const inB = (x,y) => x>=0 && y>=0 && x<N && y<N;
+function get(x,y,z){ const b = world.get(K(x,y,z)); return b ? b.t : null; }
+function setB(x,y,z,t){ if(t) world.set(K(x,y,z), {x,y,z,t}); else world.delete(K(x,y,z)); }
+function solidAt(x,y,z){ const t = get(x,y,z); return !!t && B[t].solid; }
+function opaque(t){ return t && B[t].solid && !B[t].glass; }
+
+/* ═════════════════ PERSONAJE ═════════════════ */
+const NPC = {
+  rix:    { nume:"Rix",              em:"🦊", x:5,  y:5,  z:1 },
+  zum:    { nume:"Zum",              em:"🐉", x:11, y:11, z:1 },
+  vector: { nume:"Căpitanul Vector", em:"👨‍✈️", x:9,  y:2,  z:1 },
+};
+function npcAt(x,y,z){ for(const k in NPC){ const n = NPC[k]; if(n.x===x && n.y===y && n.z===z) return k; } return null; }
+
+/* ═════════════════ LECȚII (legătura cu Școala) ═════════════════ */
+const LECTII = {
+  l01:{n:"Punct, dreaptă, semidreaptă, segment", u:"../geometrie/lectia-01-punct-dreapta-segment.html", c:"geo"},
+  l02:{n:"Coliniare, paralele, concurente", u:"../geometrie/lectia-02-coliniare-paralele-concurente.html", c:"geo"},
+  l03:{n:"Lungimea și mijlocul segmentului", u:"../geometrie/lectia-03-lungime-mijloc-segment.html", c:"geo"},
+  l04:{n:"Segmente congruente, simetricul", u:"../geometrie/lectia-04-congruente-simetric.html", c:"geo"},
+  l05:{n:"Unghiul", u:"../geometrie/lectia-05-unghiul.html", c:"geo"},
+  l06:{n:"Raportorul", u:"../geometrie/lectia-06-raportorul.html", c:"geo"},
+  l07:{n:"Tipuri de unghiuri", u:"../geometrie/lectia-07-tipuri-unghiuri.html", c:"geo"},
+  l08:{n:"Grade și minute", u:"../geometrie/lectia-08-grade-minute.html", c:"geo"},
+  l09:{n:"Simetria", u:"../geometrie/lectia-09-simetrie.html", c:"geo"},
+  l10:{n:"Perimetre", u:"../geometrie/lectia-10-perimetre.html", c:"geo"},
+  l11:{n:"Arii", u:"../geometrie/lectia-11-arii.html", c:"geo"},
+  l12:{n:"Volume", u:"../geometrie/lectia-12-volume.html", c:"geo"},
+  l13:{n:"Unități de măsură", u:"../geometrie/lectia-13-unitati-masura.html", c:"geo"},
+  m01:{n:"Formarea numerelor", u:"../clasa-3/lectia-01-formarea-numerelor.html", c:"m3"},
+  m02:{n:"Comparare și ordonare", u:"../clasa-3/lectia-02-comparare-ordonare.html", c:"m3"},
+  m03:{n:"Rotunjirea", u:"../clasa-3/lectia-03-rotunjirea.html", c:"m3"},
+  m04:{n:"Adunarea", u:"../clasa-3/lectia-04-adunarea.html", c:"m3"},
+  m05:{n:"Scăderea", u:"../clasa-3/lectia-05-scaderea.html", c:"m3"},
+  m06:{n:"Numărul necunoscut", u:"../clasa-3/lectia-06-numarul-necunoscut.html", c:"m3"},
+  m07:{n:"Înmulțirea I", u:"../clasa-3/lectia-07-inmultirea-1.html", c:"m3"},
+  m08:{n:"Înmulțirea II", u:"../clasa-3/lectia-08-inmultirea-2.html", c:"m3"},
+  m09:{n:"Înmulțirea numerelor mari", u:"../clasa-3/lectia-09-inmultirea-numere-mari.html", c:"m3"},
+  m10:{n:"Împărțirea", u:"../clasa-3/lectia-10-impartirea.html", c:"m3"},
+  m11:{n:"Ordinea operațiilor", u:"../clasa-3/lectia-11-ordinea-operatiilor.html", c:"m3"},
+  m12:{n:"Probleme", u:"../clasa-3/lectia-12-probleme.html", c:"m3"},
+  m13:{n:"Fracții", u:"../clasa-3/lectia-13-fractii.html", c:"m3"},
+  m14:{n:"Măsurări", u:"../clasa-3/lectia-14-masurari.html", c:"m3"},
+  m15:{n:"Timpul", u:"../clasa-3/lectia-15-timpul.html", c:"m3"},
+  m16:{n:"Banii", u:"../clasa-3/lectia-16-banii.html", c:"m3"},
+  m17:{n:"Marele Turnir", u:"../clasa-3/lectia-17-marele-turnir.html", c:"m3"},
+  "u-v1":{n:"Misiunea Unghiurilor", u:"../unghiuri/index.html", c:"ung"},
+  "u-v2":{n:"Misiunea Unghiurilor V2", u:"../unghiuri/v2.html", c:"ung"},
+  "u-gm":{n:"Misiunea Gaura Neagră", u:"../unghiuri/grade-minute.html", c:"ung"},
+};
+function lectiiTerminate(){
+  const ids = [];
+  for(const key of ["geoProgress","mate3Progress","unghiuriProgress"]){
+    try{ const p = JSON.parse(localStorage.getItem(key)) || {}; for(const id in p) if(p[id] && LECTII[id]) ids.push(id); }catch(e){}
+  }
+  return ids;
+}
+
+/* întrebări: primul răspuns e cel corect (se amestecă la afișare) */
+const INTREBARI = {
+  l01:[["Câte capete are un segment?",["Două","Niciunul","Unul"]],["Semidreapta OC are originea în…",["O","C","nicăieri"]]],
+  l02:[["Șinele de tren sunt ca două drepte…",["paralele","concurente","coliniare"]],["Trei puncte pe aceeași dreaptă se numesc…",["coliniare","paralele","congruente"]]],
+  l03:[["AB = 10 cm, iar M e mijlocul lui AB. Cât e AM?",["5 cm","10 cm","20 cm"]],["Mijlocul unui segment e la distanțe … de capete.",["egale","diferite","oricare"]]],
+  l04:[["Segmentele congruente au…",["aceeași lungime","aceeași culoare","aceeași direcție"]],["A′ e simetricul lui A față de O și OA = 4 cm. Cât e AA′?",["8 cm","4 cm","2 cm"]]],
+  l05:[["În unghiul ∡MAT, vârful este…",["A","M","T"]],["Laturile unui unghi sunt…",["semidrepte","segmente","drepte paralele"]]],
+  l06:[["Cu ce măsurăm unghiurile?",["Cu raportorul","Cu rigla","Cu compasul"]],["Semicercul raportorului are…",["180°","90°","360°"]]],
+  l07:[["Un unghi de 120° este…",["obtuz","ascuțit","drept"]],["Un unghi de 30° este…",["ascuțit","obtuz","alungit"]],["Unghiul drept are…",["90°","100°","180°"]]],
+  l08:[["1° are câte minute?",["60′","100′","10′"]],["20°50′ + 10°20′ = ?",["31°10′","30°70′","30°10′"]]],
+  l09:[["Câte axe de simetrie are pătratul?",["4","2","1"]],["Litera A are axă de simetrie?",["Da","Nu"]]],
+  l10:[["Perimetrul unui pătrat cu latura de 5 cm este…",["20 cm","25 cm","10 cm"]],["Un dreptunghi are 6 m și 4 m. Perimetrul?",["20 m","24 m","10 m"]]],
+  l11:[["Aria unui dreptunghi de 6 m pe 4 m este…",["24 m²","20 m²","10 m²"]],["Aria se măsoară în…",["m²","m","m³"]]],
+  l12:[["Volumul unui cub cu latura 3 este…",["27","9","6"]],["O cutie de 4 × 3 × 2 are volumul…",["24","9","12"]]],
+  l13:[["3 m = ? cm",["300 cm","30 cm","3 000 cm"]],["1 m² = ? dm²",["100 dm²","10 dm²","1 000 dm²"]]],
+  m01:[["Ce număr are 4 mii, 0 sute, 3 zeci și 5 unități?",["4 035","435","4 305"]],["În 6 284, cifra sutelor este…",["2","6","8"]]],
+  m02:[["Care e mai mare?",["3 100","3 099"]],["Ce semn pui: 5 210 … 5 201?",[">","<","="]]],
+  m03:[["47 rotunjit la zeci este…",["50","40"]],["2 340 rotunjit la sute este…",["2 300","2 400"]]],
+  m04:[["1 250 + 750 = ?",["2 000","1 900","2 100"]],["38 + 25 = ?",["63","53","513"]]],
+  m05:[["500 − 125 = ?",["375","425","385"]],["62 − 38 = ?",["24","34","36"]]],
+  m06:[["? + 30 = 100. Cine e numărul mascat?",["70","130","30"]],["? − 20 = 50. Cine e numărul mascat?",["70","30","50"]]],
+  m07:[["4 × 5 = ?",["20","9","25"]],["3 + 3 + 3 + 3 scris ca înmulțire:",["4 × 3","3 × 3","4 + 3"]]],
+  m08:[["7 × 8 = ?",["56","54","64"]],["9 × 6 = ?",["54","56","63"]],["125 × 0 = ?",["0","125","1"]]],
+  m09:[["34 × 10 = ?",["340","3 400","44"]],["3 × 213 = ?",["639","619","693"]]],
+  m10:[["56 : 7 = ?",["8","7","9"]],["36 : 4 = ?",["9","8","6"]]],
+  m11:[["2 + 3 × 4 = ?",["14","20","24"]],["(2 + 3) × 4 = ?",["20","14","9"]]],
+  m12:[["Ana are 20 de mere, Dan de 3 ori mai multe. Câte are Dan?",["60","23","17"]],["„Cu 5 mai puțin” înseamnă că…",["scădem 5","împărțim la 5","înmulțim cu 5"]]],
+  m13:[["O felie dintr-o pizza tăiată în 4 este…",["un sfert (1/4)","o jumătate","o treime"]],["Care e mai mare: 3/8 sau 5/8?",["5/8","3/8"]]],
+  m14:[["1 kg = ? g",["1 000 g","100 g","10 g"]],["1 m = ? cm",["100 cm","10 cm","1 000 cm"]]],
+  m15:[["O oră are…",["60 de minute","100 de minute","30 de minute"]],["Acul mare pe 6 înseamnă…",["și jumătate","fix","și un sfert"]]],
+  m16:[["1 leu = ? bani",["100 de bani","10 bani","1 000 de bani"]],["Dai 50 de lei pentru ceva de 35 de lei. Ce rest primești?",["15 lei","25 lei","85 lei"]]],
+  m17:[["Ce figură are 3 laturi?",["Triunghiul","Pătratul","Cercul"]],["Zarul are forma unui…",["cub","sfere","cilindru"]]],
+  u:[["Unghiul este format din…",["două semidrepte cu aceeași origine","două drepte paralele","două segmente oarecare"]],
+     ["Câte grade are un cerc?",["360°","180°","90°"]],["Un unghi alungit are…",["180°","90°","0°"]],
+     ["Dacă ∡AOB = 90°, dreptele OA și OB sunt…",["perpendiculare","paralele"]]],
+  "u-gm":[["25°40′ + 15°30′ = ?",["41°10′","40°70′","40°10′"]],["90° − 25°40′ = ?",["64°20′","65°20′","64°60′"]],
+          ["Două unghiuri cu latură comună au 30°20′ și 40°10′. Unghiul mare are…",["70°30′","70°10′","10°10′"]]],
+  incalzire:[["Câte laturi are un pătrat?",["4","3","5"]],["5 + 7 = ?",["12","11","13"]],["Care formă este rotundă?",["Cercul","Pătratul","Triunghiul"]],["10 − 4 = ?",["6","5","7"]]],
+};
+function poolLectie(id){ return (id==="u-v1"||id==="u-v2") ? "u" : id; }
+
+/* ═════════════════ POVESTEA (misiunile principale) ═════════════════ */
+function are3x3(){
+  for(let x=0;x<=N-3;x++) for(let y=0;y<=N-3;y++){
+    let ok = true;
+    for(let i=0;i<3&&ok;i++) for(let j=0;j<3&&ok;j++) if(!solidAt(x+i,y+j,1)) ok = false;
+    if(ok) return true;
+  }
+  return false;
+}
+const plasate = t => S.stats.placed[t] || 0;
+const MISIUNI = [
+  { npc:"rix", titlu:"Bun venit în Valea Curcubeului",
+    intro:"Bună, Cristian! Eu sunt Rix, vulpea de la Academia Exploratorilor. 🦊 Tu și prietenii tăi de la Școală ați găsit Valea Curcubeului — un loc liniștit unde îți poți construi CASA ta! Aici, tot ce înveți la Școală devine putere de constructor. Uite primele tale scânduri!",
+    obiectiv:"Vorbește cu Rix 🦊", prog:()=>[1,1], quiz:false, rasplata:{lemn:10},
+    final:"Pentru fiecare lecție terminată la Școală vei găsi aici un cufăr 🎁 cu materiale. Hai să începem!" },
+  { npc:"rix", titlu:"Ucenicul tăietor",
+    intro:"Orice casă începe cu lemn. Alege unealta ⛏️ Adună (din dreapta) și atinge trunchiul unui copac. Adu-mi 4 bușteni!",
+    obiectiv:"Adună 4 bușteni din copaci", prog:()=>[Math.min(S.stats.mined.trunchi||0,4),4], quiz:false, rasplata:{lemn:15},
+    final:"Super! Bușteanul ăsta… vreo 4 metri, 400 de centimetri! 😉 Acum mergi la Zum, lângă stânci — el se pricepe la temelii." },
+  { npc:"zum", titlu:"Temelia",
+    intro:"Salut, constructorule! Eu sunt Zum. 🐉 O casă bună stă pe o temelie solidă. Construiește o podea pătrată de 3 × 3 blocuri, direct pe iarbă. Câte blocuri îți trebuie? 3 × 3 = 9 — vezi? Tabla înmulțirii e și unealtă de construcții!",
+    obiectiv:"Construiește o podea de 3 × 3 blocuri pe iarbă", prog:()=>[are3x3()?1:0,1], quiz:true, rasplata:{piatra:25, caramida:12},
+    final:"Ce temelie trainică! Cu pietrele și cărămizile astea poți ridica pereții." },
+  { npc:"zum", titlu:"Pereții",
+    intro:"Acum ridică pereții! Pune 16 blocuri deasupra podelei — la al doilea nivel sau mai sus. Lasă un gol pentru ușă!",
+    obiectiv:"Pune 16 blocuri la înălțime (nivelul 2+)", prog:()=>[Math.min(S.stats.inalt,16),16], quiz:true, rasplata:{sticla:8, usa:2},
+    final:"Pereții stau drept ca un unghi de 90°! Căpitanul Vector te așteaptă — vrea să-ți dea ferestre." },
+  { npc:"vector", titlu:"Ferestre și ușă",
+    intro:"Aici turnul de control! ✈️ O casă de pilot are ferestre ca să vadă cerul. Pune 2 blocuri de sticlă în pereți și o ușă.",
+    obiectiv:"Pune 2 sticle și o ușă", prog:()=>[Math.min(plasate("sticla"),2)+Math.min(plasate("usa"),1),3], quiz:true, rasplata:{tigla:24},
+    final:"Recepționat! Acum nu-ți mai lipsește decât acoperișul." },
+  { npc:"vector", titlu:"Acoperișul",
+    intro:"Ploaia nu e prietenă cu temele! ☔ Pune 8 țigle pe acoperișul casei.",
+    obiectiv:"Pune 8 țigle pe acoperiș", prog:()=>[Math.min(plasate("tigla"),8),8], quiz:true, rasplata:{floare:8, lampa:4},
+    final:"Acoperiș impecabil! Rix vrea să-ți arate cum se face o grădină." },
+  { npc:"rix", titlu:"Grădina",
+    intro:"Orice casă frumoasă are flori! 🌷 Plantează 5 flori pe iarbă, în jurul casei.",
+    obiectiv:"Plantează 5 flori", prog:()=>[Math.min(plasate("floare"),5),5], quiz:true, rasplata:{lampa:4, caramida:20, sticla:6},
+    final:"CASA TA E GATA! 🏠🎉 De acum, Valea Curcubeului e a ta: construiește orice vrei, iar noi trei te așteptăm zilnic cu câte o temă nouă!" },
+];
+
+/* ═════════════════ STARE / SALVARE ═════════════════ */
+let S = null;
+function lumeNoua(){
+  world = new Map();
+  const lac = (x,y) => ((x-12.5)**2)/5 + ((y-4.5)**2)/3.2;
+  for(let x=0;x<N;x++) for(let y=0;y<N;y++){
+    const d = lac(x,y);
+    setB(x,y,0, d<1 ? "apa" : d<2 ? "nisip" : "iarba");
+  }
+  const copac = (x,y) => {
+    for(let z=1;z<=3;z++) setB(x,y,z,"trunchi");
+    for(let i=-1;i<=1;i++) for(let j=-1;j<=1;j++) if((i||j) && inB(x+i,y+j)) setB(x+i,y+j,3,"frunze");
+    for(const [i,j] of [[0,0],[1,0],[-1,0],[0,1],[0,-1]]) if(inB(x+i,y+j)) setB(x+i,y+j,4,"frunze");
+  };
+  [[2,2],[1,12],[5,14],[14,14],[13,9]].forEach(([x,y])=>copac(x,y));
+  [[11,7],[12,7],[11,8],[10,13],[7,13]].forEach(([x,y])=>setB(x,y,1,"piatra"));
+  setB(11,7,2,"piatra");
+  [[5,3],[8,10],[3,9]].forEach(([x,y])=>setB(x,y,1,"floare"));
+  return {
+    v:1, inv:{ lemn:20, piatra:10, pamant:10 }, pl:{x:7,y:7,z:1}, rot:0,
+    pas:0, inceput:false, terminat:false,
+    stats:{ placed:{}, mined:{}, inalt:0 },
+    revendicate:[], zilnic:{}, introVazut:false,
+  };
+}
+function salveaza(){
+  try{
+    const blocuri = [];
+    for(const b of world.values()) blocuri.push([b.x,b.y,b.z,b.t]);
+    localStorage.setItem(SAVE_KEY, JSON.stringify({...S, blocuri}));
+  }catch(e){}
+}
+let timerSalvare = null;
+function salveazaCurand(){ clearTimeout(timerSalvare); timerSalvare = setTimeout(salveaza, 600); }
+function incarca(){
+  try{
+    const d = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if(d && d.v===1 && d.blocuri){
+      world = new Map();
+      d.blocuri.forEach(([x,y,z,t])=>setB(x,y,z,t));
+      delete d.blocuri;
+      S = d;
+      return;
+    }
+  }catch(e){}
+  S = lumeNoua();
+}
+
+/* ═════════════════ JUCĂTORUL ═════════════════ */
+function standable(x,y,z){
+  if(!inB(x,y) || z<1 || z>=MAXH) return false;
+  return solidAt(x,y,z-1) && get(x,y,z-1)!=="apa" && !solidAt(x,y,z) && !npcAt(x,y,z);
+}
+function vecin(x,y,z,nx,ny){
+  if(!inB(nx,ny)) return null;
+  if(standable(nx,ny,z)) return z;
+  if(standable(nx,ny,z+1) && !solidAt(x,y,z+1)) return z+1;
+  if(!solidAt(nx,ny,z)){
+    if(standable(nx,ny,z-1)) return z-1;
+    if(!solidAt(nx,ny,z-1) && standable(nx,ny,z-2)) return z-2;
+  }
+  return null;
+}
+const DIRS = [[1,0],[-1,0],[0,1],[0,-1]];
+function bfs(stop){
+  const p = S.pl, start = K(p.x,p.y,p.z);
+  const prev = new Map([[start,null]]);
+  const q = [[p.x,p.y,p.z]];
+  while(q.length){
+    const c = q.shift();
+    if(stop(c[0],c[1],c[2])){
+      const path = []; let k = K(c[0],c[1],c[2]);
+      while(k!==start){ const [a,b,z] = k.split(",").map(Number); path.unshift([a,b,z]); k = prev.get(k); }
+      return path;
+    }
+    for(const [dx,dy] of DIRS){
+      const nx = c[0]+dx, ny = c[1]+dy, nz = vecin(c[0],c[1],c[2],nx,ny);
+      if(nz===null) continue;
+      const k = K(nx,ny,nz);
+      if(prev.has(k)) continue;
+      prev.set(k, K(c[0],c[1],c[2]));
+      q.push([nx,ny,nz]);
+    }
+  }
+  return null;
+}
+function gravitatie(){
+  const p = S.pl;
+  if(standable(p.x,p.y,p.z)) return;
+  for(let z=p.z;z>=1;z--) if(standable(p.x,p.y,z)){ p.z = z; anim.z = z; return; }
+  for(let z=p.z+1;z<MAXH;z++) if(standable(p.x,p.y,z)){ p.z = z; anim.z = z; return; }
+}
+let drum = [], actiuneLaFinal = null;
+const anim = { x:7, y:7, z:1, t:1, from:null, to:null, fata:1, faza:0 };
+function pornesteDrum(path, act){
+  drum = path ? path.slice() : [];
+  actiuneLaFinal = act || null;
+  if(!drum.length && act){ actiuneLaFinal = null; act(); }
+}
+function actualizeazaMers(dt){
+  if(anim.to){
+    anim.t += dt/170;
+    anim.faza += dt/90;
+    if(anim.t >= 1){
+      anim.t = 1; anim.x = anim.to[0]; anim.y = anim.to[1]; anim.z = anim.to[2];
+      anim.to = null;
+      salveazaCurand();
+    } else {
+      const f = anim.t;
+      anim.x = anim.from[0] + (anim.to[0]-anim.from[0])*f;
+      anim.y = anim.from[1] + (anim.to[1]-anim.from[1])*f;
+      anim.z = anim.from[2] + (anim.to[2]-anim.from[2])*f + Math.sin(f*Math.PI)*0.25;
+    }
+    return;
+  }
+  if(drum.length){
+    const nx = drum.shift();
+    const p = S.pl;
+    if(vecin(p.x,p.y,p.z,nx[0],nx[1])!==nx[2]){ drum = []; actiuneLaFinal = null; return; }
+    anim.from = [p.x,p.y,p.z]; anim.to = nx; anim.t = 0;
+    const v1 = w2v(nx[0],nx[1]), v0 = w2v(p.x,p.y);
+    const sx = (v1[0]-v1[1]) - (v0[0]-v0[1]);
+    if(sx) anim.fata = sx>0 ? 1 : -1;
+    p.x = nx[0]; p.y = nx[1]; p.z = nx[2];
+    return;
+  }
+  anim.faza = 0;
+  if(actiuneLaFinal){ const a = actiuneLaFinal; actiuneLaFinal = null; a(); }
+}
+
+/* ═════════════════ VEDERE ═════════════════ */
+const cv = document.getElementById("world"), ctx = cv.getContext("2d");
+let W=0, H=0, DPR=1, TW=48, TH=24, BH=27, ox=0, oy=0, zoomF=1;
+function w2v(x,y){ switch(S.rot){ case 1:return[N-1-y,x]; case 2:return[N-1-x,N-1-y]; case 3:return[y,N-1-x]; default:return[x,y]; } }
+function v2w(vx,vy){ switch(S.rot){ case 1:return[vy,N-1-vx]; case 2:return[N-1-vx,N-1-vy]; case 3:return[N-1-vy,vx]; default:return[vx,vy]; } }
+function proj(vx,vy,z){ return [ox + (vx-vy)*TW/2, oy + (vx+vy)*TH/2 - z*BH]; }
+function redimensioneaza(){
+  DPR = window.devicePixelRatio || 1;
+  W = innerWidth; H = innerHeight;
+  cv.width = W*DPR; cv.height = H*DPR;
+}
+function camera(){
+  const baza = Math.min(64, (W-90)/N, (H-150)/10.5);
+  TW = Math.max(22, baza*zoomF); TH = TW/2; BH = TW*0.56;
+  let cx, cy, cz;
+  if(zoomF > 1.05){ const [vx,vy] = w2v(anim.x, anim.y); cx = vx+0.5; cy = vy+0.5; cz = anim.z; }
+  else { cx = N/2; cy = N/2; cz = 1.5; }
+  ox = (W-70)/2 - (cx-cy)*TW/2;
+  oy = H/2 + 10 - (cx+cy)*TH/2 + cz*BH;
+}
+function roteste(d){ S.rot = (S.rot + d + 4) % 4; salveazaCurand(); }
+function zoom(d){ zoomF = Math.max(1, Math.min(2.2, zoomF + d*0.4)); }
+
+/* ═════════════════ DESEN ═════════════════ */
+let poligoane = [], dreptunghiuriNpc = [];
+const nori = Array.from({length:6}, (_,i)=>({x:Math.random()*1600, y:30+Math.random()*180, s:0.6+Math.random()*0.8, v:6+Math.random()*10}));
+const fluturi = Array.from({length:3}, (_,i)=>({cx:3+i*5, cy:4+i*4, f:Math.random()*6}));
+let particule = [];
+
+function poli(pts, fill){
+  ctx.beginPath(); ctx.moveTo(pts[0][0],pts[0][1]);
+  for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0],pts[i][1]);
+  ctx.closePath(); ctx.fillStyle = fill; ctx.fill();
+  ctx.strokeStyle = "rgba(0,0,0,.13)"; ctx.lineWidth = 1; ctx.stroke();
+}
+function fete(vx,vy,z){
+  const P = (a,b,c) => proj(a,b,c);
+  return {
+    top:[P(vx,vy,z+1),P(vx+1,vy,z+1),P(vx+1,vy+1,z+1),P(vx,vy+1,z+1)],
+    xp:[P(vx+1,vy,z+1),P(vx+1,vy+1,z+1),P(vx+1,vy+1,z),P(vx+1,vy,z)],
+    yp:[P(vx,vy+1,z+1),P(vx+1,vy+1,z+1),P(vx+1,vy+1,z),P(vx,vy+1,z)],
+  };
+}
+function vecinVedere(b, dvx, dvy){
+  const [vx,vy] = w2v(b.x,b.y);
+  const [wx,wy] = v2w(vx+dvx, vy+dvy);
+  return inB(wx,wy) ? get(wx,wy,b.z) : null;
+}
+function detalii(t, f, arataX, arataY){
+  ctx.strokeStyle = "rgba(0,0,0,.16)"; ctx.lineWidth = 1;
+  const vizibile = [arataX ? f.xp : null, arataY ? f.yp : null].filter(Boolean);
+  if(t==="caramida" || t==="lemn"){
+    for(const fata of vizibile){
+      const [a,b,c,d] = fata;
+      for(const k of [1/3, 2/3]){
+        ctx.beginPath();
+        ctx.moveTo(a[0]+(d[0]-a[0])*k, a[1]+(d[1]-a[1])*k);
+        ctx.lineTo(b[0]+(c[0]-b[0])*k, b[1]+(c[1]-b[1])*k);
+        ctx.stroke();
+      }
+    }
+  }
+  if(t==="trunchi"){
+    const c = [(f.top[0][0]+f.top[2][0])/2, (f.top[0][1]+f.top[2][1])/2];
+    ctx.beginPath(); ctx.ellipse(c[0], c[1], TW*0.18, TH*0.18, 0, 0, 7); ctx.stroke();
+  }
+  if(t==="usa"){
+    for(const fata of vizibile){
+      const [a,b,c,d] = fata;
+      const m = (p,q,k) => [p[0]+(q[0]-p[0])*k, p[1]+(q[1]-p[1])*k];
+      const tl = m(a,b,0.2), tr = m(a,b,0.8), br = m(d,c,0.8), bl = m(d,c,0.2);
+      const top1 = m(tl,bl,0.1), top2 = m(tr,br,0.1);
+      ctx.fillStyle = "#6e4a26";
+      ctx.beginPath(); ctx.moveTo(top1[0],top1[1]); ctx.lineTo(top2[0],top2[1]); ctx.lineTo(br[0],br[1]); ctx.lineTo(bl[0],bl[1]); ctx.closePath(); ctx.fill();
+      const kn = m(m(top2,br,0.55), m(top1,bl,0.55), 0.2);
+      ctx.fillStyle = "#ffd84d"; ctx.beginPath(); ctx.arc(kn[0], kn[1], Math.max(1.5,TW*0.035), 0, 7); ctx.fill();
+    }
+  }
+}
+function deseneazaBloc(b, timp){
+  const [vx,vy] = w2v(b.x,b.y);
+  const T = B[b.t];
+  if(T.flower){
+    const [sx,sy] = proj(vx+0.5, vy+0.5, b.z);
+    ctx.fillStyle = "#000";
+    ctx.font = `${Math.round(TW*0.55)}px Segoe UI Emoji, Apple Color Emoji, sans-serif`;
+    ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+    ctx.fillText(FLORI[(b.x*7+b.y*3)%FLORI.length], sx, sy+TH*0.15);
+    ctx.textAlign = "start"; ctx.textBaseline = "alphabetic";
+    const r = TW*0.25;
+    poligoane.push({b, fata:"top", pts:[[sx-r,sy-TW*0.6],[sx+r,sy-TW*0.6],[sx+r,sy+TH*0.2],[sx-r,sy+TH*0.2]]});
+    return;
+  }
+  const f = fete(vx,vy,b.z);
+  const sus = get(b.x,b.y,b.z+1);
+  const arataSus = !opaque(sus) || T.glass;
+  const arataX = !opaque(vecinVedere(b,1,0)) || T.glass;
+  const arataY = !opaque(vecinVedere(b,0,1)) || T.glass;
+  let culTop = T.top;
+  if(T.water){ const u = Math.sin(timp/700 + b.x + b.y)*10; culTop = `rgb(${90+u},${182+u},${240})`; }
+  if(arataY){ poli(f.yp, T.l); poligoane.push({b, fata:"yp", pts:f.yp}); }
+  if(arataX){ poli(f.xp, T.r); poligoane.push({b, fata:"xp", pts:f.xp}); }
+  if(arataSus){ poli(f.top, culTop); poligoane.push({b, fata:"top", pts:f.top}); }
+  if(b.t==="iarba" && arataY){
+    const [a,bb,c,d] = f.yp;
+    ctx.fillStyle = "#5aa83c";
+    ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(bb[0],bb[1]);
+    ctx.lineTo(bb[0]+(c[0]-bb[0])*0.22, bb[1]+(c[1]-bb[1])*0.22); ctx.lineTo(a[0]+(d[0]-a[0])*0.22, a[1]+(d[1]-a[1])*0.22); ctx.closePath(); ctx.fill();
+  }
+  if(b.t==="iarba" && arataX){
+    const [a,bb,c,d] = f.xp;
+    ctx.fillStyle = "#4f9a33";
+    ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(bb[0],bb[1]);
+    ctx.lineTo(bb[0]+(c[0]-bb[0])*0.22, bb[1]+(c[1]-bb[1])*0.22); ctx.lineTo(a[0]+(d[0]-a[0])*0.22, a[1]+(d[1]-a[1])*0.22); ctx.closePath(); ctx.fill();
+  }
+  detalii(b.t, f, arataX, arataY);
+  if(T.glow){
+    const c = [(f.top[0][0]+f.top[2][0])/2, (f.top[0][1]+f.top[2][1])/2 + BH/2];
+    const g = ctx.createRadialGradient(c[0],c[1],2,c[0],c[1],TW*1.1);
+    g.addColorStop(0,"rgba(255,230,120,.45)"); g.addColorStop(1,"rgba(255,230,120,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(c[0],c[1],TW*1.1,0,7); ctx.fill();
+  }
+}
+function deseneazaCristian(timp){
+  const [vx,vy] = w2v(anim.x, anim.y);
+  const [sx,sy] = proj(vx+0.5, vy+0.5, anim.z);
+  const u = TW/16;
+  ctx.save();
+  ctx.translate(sx, sy);
+  ctx.fillStyle = "rgba(0,0,0,.18)"; ctx.beginPath(); ctx.ellipse(0,0,u*4,u*1.6,0,0,7); ctx.fill();
+  ctx.scale(anim.fata, 1);
+  const pasPic = anim.to ? Math.sin(anim.faza)*u*1.2 : 0;
+  const respir = Math.sin(timp/500)*u*0.15;
+  ctx.fillStyle = "#3b4fa8";
+  ctx.fillRect(-u*2.6, -u*4 - pasPic*0.3, u*2.4, u*4 + pasPic*0.3);
+  ctx.fillRect(u*0.2, -u*4 + pasPic*0.3, u*2.4, u*4 - pasPic*0.3);
+  ctx.fillStyle = "#2a2a2a";
+  ctx.fillRect(-u*2.6, -u*0.8, u*2.4, u*0.8); ctx.fillRect(u*0.2, -u*0.8, u*2.4, u*0.8);
+  ctx.fillStyle = "#26b5a0"; ctx.fillRect(-u*3, -u*9.2 + respir, u*6, u*5.4);
+  ctx.fillStyle = "#1f9886"; ctx.fillRect(-u*4.6, -u*9 + respir + pasPic*0.4, u*1.6, u*4.6); ctx.fillRect(u*3, -u*9 + respir - pasPic*0.4, u*1.6, u*4.6);
+  ctx.fillStyle = "#f2c39b"; ctx.fillRect(-u*4.6, -u*4.6 + respir + pasPic*0.4, u*1.6, u*1.2); ctx.fillRect(u*3, -u*4.6 + respir - pasPic*0.4, u*1.6, u*1.2);
+  ctx.fillStyle = "#f2c39b"; ctx.fillRect(-u*3, -u*15 + respir, u*6, u*6);
+  ctx.fillStyle = "#6b3e1e"; ctx.fillRect(-u*3.2, -u*15.6 + respir, u*6.4, u*2.2); ctx.fillRect(-u*3.2, -u*15 + respir, u*1.2, u*3);
+  ctx.fillStyle = "#fff"; ctx.fillRect(u*0.1, -u*12.4 + respir, u*1.4, u*1.3); ctx.fillRect(u*1.9, -u*12.4 + respir, u*1.0, u*1.3);
+  ctx.fillStyle = "#2b4a8a"; ctx.fillRect(u*0.7, -u*12.3 + respir, u*0.8, u*1.1); ctx.fillRect(u*2.2, -u*12.3 + respir, u*0.6, u*1.1);
+  ctx.fillStyle = "#c46a5a"; ctx.fillRect(u*0.4, -u*10.4 + respir, u*2.2, u*0.6);
+  ctx.restore();
+  ctx.font = `bold ${Math.max(10, Math.round(TW*0.24))}px Segoe UI`;
+  ctx.textAlign = "center";
+  const lw = ctx.measureText("Cristian").width + 10;
+  ctx.fillStyle = "rgba(255,255,255,.85)";
+  ctx.fillRect(sx - lw/2, sy - u*19.5, lw, TW*0.3);
+  ctx.fillStyle = "#1d4e89"; ctx.fillText("Cristian", sx, sy - u*19.5 + TW*0.24);
+  ctx.textAlign = "start";
+}
+function deseneazaNpc(k, timp){
+  const n = NPC[k];
+  const [vx,vy] = w2v(n.x,n.y);
+  const [sx,sy] = proj(vx+0.5, vy+0.5, n.z);
+  const salt = Math.abs(Math.sin(timp/450 + n.x))*TW*0.06;
+  ctx.fillStyle = "rgba(0,0,0,.18)"; ctx.beginPath(); ctx.ellipse(sx,sy,TW*0.25,TW*0.1,0,0,7); ctx.fill();
+  const fs = Math.round(TW*0.95);
+  ctx.fillStyle = "#000";
+  ctx.font = `${fs}px Segoe UI Emoji, Apple Color Emoji, sans-serif`;
+  ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+  ctx.fillText(n.em, sx, sy - salt + TW*0.08);
+  const semn = semnNpc(k);
+  if(semn){
+    ctx.font = `${Math.round(TW*0.45)}px Segoe UI Emoji, sans-serif`;
+    ctx.fillText(semn, sx, sy - fs - salt - 2 + Math.sin(timp/300)*3);
+  }
+  ctx.font = `bold ${Math.max(10, Math.round(TW*0.22))}px Segoe UI`;
+  ctx.textBaseline = "top";
+  ctx.fillStyle = "#7a3803"; ctx.fillText(n.nume, sx, sy + 3);
+  ctx.textAlign = "start"; ctx.textBaseline = "alphabetic";
+  dreptunghiuriNpc.push({k, x0:sx-fs*0.55, x1:sx+fs*0.55, y0:sy-fs-salt-TW*0.5, y1:sy+TW*0.35});
+}
+function deseneazaCer(timp){
+  const g = ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,"#8fd3ff"); g.addColorStop(1,"#e4f6ff");
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle = "rgba(255,255,255,.9)";
+  for(const n of nori){
+    const x = ((n.x + timp/1000*n.v) % (W+300)) - 150;
+    ctx.beginPath();
+    ctx.ellipse(x, n.y, 60*n.s, 20*n.s, 0, 0, 7);
+    ctx.ellipse(x+35*n.s, n.y-12*n.s, 40*n.s, 22*n.s, 0, 0, 7);
+    ctx.ellipse(x-30*n.s, n.y-6*n.s, 35*n.s, 16*n.s, 0, 0, 7);
+    ctx.fill();
+  }
+}
+function deseneaza(timp){
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  camera();
+  deseneazaCer(timp);
+  poligoane = []; dreptunghiuriNpc = [];
+  const elem = [];
+  for(const b of world.values()){
+    const [vx,vy] = w2v(b.x,b.y);
+    elem.push({k:(vx+vy)*100 + b.z*2, b});
+  }
+  {
+    const [vx,vy] = w2v(Math.round(anim.x), Math.round(anim.y));
+    elem.push({k:(vx+vy)*100 + Math.round(anim.z)*2 + 1, pl:true});
+  }
+  for(const k in NPC){ const n = NPC[k]; const [vx,vy] = w2v(n.x,n.y); elem.push({k:(vx+vy)*100 + n.z*2 + 1, npc:k}); }
+  elem.sort((a,b)=>a.k-b.k);
+  for(const e of elem){
+    if(e.b) deseneazaBloc(e.b, timp);
+    else if(e.pl) deseneazaCristian(timp);
+    else deseneazaNpc(e.npc, timp);
+  }
+  ctx.font = `${Math.round(TW*0.5)}px Segoe UI Emoji, sans-serif`; ctx.textAlign = "center"; ctx.fillStyle = "#000";
+  for(const f of fluturi){
+    const t = timp/1000 + f.f;
+    const wx = f.cx + Math.sin(t*0.5)*3, wy = f.cy + Math.cos(t*0.37)*3;
+    const [vx,vy] = w2v(Math.max(0,Math.min(N-1,wx)), Math.max(0,Math.min(N-1,wy)));
+    const [sx,sy] = proj(vx, vy, 3.2 + Math.sin(t*2)*0.4);
+    ctx.fillText("🦋", sx, sy);
+  }
+  ctx.textAlign = "start";
+  particule = particule.filter(p => p.v > 0);
+  for(const p of particule){
+    p.x += p.dx; p.y += p.dy; p.dy += 0.35; p.v -= 1;
+    ctx.globalAlpha = Math.max(0, p.v/30);
+    ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, 5, 5);
+  }
+  ctx.globalAlpha = 1;
+}
+function explozie(b){
+  const [vx,vy] = w2v(b.x,b.y);
+  const [sx,sy] = proj(vx+0.5, vy+0.5, b.z+0.5);
+  const c = B[b.t].top || "#f9c";
+  for(let i=0;i<14;i++) particule.push({x:sx, y:sy, dx:(Math.random()-0.5)*6, dy:-Math.random()*5, v:30, c});
+}
+
+/* ═════════════════ INTERACȚIUNE ═════════════════ */
+let mod = "mergi", blocAles = "lemn";
+function setMode(m){
+  mod = m;
+  ["mergi","construieste","aduna"].forEach(x=>document.getElementById("t-"+x).classList.toggle("sel", x===m));
+}
+function inPoligon(px,py,pts){
+  let ins = false;
+  for(let i=0,j=pts.length-1;i<pts.length;j=i++){
+    const [xi,yi] = pts[i], [xj,yj] = pts[j];
+    if(((yi>py)!==(yj>py)) && (px < (xj-xi)*(py-yi)/(yj-yi)+xi)) ins = !ins;
+  }
+  return ins;
+}
+function celulaAdiacenta(b, fata){
+  if(fata==="top") return [b.x,b.y,b.z+1];
+  const [vx,vy] = w2v(b.x,b.y);
+  const [wx,wy] = fata==="xp" ? v2w(vx+1,vy) : v2w(vx,vy+1);
+  return [wx,wy,b.z];
+}
+const inRaza = (x,y,z,tx,ty,tz) => Math.max(Math.abs(x-tx),Math.abs(y-ty)) <= 3 && Math.abs(z-tz) <= 3;
+function mergiSiFa(tx,ty,tz, act, interzisPeTinta){
+  const p = S.pl;
+  if(!drum.length && !anim.to && inRaza(p.x,p.y,p.z,tx,ty,tz) && !(interzisPeTinta && p.x===tx && p.y===ty && p.z===tz)) return act();
+  const path = bfs((x,y,z)=> inRaza(x,y,z,tx,ty,tz) && !(interzisPeTinta && x===tx && y===ty && (z===tz)));
+  if(!path) return toast("Nu pot ajunge până acolo 🤔");
+  pornesteDrum(path, act);
+}
+function poatePune(x,y,z,t){
+  if(!inB(x,y) || z<1 || z>=MAXH) return "Acolo nu se poate construi.";
+  if(get(x,y,z)) return "Locul e deja ocupat.";
+  if(npcAt(x,y,z)) return "Acolo stă un prieten! 😄";
+  if((t==="floare"||t==="usa") && !solidAt(x,y,z-1)) return B[t].n+" are nevoie de un bloc dedesubt.";
+  if(t==="floare" && !["iarba","pamant","nisip"].includes(get(x,y,z-1))) return "Florile cresc doar pe iarbă, pământ sau nisip. 🌷";
+  return null;
+}
+function pune(x,y,z){
+  const t = blocAles;
+  if(!(S.inv[t] > 0)) return toast(`Nu mai ai ${B[t].n.toLowerCase()}. Fă o temă la prieteni sau o lecție la Școală! 🎁`);
+  const err = poatePune(x,y,z,t);
+  if(err) return toast(err);
+  const p = S.pl;
+  if(p.x===x && p.y===y && p.z===z) return toast("Nu pot pune un bloc peste mine! 😅");
+  setB(x,y,z,t);
+  S.inv[t]--;
+  S.stats.placed[t] = (S.stats.placed[t]||0) + 1;
+  if(z>=2 && B[t].solid) S.stats.inalt++;
+  explozie({x,y,z,t});
+  dupaSchimbare();
+}
+function aduna(b){
+  if(b.z===0) return toast("Pământul de sub vale nu se sapă — e temelia lumii! 🌍");
+  if(b.t==="apa") return toast("Apa nu se poate lua în buzunar! 💧");
+  setB(b.x,b.y,b.z,null);
+  S.inv[b.t] = (S.inv[b.t]||0) + 1;
+  S.stats.mined[b.t] = (S.stats.mined[b.t]||0) + 1;
+  explozie(b);
+  if(b.t!=="floare" && get(b.x,b.y,b.z+1)==="floare"){
+    setB(b.x,b.y,b.z+1,null); S.inv.floare = (S.inv.floare||0)+1;
+  }
+  gravitatie();
+  dupaSchimbare();
+}
+function dupaSchimbare(){ gravitatie(); deseneazaHotbar(); actualizeazaMisiune(); salveazaCurand(); }
+
+function atingere(px,py){
+  if(!modalInchis()) return;
+  for(let i=dreptunghiuriNpc.length-1;i>=0;i--){
+    const r = dreptunghiuriNpc[i];
+    if(px>=r.x0 && px<=r.x1 && py>=r.y0 && py<=r.y1) return mergiLaNpc(r.k);
+  }
+  let hit = null;
+  for(let i=poligoane.length-1;i>=0;i--) if(inPoligon(px,py,poligoane[i].pts)){ hit = poligoane[i]; break; }
+  if(!hit) return;
+  const b = hit.b;
+  if(mod==="mergi"){
+    const tinta = hit.fata==="top" ? [b.x,b.y,b.z+1] : celulaAdiacenta(b, hit.fata);
+    let path = bfs((x,y,z)=> x===tinta[0] && y===tinta[1] && Math.abs(z-tinta[2])<=1);
+    if(!path) path = bfs((x,y)=> x===b.x && y===b.y);
+    if(!path) return toast("Nu pot ajunge acolo 🤔");
+    return pornesteDrum(path);
+  }
+  if(mod==="construieste"){
+    const [x,y,z] = celulaAdiacenta(b, hit.fata);
+    const err = poatePune(x,y,z,blocAles);
+    if(err) return toast(err);
+    if(!(S.inv[blocAles] > 0)) return toast(`Nu mai ai ${B[blocAles].n.toLowerCase()}. Fă o temă la prieteni sau o lecție la Școală! 🎁`);
+    return mergiSiFa(x,y,z, ()=>pune(x,y,z), true);
+  }
+  if(mod==="aduna"){
+    if(b.z===0) return toast("Pământul de sub vale nu se sapă — e temelia lumii! 🌍");
+    return mergiSiFa(b.x,b.y,b.z, ()=>{ if(get(b.x,b.y,b.z)===b.t) aduna(b); }, false);
+  }
+}
+function pas(dvx, dvy){
+  if(!modalInchis() || anim.to || drum.length) return;
+  const p = S.pl;
+  const [vx,vy] = w2v(p.x,p.y);
+  const [nx,ny] = v2w(vx+dvx, vy+dvy);
+  const nz = vecin(p.x,p.y,p.z,nx,ny);
+  if(nz===null) return toast("Pe acolo nu se poate. Construiește o scară? 🪜");
+  pornesteDrum([[nx,ny,nz]]);
+}
+addEventListener("keydown", e=>{
+  const m = {ArrowUp:[0,-1], w:[0,-1], ArrowRight:[1,0], d:[1,0], ArrowDown:[0,1], s:[0,1], ArrowLeft:[-1,0], a:[-1,0]}[e.key];
+  if(m){ e.preventDefault(); pas(m[0],m[1]); }
+  if(e.key>="1" && e.key<="9"){ const t = HOTBAR[+e.key-1]; if(t) alegeBloc(t); }
+});
+let jos = null;
+cv.addEventListener("pointerdown", e=>{ jos = {x:e.clientX, y:e.clientY}; });
+cv.addEventListener("pointerup", e=>{
+  if(jos && Math.hypot(e.clientX-jos.x, e.clientY-jos.y) < 12) atingere(e.clientX, e.clientY);
+  jos = null;
+});
+
+/* ═════════════════ HOTBAR ═════════════════ */
+function iconita(t, size){
+  const c = document.createElement("canvas");
+  c.width = size*2; c.height = size*2;
+  const x = c.getContext("2d"); x.scale(2,2);
+  const T = B[t];
+  if(T.flower){ x.font = `${size*0.8}px Segoe UI Emoji, sans-serif`; x.textAlign="center"; x.textBaseline="middle"; x.fillText("🌷", size/2, size/2+2); return c; }
+  const w = size*0.9, h = w/2, bh = w*0.55, cx = size/2, top = (size - (h+bh))/2;
+  const P = (a,b,z) => [cx + (a-b)*w/2, top + (a+b)*h/2 - z*bh + bh];
+  const fp = (pts, col) => { x.beginPath(); x.moveTo(...pts[0]); pts.slice(1).forEach(p=>x.lineTo(...p)); x.closePath(); x.fillStyle = col; x.fill(); x.strokeStyle="rgba(0,0,0,.2)"; x.stroke(); };
+  fp([P(0,1,1),P(1,1,1),P(1,1,0),P(0,1,0)], T.l);
+  fp([P(1,0,1),P(1,1,1),P(1,1,0),P(1,0,0)], T.r);
+  fp([P(0,0,1),P(1,0,1),P(1,1,1),P(0,1,1)], T.top);
+  if(T.door){ x.fillStyle="#6e4a26"; x.fillRect(cx-w*0.12, top+h+bh*0.35, w*0.2, bh*0.6); }
+  return c;
+}
+function deseneazaHotbar(){
+  const hb = document.getElementById("hotbar");
+  hb.innerHTML = "";
+  HOTBAR.forEach(t=>{
+    const n = S.inv[t] || 0;
+    const d = document.createElement("div");
+    d.className = "slot" + (t===blocAles ? " sel" : "") + (n ? "" : " gol");
+    d.title = B[t].n;
+    d.appendChild(iconita(t, 38));
+    const s = document.createElement("span"); s.className = "n"; s.textContent = n; d.appendChild(s);
+    d.onclick = () => alegeBloc(t);
+    hb.appendChild(d);
+  });
+}
+function alegeBloc(t){
+  blocAles = t;
+  setMode("construieste");
+  deseneazaHotbar();
+  toast(`${B[t].n} · ai ${S.inv[t]||0}`);
+}
+
+/* ═════════════════ UI: toast, modal ═════════════════ */
+let toastTimer = null;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.remove("hidden"); t.style.opacity = 1;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ t.style.opacity = 0; setTimeout(()=>t.classList.add("hidden"), 400); }, 2200);
+}
+function modal(html){
+  document.getElementById("modal").innerHTML = html;
+  document.getElementById("modal-bg").classList.remove("hidden");
+}
+function inchide(){ document.getElementById("modal-bg").classList.add("hidden"); }
+function modalInchis(){ return document.getElementById("modal-bg").classList.contains("hidden"); }
+function htmlRasplata(r){
+  return `<div class="rewards">${Object.entries(r).map(([t,n])=>`<div class="rw" data-t="${t}"><span>+${n}</span> ${B[t].n}</div>`).join("")}</div>`;
+}
+function puneIconiteRasplata(){
+  document.querySelectorAll("#modal .rw").forEach(el=>el.prepend(iconita(el.dataset.t, 26)));
+}
+function primeste(r){
+  for(const [t,n] of Object.entries(r)) S.inv[t] = (S.inv[t]||0) + n;
+  deseneazaHotbar(); salveazaCurand();
+}
+function confetti(){
+  const em = ["🎉","⭐","🌷","🏠","✨","🎈"];
+  for(let i=0;i<40;i++){
+    const d = document.createElement("div");
+    d.className = "confetti"; d.textContent = em[i%em.length];
+    d.style.left = Math.random()*100 + "vw";
+    d.style.animationDuration = (2.5+Math.random()*2.5) + "s";
+    d.style.animationDelay = Math.random()*1.2 + "s";
+    document.body.appendChild(d);
+    setTimeout(()=>d.remove(), 6500);
+  }
+}
+
+/* ═════════════════ MISIUNI ═════════════════ */
+function actualizeazaMisiune(){
+  const q = document.getElementById("quest");
+  if(S.terminat){
+    q.innerHTML = `🏠 <b>Casa e gata!</b> Construiește liber · prietenii au 📝 teme zilnice`;
+    return;
+  }
+  const m = MISIUNI[S.pas];
+  const n = NPC[m.npc];
+  if(!S.inceput){
+    q.innerHTML = `❗ <b>Misiune nouă:</b> vorbește cu ${n.nume} ${n.em} (atinge-l!)`;
+    return;
+  }
+  const [a,t] = m.prog();
+  const gata = a>=t;
+  q.innerHTML = `📜 <b>${m.titlu}:</b> ${m.obiectiv} ${gata ? `<br>✅ Gata! Mergi la ${n.nume} ${n.em}` : `(${a}/${t})`}
+    <div class="bar"><span style="width:${Math.round(a/t*100)}%"></span></div>`;
+}
+function semnNpc(k){
+  if(!S.terminat){
+    const m = MISIUNI[S.pas];
+    if(m.npc===k){
+      if(!S.inceput) return "❗";
+      const [a,t] = m.prog(); return a>=t ? "⭐" : "💬";
+    }
+  }
+  return temaDisponibila(k) ? "📝" : "";
+}
+function arataMisiunea(){
+  if(S.terminat) return toast("Casa e gata! Vorbește cu prietenii pentru teme zilnice 📝");
+  const m = MISIUNI[S.pas];
+  toast(S.inceput ? `${m.obiectiv}` : `Mergi la ${NPC[m.npc].nume} ${NPC[m.npc].em}`);
+}
+function mergiLaNpc(k){
+  const n = NPC[k];
+  const p = S.pl;
+  const langa = (x,y,z) => Math.abs(x-n.x)+Math.abs(y-n.y) <= 1 && Math.abs(z-n.z) <= 2;
+  if(!drum.length && !anim.to && langa(p.x,p.y,p.z)) return vorbeste(k);
+  const path = bfs(langa);
+  if(!path) return toast(`Nu pot ajunge la ${n.nume} 🤔`);
+  pornesteDrum(path, ()=>vorbeste(k));
+}
+function cap(k){ const n = NPC[k]; return `<div class="npc-head"><span class="em">${n.em}</span><span class="nm">${n.nume}</span></div>`; }
+function vorbeste(k){
+  const n = NPC[k];
+  const p = S.pl;
+  const sx = (w2v(n.x,n.y)[0]-w2v(n.x,n.y)[1]) - (w2v(p.x,p.y)[0]-w2v(p.x,p.y)[1]);
+  if(sx) anim.fata = sx>0 ? 1 : -1;
+  const butoane = [];
+  if(!S.terminat && MISIUNI[S.pas].npc===k){
+    const m = MISIUNI[S.pas];
+    if(!S.inceput){
+      S.inceput = true;
+      if(S.pas===0){
+        return modal(`${cap(k)}<h2>🌈 ${m.titlu}</h2><p>${m.intro}</p>
+          <div class="btns"><button class="btn verde" onclick="finalizeazaMisiune()">Mulțumesc, Rix! 🙌</button></div>`);
+      }
+      actualizeazaMisiune(); salveazaCurand();
+      return modal(`${cap(k)}<h2>📜 ${m.titlu}</h2><p>${m.intro}</p>
+        <div class="btns"><button class="btn verde" onclick="inchide()">Accept misiunea! 💪</button></div>`);
+    }
+    const [a,t] = m.prog();
+    if(a>=t){
+      if(m.quiz) return modal(`${cap(k)}<h2>⭐ Ai reușit: ${m.titlu}!</h2><p>Minunat! Înainte de răsplată, o mică temă din lecțiile tale de la Școală — 3 întrebări. Trebuie să răspunzi corect la cel puțin 2.</p>
+        <div class="btns"><button class="btn verde" onclick="incepeTema('${k}','misiune')">📝 Începe tema</button></div>`);
+      return finalizeazaMisiune();
+    }
+    butoane.push(`<button class="btn" onclick="inchide()">Mă întorc la treabă! (${a}/${t})</button>`);
+    return modal(`${cap(k)}<h2>📜 ${m.titlu}</h2><p>${m.intro}</p><p><b>Progres:</b> ${a} din ${t}</p>
+      ${temaDisponibila(k) ? `<p>Între timp, vrei și tema zilei?</p>` : ""}
+      <div class="btns">${butoane.join("")}${temaDisponibila(k) ? `<button class="btn verde" onclick="incepeTema('${k}','zilnic')">📝 Tema zilei</button>` : ""}</div>`);
+  }
+  const replici = {
+    rix:["Știai că o vulpe vede foarte bine noaptea? Dar eu prefer să citesc hărți ziua! 🗺️","Ce casă frumoasă crește aici! Fiecare bloc e ca o piesă din harta mea."],
+    zum:["Eu număr solzii în fiecare dimineață: 8 234! Sau era 8 243? 🐉","Un dragon cu casă — nu, cu CASTEL! Dar și casa ta e grozavă."],
+    vector:["De sus, casele arată ca pătrățelele din caietul de mate! ✈️","Unghi de aterizare perfect lângă casa ta, pilotule!"],
+  }[k];
+  const replica = replici[Math.floor(Math.random()*replici.length)];
+  if(temaDisponibila(k)){
+    return modal(`${cap(k)}<p>${replica}</p><p>Am pregătit pentru tine <b>tema zilei</b>: 3 întrebări din lecțiile pe care le-ai terminat. Răsplata: materiale de construcție! 🎁</p>
+      <div class="btns"><button class="btn verde" onclick="incepeTema('${k}','zilnic')">📝 Fac tema!</button><button class="btn gri" onclick="inchide()">Mai târziu</button></div>`);
+  }
+  modal(`${cap(k)}<p>${replica}</p><p>Tema de azi ai făcut-o deja — bravo! Revino mâine pentru una nouă. Până atunci, joacă-te liber! 🏗️</p>
+    <div class="btns"><button class="btn" onclick="inchide()">Pa, ${n.nume}! 👋</button></div>`);
+}
+function finalizeazaMisiune(){
+  const m = MISIUNI[S.pas], k = m.npc;
+  primeste(m.rasplata);
+  const ultima = S.pas === MISIUNI.length-1;
+  if(ultima){ S.terminat = true; } else { S.pas++; S.inceput = false; }
+  actualizeazaMisiune(); salveazaCurand();
+  modal(`${cap(k)}<h2>${ultima ? "🏆 Casa lui Cristian e gata!" : "🎁 Răsplata ta"}</h2>
+    ${htmlRasplata(m.rasplata)}<p>${m.final}</p>
+    ${ultima ? `<p style="text-align:center;font-size:1.1rem;font-weight:800;color:#7a3803;">🎖️ Diplomă de Constructor al Văii Curcubeului 🎖️</p>` : ""}
+    <div class="btns"><button class="btn verde" onclick="inchide()">${ultima ? "Hura! 🎉" : "Mulțumesc! 🙌"}</button></div>`);
+  puneIconiteRasplata();
+  if(ultima) confetti();
+}
+
+/* ═════════════════ TEME (legate de lecții) ═════════════════ */
+const azi = () => new Date().toISOString().slice(0,10);
+function temaDisponibila(k){ return S.zilnic[k] !== azi(); }
+function amesteca(a){ a = a.slice(); for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; } return a; }
+function alegeIntrebari(){
+  const terminate = lectiiTerminate();
+  let pool = [];
+  for(const id of terminate) (INTREBARI[poolLectie(id)]||[]).forEach(q=>pool.push({q:q[0], r:q[1], id}));
+  const vazut = new Set(); pool = pool.filter(q=>!vazut.has(q.q) && vazut.add(q.q));
+  let alese = amesteca(pool).slice(0,3);
+  if(alese.length < 3) alese = alese.concat(amesteca(INTREBARI.incalzire.map(q=>({q:q[0], r:q[1], id:null}))).slice(0, 3-alese.length));
+  return alese;
+}
+let tema = null;
+function incepeTema(k, tip){
+  tema = { k, tip, qs:alegeIntrebari(), i:0, corecte:0 };
+  arataIntrebare();
+}
+function arataIntrebare(){
+  const q = tema.qs[tema.i];
+  const variante = amesteca(q.r);
+  tema.corect = q.r[0];
+  const sursa = q.id ? `📚 din lecția: <b>${LECTII[q.id].n}</b>` : `🌱 încălzire (termină lecții la Școală pentru teme din ele!)`;
+  modal(`${cap(tema.k)}<h2>📝 Întrebarea ${tema.i+1} din 3</h2>
+    <div class="din-lectia">${sursa}</div>
+    <p style="font-weight:700;font-size:1.12rem;color:#1d4e89;">${q.q}</p>
+    <div id="variante">${variante.map(v=>`<button class="choice" data-v="${v.replace(/"/g,"&quot;")}">${v}</button>`).join("")}</div>
+    <div id="tema-fb"></div>
+    <div class="btns hidden" id="tema-next"><button class="btn" onclick="urmatoareaIntrebare()">${tema.i<2 ? "Următoarea ➜" : "Vezi rezultatul ➜"}</button></div>`);
+  document.querySelectorAll("#variante .choice").forEach(b=>b.onclick=()=>raspunde(b));
+}
+function raspunde(btn){
+  const q = tema.qs[tema.i];
+  document.querySelectorAll("#variante .choice").forEach(b=>{
+    b.disabled = true;
+    if(b.dataset.v===tema.corect) b.classList.add("ok");
+  });
+  const fb = document.getElementById("tema-fb");
+  if(btn.dataset.v===tema.corect){
+    tema.corecte++;
+    fb.innerHTML = `<div class="fb ok">⭐ Corect! ${["Bravo!","Super!","Excelent!"][tema.i%3]}</div>`;
+  } else {
+    btn.classList.add("ko");
+    fb.innerHTML = `<div class="fb ko">Răspunsul corect: <b>${tema.corect}</b>.${q.id ? ` 📚 Poți recapitula aici: <a href="${LECTII[q.id].u}">${LECTII[q.id].n}</a>` : ""}</div>`;
+  }
+  document.getElementById("tema-next").classList.remove("hidden");
+}
+function urmatoareaIntrebare(){
+  tema.i++;
+  if(tema.i < 3) return arataIntrebare();
+  const trecut = tema.corecte >= 2;
+  if(!trecut){
+    return modal(`${cap(tema.k)}<h2>Aproape! 💪</h2><p>Ai răspuns corect la ${tema.corecte} din 3. Nu-i nimic — fiecare constructor greșește uneori o măsurătoare. Mai încerci?</p>
+      <div class="btns"><button class="btn verde" onclick="incepeTema('${tema.k}','${tema.tip}')">🔄 Încă o dată</button><button class="btn gri" onclick="inchide()">Mai târziu</button></div>`);
+  }
+  if(tema.tip==="misiune") return finalizeazaMisiune();
+  S.zilnic[tema.k] = azi();
+  const pachete = [{caramida:8},{sticla:4},{lampa:2},{floare:4},{tigla:8},{lemn:12},{piatra:12},{usa:1},{nisip:8}];
+  const r = {};
+  amesteca(pachete).slice(0, tema.corecte===3 ? 3 : 2).forEach(p=>{ for(const t in p) r[t] = (r[t]||0) + p[t]; });
+  primeste(r);
+  actualizeazaMisiune();
+  modal(`${cap(tema.k)}<h2>🎉 Temă reușită: ${tema.corecte} din 3!</h2>
+    <p>${tema.corecte===3 ? "Perfect! Pentru 3 din 3 primești un pachet în plus! 🌟" : "Foarte bine! Iată răsplata:"}</p>
+    ${htmlRasplata(r)}<div class="btns"><button class="btn verde" onclick="inchide()">La construit! 🏗️</button></div>`);
+  puneIconiteRasplata();
+}
+
+/* ═════════════════ CUFERE DE LA ȘCOALĂ ═════════════════ */
+const CUFAR = { geo:{caramida:6, sticla:2}, m3:{lemn:8, piatra:6, lampa:1}, ung:{tigla:6, floare:2, lampa:1} };
+function verificaCufere(){
+  if(!modalInchis()) return;
+  const noi = lectiiTerminate().filter(id=>!S.revendicate.includes(id));
+  if(!noi.length) return;
+  const r = {};
+  noi.forEach(id=>{ const c = CUFAR[LECTII[id].c]; for(const t in c) r[t] = (r[t]||0) + c[t]; });
+  modal(`<h2>🎁 ${noi.length===1 ? "Un cufăr" : noi.length+" cufere"} de la Școală!</h2>
+    <p>Pentru fiecare lecție terminată la Școală, prietenii ți-au trimis un cufăr cu materiale:</p>
+    <div class="chest-list">${noi.map(id=>`<div>✅ ${LECTII[id].n}</div>`).join("")}</div>
+    ${htmlRasplata(r)}
+    <div class="btns"><button class="btn verde" id="deschide-cufere">🗝️ Deschide!</button></div>`);
+  puneIconiteRasplata();
+  document.getElementById("deschide-cufere").onclick = ()=>{
+    S.revendicate.push(...noi);
+    primeste(r); inchide(); confetti();
+  };
+}
+
+/* ═════════════════ AJUTOR + INTRO ═════════════════ */
+function arataAjutor(){
+  modal(`<h2>❓ Cum se joacă</h2>
+    <ul class="help">
+      <li>🚶 <b>Mergi:</b> atinge un loc din lume și Cristian merge acolo. Poți folosi și săgețile din stânga (sau tastele W A S D).</li>
+      <li>🧱 <b>Pune:</b> alege un bloc din bara de jos, apoi atinge fața unui bloc — noul bloc se lipește de ea.</li>
+      <li>⛏️ <b>Adună:</b> atinge un bloc ca să-l iei în rucsac (copacii dau bușteni, stâncile dau piatră).</li>
+      <li>🦊🐉👨‍✈️ <b>Prietenii:</b> atinge-i ca să vorbești. ❗ = misiune nouă, ⭐ = misiune gata, 📝 = tema zilei.</li>
+      <li>🎁 <b>Cufere:</b> fiecare lecție terminată la Școală îți aduce materiale aici, acasă.</li>
+      <li>↺ ↻ rotesc lumea ca să vezi și în spatele casei; 🔍 mărește.</li>
+    </ul>
+    <div class="btns"><a class="btn" href="../index.html">🏫 Mergi la Școală</a><button class="btn verde" onclick="inchide()">Am înțeles!</button>
+    <button class="btn gri" onclick="reseteaza()">🔄 Lume nouă</button></div>`);
+}
+function reseteaza(){
+  if(!confirm("Sigur vrei o lume nouă? Casa construită se va pierde (cuferele deja deschise rămân deschise).")) return;
+  const rev = S.revendicate;
+  S = lumeNoua(); S.revendicate = rev; S.introVazut = true;
+  anim.x = S.pl.x; anim.y = S.pl.y; anim.z = S.pl.z; anim.to = null; drum = [];
+  salveaza(); deseneazaHotbar(); actualizeazaMisiune(); inchide();
+}
+function intro(){
+  modal(`<h2>🏠 Bine ai venit acasă, Cristian!</h2>
+    <p>După atâtea lecții la Școală, prietenii tăi — <b>Rix</b> 🦊, <b>Zum</b> 🐉 și <b>Căpitanul Vector</b> 👨‍✈️ — ți-au pregătit o surpriză: <b>Valea Curcubeului</b>, o vale liniștită numai a ta.</p>
+    <p>Aici îți vei construi casa, bloc cu bloc. Fiecare lecție terminată la Școală îți aduce un 🎁 cufăr cu materiale, iar prietenii îți dau teme-provocări din ce ai învățat. Și, desigur, te poți juca liber oricât vrei!</p>
+    <div class="btns"><button class="btn verde" id="start-joc">Să construim! 🏗️</button></div>`);
+  document.getElementById("start-joc").onclick = ()=>{ S.introVazut = true; salveaza(); inchide(); setTimeout(verificaCufere, 300); };
+}
+
+/* ═════════════════ PORNIRE ═════════════════ */
+incarca();
+anim.x = S.pl.x; anim.y = S.pl.y; anim.z = S.pl.z;
+gravitatie();
+redimensioneaza();
+addEventListener("resize", redimensioneaza);
+deseneazaHotbar();
+actualizeazaMisiune();
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden) verificaCufere(); });
+addEventListener("pagehide", salveaza);
+if(!S.introVazut) intro(); else verificaCufere();
+
+let ultim = performance.now();
+function bucla(t){
+  const dt = Math.min(50, t-ultim); ultim = t;
+  actualizeazaMers(dt);
+  deseneaza(t);
+  requestAnimationFrame(bucla);
+}
+requestAnimationFrame(bucla);
+</script>
+</body>
+</html>

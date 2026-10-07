@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Les verbes du 1er et du 2e groupe — affiche</title>
+<style>
+  @font-face { font-family: "Andika"; src: url(fonts/Andika-Regular.ttf); font-weight: 400; }
+  @font-face { font-family: "Andika"; src: url(fonts/Andika-Bold.ttf); font-weight: 700; }
+  @font-face { font-family: "Fredoka"; src: url(fonts/Fredoka.ttf); font-weight: 300 700; }
+
+  @page { size: A4 portrait; margin: 0; }
+  html.a3 { --zoom: 1.41421; }
+  html { --zoom: 1; }
+
+  :root {
+    --ink: #1d2433;
+    --r: #d62828;  --r-bg: #fdeeee; --r-line: #ec6a6a;
+    --b: #1560bd;  --b-bg: #eaf2fd; --b-line: #4f93e6;
+    --y: #ffd54a;  --y-bg: #fff7d9; --y-line: #e8b800;
+    --grey: #5b6272;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #fff; }
+  body {
+    font-family: "Andika", "Comic Sans MS", sans-serif;
+    color: var(--ink);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    zoom: var(--zoom);
+    width: 210mm; height: 297mm; overflow: hidden;
+    padding: 8mm 8mm 6mm;
+    display: flex; flex-direction: column; gap: 3.2mm;
+  }
+  .emoji { font-family: "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-weight: 400; }
+  .r { color: var(--r); font-weight: 700; }
+  .b { color: var(--b); font-weight: 700; }
+
+  /* ---------- Titre ---------- */
+  header { text-align: center; }
+  h1 {
+    display: inline-block;
+    font-family: "Fredoka", sans-serif; font-weight: 700;
+    font-size: 14.5mm; line-height: 1; letter-spacing: .5mm;
+    padding: 1.4mm 9mm 2mm;
+    background: var(--y); border-radius: 8mm;
+  }
+  .sous-titre {
+    font-family: "Fredoka", sans-serif; font-weight: 500;
+    font-size: 7mm; margin-top: 1.2mm;
+  }
+  .sous-titre sup { font-size: .55em; }
+  .sous-titre .pt { color: var(--grey); font-weight: 400; }
+
+  /* ---------- Bandeau radical / terminaison ---------- */
+  .radical {
+    display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 6mm;
+    border: .7mm solid #cfd4de; border-radius: 5mm; padding: 2.6mm 5mm;
+  }
+  .coupe { display: flex; align-items: flex-start; gap: 1.2mm; }
+  .coupe .bloc { text-align: center; }
+  .coupe .mot {
+    font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 10mm; line-height: 1.1;
+    border-radius: 2.5mm; padding: .6mm 2.4mm;
+  }
+  .coupe .rad .mot { background: #eef0f4; }
+  .coupe .ter .mot { background: var(--r-bg); color: var(--r); }
+  .coupe .ciseau { font-size: 7mm; padding-top: 1.6mm; }
+  .coupe .lbl { font-size: 3.5mm; font-weight: 700; margin-top: .8mm; line-height: 1.15; }
+  .coupe .lbl small { display: block; font-weight: 400; color: var(--grey); font-size: 3.2mm; }
+  .radical .regle { font-size: 4.5mm; line-height: 1.35; }
+  .radical .regle p + p { margin-top: 1.4mm; }
+  .faut {
+    display: inline-block; background: var(--y-bg); border: .45mm solid var(--y-line);
+    border-radius: 2mm; padding: 0 1.8mm; font-weight: 700;
+  }
+
+  /* ---------- Colonnes des deux groupes ---------- */
+  .groupes { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+  .col {
+    border: 1mm solid; border-radius: 6mm; padding: 3mm 4mm 3.4mm;
+    display: flex; flex-direction: column; gap: 2.4mm;
+  }
+  .g1 { border-color: var(--r-line); }
+  .g2 { border-color: var(--b-line); }
+
+  .tete {
+    display: flex; align-items: center; gap: 3mm;
+    border-radius: 4mm; padding: 1.6mm 3mm;
+  }
+  .g1 .tete { background: var(--r-bg); }
+  .g2 .tete { background: var(--b-bg); }
+  .num {
+    flex: none; width: 13mm; height: 13mm; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: "Fredoka", sans-serif; font-weight: 700; font-size: 9mm; color: #fff;
+  }
+  .g1 .num { background: var(--r); }
+  .g2 .num { background: var(--b); border-radius: 2.5mm; transform: rotate(45deg) scale(.86); }
+  .g2 .num span { transform: rotate(-45deg); }
+  .tete .t1 { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 6.4mm; line-height: 1.05; }
+  .tete .t1 sup { font-size: .55em; }
+  .tete .t2 { font-size: 4.4mm; line-height: 1.1; }
+  .tete .t2 b { font-size: 5.4mm; }
+
+  .modele {
+    text-align: center; font-family: "Fredoka", sans-serif; font-weight: 600;
+    font-size: 9mm; line-height: 1; letter-spacing: .4mm;
+  }
+
+  table.conj { border-collapse: collapse; width: 100%; font-size: 7.1mm; line-height: 1.26; }
+  table.conj td { padding: 0; white-space: nowrap; }
+  table.conj td.pr { text-align: right; padding-right: 3mm; color: var(--grey); width: 44%; }
+  table.conj tr.sep td { border-top: .4mm dashed #cfd4de; }
+  .g1 .t { color: var(--r); font-weight: 700; }
+  .g2 .t { color: var(--b); font-weight: 700; }
+  .iss { background: #d6e6fb; border-radius: .8mm; }
+
+  .puces { display: flex; justify-content: center; gap: 1.4mm; flex-wrap: nowrap; }
+  .puces span {
+    font-weight: 700; font-size: 4.9mm; border-radius: 2mm; padding: .4mm 1.6mm; color: #fff;
+  }
+  .g1 .puces span { background: var(--r); }
+  .g2 .puces span { background: var(--b); }
+
+  .ex-titre { font-weight: 700; font-size: 4.4mm; }
+  .ex { display: grid; grid-template-columns: 1fr 1fr; gap: .6mm 3mm; font-size: 5.4mm; line-height: 1.25; }
+  .ex li { list-style: none; }
+  .g1 .ex li::before { content: "● "; color: var(--r); font-size: .8em; }
+  .g2 .ex li::before { content: "◆ "; color: var(--b); font-size: .8em; }
+  .ex .t { text-decoration: underline; text-decoration-thickness: .5mm; text-underline-offset: .8mm; }
+  .ex small { font-size: 3.8mm; color: var(--grey); }
+
+  /* ---------- Encadrés ---------- */
+  .encadre {
+    margin-top: auto;
+    border-radius: 4mm; padding: 2.4mm 3mm; font-size: 4.1mm; line-height: 1.3;
+  }
+  .encadre h3 { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 5.2mm; margin-bottom: .8mm; }
+  .attention { background: var(--y-bg); border: .6mm solid var(--y-line); }
+  .test { background: var(--b-bg); border: .6mm solid var(--b-line); }
+  .test .ok, .test .non { display: grid; grid-template-columns: 5mm 1fr; }
+  .ok b.m { color: var(--b); }
+  .non { color: var(--grey); }
+  .sym { font-weight: 700; }
+
+  /* ---------- Bas : ce qui est pareil ---------- */
+  .pareil {
+    display: grid; grid-template-columns: 1.08fr 1fr; gap: 4mm;
+  }
+  .boite { border-radius: 5mm; padding: 2.6mm 4mm; }
+  .toujours { background: var(--y-bg); border: .8mm solid var(--y-line); }
+  .chut { background: #f3f4f7; border: .8mm solid #cfd4de; }
+  .boite h3 { font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 5.4mm; margin-bottom: 1.2mm; }
+  .regles { display: grid; grid-template-columns: auto auto 1fr; align-items: center; gap: .9mm 2.6mm; font-size: 5.2mm; line-height: 1.2; }
+  .regles .p { text-align: right; }
+  .regles .fin {
+    font-weight: 700; background: var(--y); border-radius: 1.6mm; padding: 0 1.8mm; text-align: center;
+  }
+  .regles .exs { font-size: 4.2mm; color: var(--grey); }
+  .regles .exs .r, .regles .exs .b { font-weight: 700; }
+  .chut p { font-size: 4.3mm; line-height: 1.3; }
+  .chut .son { font-size: 5.2mm; margin: .6mm 0 1mm; line-height: 1.3; }
+  .muet { color: var(--r); font-weight: 700; border: .45mm dashed #8a91a0; border-radius: 1.2mm; padding: 0 .5mm; }
+
+  footer {
+    text-align: center; font-size: 3.9mm; color: var(--grey); line-height: 1.25;
+  }
+  footer b { color: var(--ink); }
+</style>
+<script>
+  // ?a3 → même affiche agrandie ×√2 pour une feuille A3
+  if (location.search.includes('a3')) {
+    document.documentElement.classList.add('a3');
+    document.write('<style>@page { size: A3 portrait; margin: 0; }</style>');
+  }
+</script>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>LES VERBES</h1>
+    <div class="sous-titre">
+      du <span class="r">1<sup>er</sup></span> et du <span class="b">2<sup>e</sup></span> groupe
+      <span class="pt">· au présent</span>
+    </div>
+  </header>
+
+  <section class="radical">
+    <div class="coupe">
+      <div class="bloc rad">
+        <div class="mot">chant</div>
+        <div class="lbl">le radical<small>il ne bouge pas</small></div>
+      </div>
+      <div class="ciseau emoji">✂️</div>
+      <div class="bloc ter">
+        <div class="mot">er</div>
+        <div class="lbl">la terminaison<small>elle change</small></div>
+      </div>
+    </div>
+    <div class="regle">
+      <p>La <b>terminaison</b> change selon <b>qui</b> fait l’action :<br>je chant<span class="r">e</span>, nous chant<span class="r">ons</span>…</p>
+      <p>Pour trouver l’infinitif, je dis <span class="faut">« il faut… »</span><br>il chante → il faut <b>chant<span class="r">er</span></b></p>
+    </div>
+  </section>
+
+  <section class="groupes">
+
+    <!-- 1er groupe -->
+    <div class="col g1">
+      <div class="tete">
+        <div class="num">1</div>
+        <div>
+          <div class="t1">1<sup>er</sup> groupe</div>
+          <div class="t2">verbes en <b class="r">-er</b></div>
+        </div>
+      </div>
+
+      <div class="modele">CHANT<span class="r">ER</span></div>
+
+      <table class="conj">
+        <tr><td class="pr">je</td><td>chant<span class="t">e</span></td></tr>
+        <tr><td class="pr">tu</td><td>chant<span class="t">es</span></td></tr>
+        <tr><td class="pr">il, elle, on</td><td>chant<span class="t">e</span></td></tr>
+        <tr class="sep"><td class="pr">nous</td><td>chant<span class="t">ons</span></td></tr>
+        <tr><td class="pr">vous</td><td>chant<span class="t">ez</span></td></tr>
+        <tr><td class="pr">ils, elles</td><td>chant<span class="t">ent</span></td></tr>
+      </table>
+
+      <div class="puces"><span>e</span><span>es</span><span>e</span><span>ons</span><span>ez</span><span>ent</span></div>
+
+      <div>
+        <div class="ex-titre">Comme chanter :</div>
+        <ul class="ex">
+          <li>jou<span class="t">er</span></li>
+          <li>parl<span class="t">er</span></li>
+          <li>dans<span class="t">er</span></li>
+          <li>regard<span class="t">er</span></li>
+          <li>aim<span class="t">er</span> <small>→ j’aime</small></li>
+          <li>march<span class="t">er</span></li>
+        </ul>
+      </div>
+
+      <div class="encadre attention">
+        <h3><span class="emoji">⚠️</span> L’intrus : aller</h3>
+        Il finit par <span class="r">-er</span>, mais attention :<br>
+        je <b>vais</b>, tu <b>vas</b>, il <b>va</b>… → <b>3<sup>e</sup> groupe</b>
+      </div>
+    </div>
+
+    <!-- 2e groupe -->
+    <div class="col g2">
+      <div class="tete">
+        <div class="num"><span>2</span></div>
+        <div>
+          <div class="t1">2<sup>e</sup> groupe</div>
+          <div class="t2">verbes en <b class="b">-ir</b></div>
+        </div>
+      </div>
+
+      <div class="modele">FIN<span class="b">IR</span></div>
+
+      <table class="conj">
+        <tr><td class="pr">je</td><td>fin<span class="t">is</span></td></tr>
+        <tr><td class="pr">tu</td><td>fin<span class="t">is</span></td></tr>
+        <tr><td class="pr">il, elle, on</td><td>fin<span class="t">it</span></td></tr>
+        <tr class="sep"><td class="pr">nous</td><td>fin<span class="t"><span class="iss">iss</span>ons</span></td></tr>
+        <tr><td class="pr">vous</td><td>fin<span class="t"><span class="iss">iss</span>ez</span></td></tr>
+        <tr><td class="pr">ils, elles</td><td>fin<span class="t"><span class="iss">iss</span>ent</span></td></tr>
+      </table>
+
+      <div class="puces"><span>is</span><span>is</span><span>it</span><span>issons</span><span>issez</span><span>issent</span></div>
+
+      <div>
+        <div class="ex-titre">Comme finir :</div>
+        <ul class="ex">
+          <li>grand<span class="t">ir</span></li>
+          <li>chois<span class="t">ir</span></li>
+          <li>réuss<span class="t">ir</span></li>
+          <li>roug<span class="t">ir</span></li>
+          <li>rempl<span class="t">ir</span></li>
+          <li>obé<span class="t">ir</span></li>
+        </ul>
+      </div>
+
+      <div class="encadre test">
+        <h3><span class="emoji">💡</span> Le test du « nous »</h3>
+        <div class="ok"><span class="sym b">✔</span><span>nous grand<b class="m">issons</b> → 2<sup>e</sup> groupe</span></div>
+        <div class="non"><span class="sym">✖</span><span>nous <b>partons</b> → 3<sup>e</sup> groupe</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pareil">
+    <div class="boite toujours">
+      <h3>★ Pareil dans les 2 groupes</h3>
+      <div class="regles">
+        <span class="p">tu</span><span class="fin">s</span><span class="exs">chante<span class="r">s</span> · fini<span class="b">s</span></span>
+        <span class="p">nous</span><span class="fin">ons</span><span class="exs">chant<span class="r">ons</span> · finiss<span class="b">ons</span></span>
+        <span class="p">vous</span><span class="fin">ez</span><span class="exs">chant<span class="r">ez</span> · finiss<span class="b">ez</span></span>
+        <span class="p">ils, elles</span><span class="fin">ent</span><span class="exs">chant<span class="r">ent</span> · finiss<span class="b">ent</span></span>
+      </div>
+    </div>
+    <div class="boite chut">
+      <h3><span class="emoji">🤫</span> Chut ! Lettres muettes</h3>
+      <p class="son">il chant<span class="muet">e</span> · ils chant<span class="muet">ent</span></p>
+      <p>On entend la même chose, mais on n’écrit pas pareil.<br><b>Je regarde qui fait l’action !</b></p>
+    </div>
+  </section>
+
+  <footer>
+    Tous les autres verbes sont du <b>3<sup>e</sup> groupe</b> (aller, faire, venir, partir, prendre…). <b>être</b> et <b>avoir</b> sont à part.
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Mein Deutschheft — Chris</title>
+<style>
+  @font-face { font-family: "Andika"; src: url(../fr-verbes/fonts/Andika-Regular.ttf); font-weight: 400; }
+  @font-face { font-family: "Andika"; src: url(../fr-verbes/fonts/Andika-Bold.ttf); font-weight: 700; }
+  @font-face { font-family: "Fredoka"; src: url(../fr-verbes/fonts/Fredoka.ttf); font-weight: 300 700; }
+
+  @page { size: A4 portrait; margin: 0; }
+  :root {
+    --ink: #1d2433; --grey: #5b6272; --light: #8a91a0; --line: #dfe3ea;
+    --y: #ffd54a; --y-bg: #fff7d9; --b: #0072B2; --b-bg: #eaf2fd;
+    --o: #D55E00; --o-bg: #fdeee4; --v: #b0578d; --v-bg: #f7eaf2; --acc: #ffd54a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #fff; }
+  body {
+    font-family: "Andika", "Comic Sans MS", sans-serif; color: var(--ink); font-size: 4.4mm;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  @media screen { body { background: #c9ced8; } .page { margin: 6mm auto; box-shadow: 0 1mm 4mm #0003; } }
+  html.solo body { background: #fff; } html.solo .page { margin: 0; box-shadow: none; }
+
+  .page {
+    counter-increment: pg; position: relative; background: #fff;
+    width: 210mm; height: 297mm; overflow: hidden; break-after: page;
+    padding: 9mm 11mm 12mm; display: flex; flex-direction: column; gap: 4mm;
+  }
+  .em { font-family: "Segoe UI Emoji", "Noto Color Emoji", sans-serif; font-weight: 400; font-style: normal; }
+  x-c, x-t { display: inline-block; }
+  x-c svg, x-t svg { display: block; height: 100%; width: auto; overflow: visible; }
+  x-t { width: 100%; } x-t svg { width: 100%; height: auto; }
+
+  /* ---------- header / footer ---------- */
+  header.top { display: flex; align-items: center; gap: 4mm; }
+  .lek { font-family: "Fredoka"; font-weight: 600; font-size: 4.6mm; background: var(--acc); border-radius: 4mm; padding: 1.6mm 4mm; white-space: nowrap; }
+  h1 { font-family: "Fredoka"; font-weight: 700; font-size: 12mm; line-height: 1; }
+  .ro { color: var(--grey); font-size: 4.2mm; }
+  .audio { margin-left: auto; display: flex; align-items: center; gap: 1.5mm; border: .6mm solid var(--line); border-radius: 10mm; padding: 1mm 3.5mm; font-family: "Fredoka"; font-weight: 600; font-size: 5mm; color: var(--grey); }
+  .audio::after { content: counter(pg, decimal-leading-zero); }
+  footer { position: absolute; bottom: 5mm; left: 11mm; right: 11mm; display: flex; justify-content: space-between; font-size: 3.3mm; color: var(--light); }
+  footer .pn::after { content: counter(pg); font-family: "Fredoka"; font-weight: 600; font-size: 4.2mm; color: var(--grey); }
+
+  /* ---------- word cards ---------- */
+  .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; }
+  .cards.c3 { grid-template-columns: repeat(3, 1fr); }
+  .cards.c5 { grid-template-columns: repeat(5, 1fr); gap: 2.4mm; }
+  .card { border: .6mm solid var(--line); border-radius: 4mm; padding: 2mm 1.5mm 2.2mm; text-align: center; display: flex; flex-direction: column; align-items: center; }
+  .card .pic { height: 24mm; display: flex; align-items: flex-end; justify-content: center; gap: 1mm; margin-bottom: 1.2mm; }
+  .card .pic .em { font-size: 17mm; line-height: 1; }
+  .de { font-family: "Fredoka"; font-weight: 600; font-size: 6mm; line-height: 1.1; }
+  .art { font-weight: 400; font-size: .72em; color: var(--grey); }
+  .pr { font-size: 3.4mm; color: var(--light); }
+  .tr { font-size: 3.7mm; color: var(--grey); font-style: italic; }
+  .sm { font-size: 3.7mm; }
+
+  /* ---------- scenes, bubbles ---------- */
+  .scene { display: flex; align-items: flex-end; justify-content: center; gap: 5mm; background: linear-gradient(#e3f1ff, #f6fbff); border-radius: 6mm; padding: 4mm 5mm 3mm; }
+  .bubble { flex: none; position: relative; background: #fff; border: .7mm solid var(--ink); border-radius: 5mm; padding: 2mm 4mm; font-family: "Fredoka"; font-weight: 600; font-size: 5.4mm; line-height: 1.25; align-self: flex-start; }
+  .bubble small { display: block; font-family: "Andika"; font-weight: 400; font-size: 3.5mm; color: var(--grey); }
+  .bubble.l::after, .bubble.r::after { content: ""; position: absolute; bottom: -3.2mm; width: 4mm; height: 4mm; background: #fff; border-right: .7mm solid var(--ink); border-bottom: .7mm solid var(--ink); }
+  .bubble.l::after { left: 6mm; transform: rotate(45deg); }
+  .bubble.r::after { right: 6mm; transform: rotate(45deg); }
+
+  /* ---------- exercises ---------- */
+  .ex { border: .7mm solid var(--line); border-radius: 5mm; padding: 3mm 4mm; }
+  .ex h3 { font-family: "Fredoka"; font-weight: 600; font-size: 5.6mm; display: flex; align-items: center; gap: 2.5mm; margin-bottom: 2mm; }
+  .ex h3 .n { background: var(--b); color: #fff; border-radius: 50%; width: 7.5mm; height: 7.5mm; display: inline-flex; align-items: center; justify-content: center; font-size: 4.4mm; flex: none; }
+  .ex h3 .ro { font-family: "Andika"; font-weight: 400; font-size: 3.9mm; }
+  .grow { flex: 1; }
+  .row { display: flex; align-items: center; gap: 4mm; }
+  .center { justify-content: center; }
+  .between { justify-content: space-between; }
+  .wl { display: inline-block; border-bottom: .5mm solid var(--ink); min-width: 30mm; height: 7mm; vertical-align: bottom; }
+
+  .match { display: flex; justify-content: space-between; padding: 0 6mm; }
+  .mcol { display: flex; flex-direction: column; gap: 2mm; }
+  .mi { display: flex; align-items: center; gap: 4mm; height: 17mm; }
+  .mcol.r .mi { justify-content: flex-start; }
+  .pt { width: 3.4mm; height: 3.4mm; border-radius: 50%; background: var(--ink); display: inline-block; flex: none; }
+  .mi .em { font-size: 13mm; line-height: 1; }
+
+  .elena { background: var(--b-bg); border-left: 1.6mm solid var(--b); border-radius: 3mm; padding: 2.4mm 4mm; font-size: 3.8mm; line-height: 1.35; }
+  .elena b { font-family: "Fredoka"; font-weight: 600; }
+  .tip { background: var(--y-bg); border-radius: 4mm; padding: 2.6mm 4mm; font-size: 4.2mm; line-height: 1.4; }
+  .tip .de { font-size: 5.2mm; }
+
+  .stern { margin-top: auto; display: flex; align-items: center; justify-content: flex-end; gap: 3mm; font-family: "Fredoka"; font-weight: 500; font-size: 5mm; }
+  .stern svg { width: 15mm; height: 15mm; }
+  .draw { border: .6mm dashed #aab2c0; border-radius: 4mm; }
+  .dots { display: inline-flex; flex-wrap: wrap; gap: 1mm; justify-content: center; max-width: 28mm; margin: 1mm 0; }
+  .dots i { width: 4.4mm; height: 4.4mm; border-radius: 50%; background: #ffc83d; border: .35mm solid var(--ink); }
+  .choice { display: inline-block; border: .5mm solid var(--line); border-radius: 3mm; padding: .6mm 3mm; font-family: "Fredoka"; font-weight: 500; font-size: 5.2mm; margin: 0 1mm; }
+  .sw { display: inline-block; width: 9mm; height: 9mm; border-radius: 50%; border: .5mm solid var(--ink); }
+
+  /* ---------- cover ---------- */
+  .cover { padding: 12mm; gap: 5mm; }
+  .cover h1 { font-size: 19mm; text-align: center; }
+  .flag { display: flex; width: 30mm; height: 5mm; margin: 0 auto 3mm; border-radius: 1mm; overflow: hidden; border: .3mm solid #0003; }
+  .flag i { flex: 1; }
+  .sky { position: relative; flex: 1; border-radius: 8mm; background: linear-gradient(#bfe0ff, #eef7ff 70%); overflow: hidden; }
+  .grass { position: absolute; left: 0; right: 0; bottom: 0; height: 30mm; background: #b9e3a0; border-top: .7mm solid #8cc877; }
+  .abs { position: absolute; }
+  .cloud { position: absolute; background: #fff; border-radius: 50%; }
+
+  /* ---------- board game ---------- */
+  .board { display: grid; grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(5, 1fr); gap: 2mm; flex: 1; }
+  .sq { border: .7mm solid var(--ink); border-radius: 3.5mm; padding: 1.2mm; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 3.5mm; line-height: 1.15; position: relative; }
+  .sq b { position: absolute; top: .8mm; left: 1.5mm; font-family: "Fredoka"; font-size: 3.4mm; color: var(--grey); }
+  .sq .em { font-size: 8mm; line-height: 1.1; }
+  .sq .de { font-size: 3.9mm; }
+  .sq.w { background: var(--b-bg); } .sq.z { background: var(--y-bg); } .sq.k { background: var(--o-bg); } .sq.g { background: var(--v-bg); } .sq.m { background: #f1f3f6; }
+  .sq.big { background: var(--y); }
+  .fig svg { width: 100%; height: 100%; }
+  .cards.xl .pic { height: 30mm; } .cards.xl .pic .em { font-size: 21mm; }
+</style>
+</head>
+<body>
+
+<!-- ======================= 1 · COPERTA ======================= -->
+<section class="page cover">
+  <div>
+    <div class="flag"><i style="background:#1d1d1d"></i><i style="background:#dd0000"></i><i style="background:#ffce00"></i></div>
+    <h1>Mein Deutschheft</h1>
+    <p style="text-align:center;font-family:Fredoka;font-weight:500;font-size:7mm;margin-top:2mm">Chris lernt Deutsch — mit Fernanda und seinen Freunden</p>
+    <p class="ro" style="text-align:center;font-size:4.6mm;margin-top:1mm">Caietul meu de germană · 8 lecții, un joc și o diplomă</p>
+  </div>
+  <div class="sky">
+    <div class="cloud" style="width:34mm;height:12mm;left:12mm;top:14mm"></div>
+    <div class="cloud" style="width:22mm;height:9mm;left:30mm;top:9mm"></div>
+    <div class="cloud" style="width:30mm;height:11mm;right:16mm;top:44mm"></div>
+    <span class="abs em" style="right:10mm;top:6mm;font-size:18mm">☀️</span>
+    <x-c c="fernplane" h="62mm" class="abs" style="left:30mm;top:34mm;transform:rotate(-6deg)"></x-c>
+    <div class="bubble l abs" style="left:118mm;top:24mm;font-size:6.5mm">Hallo, Chris!</div>
+    <div class="abs" style="left:-20mm;right:-20mm;bottom:20mm;height:80mm;border-radius:50%;background:#d3efc2;border-top:.7mm solid #a9d98f"></div>
+    <x-c c="uno" h="30mm" class="abs" style="left:10mm;bottom:66mm"></x-c>
+    <x-c c="deca" h="32mm" class="abs" style="left:28mm;bottom:67mm"></x-c>
+    <x-c c="centa" h="30mm" class="abs" style="left:47mm;bottom:68mm"></x-c>
+    <x-c c="millie" h="30mm" class="abs" style="left:70mm;bottom:70mm"></x-c>
+    <x-c c="miguel" h="27mm" class="abs" style="left:86mm;bottom:71mm"></x-c>
+    <x-c c="mike" h="23mm" class="abs" style="left:101mm;bottom:71mm"></x-c>
+    <x-c c="leo" h="30mm" class="abs" style="left:118mm;bottom:69mm"></x-c>
+    <x-c c="raph" h="30mm" class="abs" style="left:136mm;bottom:68mm"></x-c>
+    <x-c c="mikey" h="30mm" class="abs" style="left:154mm;bottom:66mm"></x-c>
+    <div class="grass"></div>
+    <x-c c="melba" h="48mm" class="abs" style="left:4mm;bottom:14mm"></x-c>
+    <x-c c="clara" h="50mm" class="abs" style="left:36mm;bottom:10mm"></x-c>
+    <x-c c="chris" h="58mm" class="abs" style="left:66mm;bottom:8mm" racket></x-c>
+    <x-c c="elena" h="64mm" class="abs" style="left:98mm;bottom:9mm"></x-c>
+    <x-c c="eric" h="36mm" class="abs" style="left:136mm;bottom:8mm"></x-c>
+    <x-c c="pip" h="32mm" class="abs" style="left:160mm;bottom:12mm"></x-c>
+    <x-c c="mello" h="22mm" class="abs" style="left:24mm;bottom:3mm"></x-c>
+    <x-c c="malva" h="11mm" class="abs" style="left:156mm;bottom:3mm"></x-c>
+  </div>
+  <div class="row between" style="font-size:6mm;font-family:Fredoka;font-weight:500">
+    <span>Name: <span class="wl" style="min-width:62mm"></span></span>
+    <span style="background:var(--y-bg);border-radius:5mm;padding:2mm 5mm">Jeden <b>Dienstag</b> mit <b>Elena</b> <span class="em">💛</span></span>
+  </div>
+</section>
+
+<!-- ======================= 2 · PRIETENII ======================= -->
+<section class="page" style="--acc:#ffd54a">
+  <header class="top"><span class="lek">Start</span><div><h1>Das sind meine Freunde!</h1><div class="ro">Aceștia sunt prietenii mei!</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="cards">
+    <div class="card"><div class="pic"><x-c c="fernanda" h="20mm"></x-c></div><div class="de">Fernanda</div><div class="sm">Sie ist eine Ameise.</div></div>
+    <div class="card"><div class="pic"><x-c c="eric" h="24mm"></x-c></div><div class="de">Eric</div><div class="sm">Er ist mein Roboter.</div></div>
+    <div class="card"><div class="pic"><x-c c="clara" h="24mm"></x-c></div><div class="de">Clara</div><div class="sm">Sie ist meine Freundin.</div></div>
+    <div class="card"><div class="pic"><x-c c="pip" h="22mm"></x-c></div><div class="de">Pip</div><div class="sm">Er ist ein Pinguin.</div></div>
+    <div class="card"><div class="pic"><x-c c="uno" h="24mm"></x-c><x-c c="deca" h="24mm"></x-c></div><div class="de">Uno &amp; Deca</div><div class="sm">eins und zehn</div></div>
+    <div class="card"><div class="pic"><x-c c="milo" h="20mm"></x-c></div><div class="de">Milo</div><div class="sm">Er ist ein kleiner Roboter.</div></div>
+    <div class="card"><div class="pic"><x-c c="melba" h="24mm"></x-c></div><div class="de">Melba</div><div class="sm">Sie ist ein Alpaka.</div></div>
+    <div class="card"><div class="pic"><x-c c="mello" h="17mm"></x-c></div><div class="de">Mello</div><div class="sm">Er ist ein Hund.</div></div>
+    <div class="card"><div class="pic"><x-c c="malva" h="12mm"></x-c></div><div class="de">Malva</div><div class="sm">Sie ist eine Maus.</div></div>
+    <div class="card"><div class="pic"><x-c c="leo" h="24mm"></x-c><x-c c="mikey" h="24mm"></x-c></div><div class="de">Leo &amp; Mikey</div><div class="sm">die Ninja-Schildkröten</div></div>
+    <div class="card"><div class="pic"><x-c c="millie" h="23mm"></x-c><x-c c="miguel" h="19mm"></x-c><x-c c="mike" h="15mm"></x-c></div><div class="de">die Mimigs</div><div class="sm">Millie, Miguel, Mike</div></div>
+    <div class="card"><div class="pic"><x-c c="elena" h="24mm"></x-c></div><div class="de">Elena</div><div class="sm">Sie spricht Deutsch!</div></div>
+  </div>
+  <div class="tip" style="font-size:3.9mm">
+    <b style="font-family:Fredoka;font-size:4.6mm">Pentru părinți — cum folosim caietul</b><br>
+    8 lecții × 2 pagini: <b>prima pagină</b> = cuvinte noi (ascultă, arată, repetă) · <b>a doua</b> = exerciții (unește, colorează, scrie, desenează).
+    La sfârșit: un <b>joc de societate</b> și o <b>diplomă</b>. <span class="em">🎧</span> = numărul pistei audio (= numărul paginii).<br>
+    <b>[ ]</b> = pronunție aproximativă. &nbsp;<b>ü</b> = „u" franțuzesc · <b>ö</b> = „eu" franțuzesc · <b>ei</b> = ai · <b>ie</b> = i · <b>eu</b> = oi · <b>sch</b> = ș · <b>z</b> = ț · <b>w</b> = v · <b>ß</b> = s
+  </div>
+  <div class="elena">
+    <b>Für Elena:</b> Alle Figuren stammen aus Chris’ eigener Fantasiewelt — er erzählt sehr gern von ihnen! Pro Dienstag ca. eine Lektion (2 Seiten).
+    Bitte viel spielen, zeigen, singen und lachen; Schreiben ist nur ein Bonus. Die blauen Kästen enthalten Spielideen für die Stunde.
+  </div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 3 · L1 HALLO ======================= -->
+<section class="page" style="--acc:#ffd54a">
+  <header class="top"><span class="lek">Lektion 1</span><div><h1>Hallo!</h1><div class="ro">Salut! — Cum ne salutăm și ne prezentăm</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="scene" style="height:72mm">
+    <x-c c="chris" h="58mm"></x-c>
+    <div style="display:flex;flex-direction:column;justify-content:space-between;gap:4mm;flex:1;align-self:stretch">
+      <div class="bubble r" style="align-self:flex-end">Hallo! Ich heiße Fernanda.<br>Wie heißt du?<small>Salut! Eu sunt Fernanda. Cum te cheamă?</small></div>
+      <div class="bubble l" style="align-self:flex-start;margin-bottom:6mm">Hallo! Ich heiße Chris.<small>Salut! Mă numesc Chris.</small></div>
+    </div>
+    <x-c c="fernplane" h="36mm" style="align-self:flex-start"></x-c>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="pic"><span class="em">👋</span></div><div class="de">Hallo!</div><div class="pr">[halo]</div><div class="tr">Salut!</div></div>
+    <div class="card"><div class="pic"><span class="em">🌅</span></div><div class="de">Guten Morgen!</div><div class="pr">[guten morghen]</div><div class="tr">Bună dimineața!</div></div>
+    <div class="card"><div class="pic"><span class="em">☀️</span></div><div class="de">Guten Tag!</div><div class="pr">[guten tak]</div><div class="tr">Bună ziua!</div></div>
+    <div class="card"><div class="pic"><x-c c="pip" h="22mm"></x-c></div><div class="de">Tschüss!</div><div class="pr">[ciüs]</div><div class="tr">Pa!</div></div>
+    <div class="card"><div class="pic"><span class="em">🎁</span></div><div class="de">Danke!</div><div class="pr">[danke]</div><div class="tr">Mulțumesc!</div></div>
+    <div class="card"><div class="pic"><span class="em">🙏</span></div><div class="de">Bitte!</div><div class="pr">[bite]</div><div class="tr">Te rog! / Poftim!</div></div>
+    <div class="card"><div class="pic"><span class="em">👍</span></div><div class="de">Ja ✔</div><div class="pr">[ia]</div><div class="tr">Da</div></div>
+    <div class="card"><div class="pic"><span class="em">👎</span></div><div class="de">Nein ✖</div><div class="pr">[nain]</div><div class="tr">Nu</div></div>
+  </div>
+  <div class="tip row">
+    <div class="grow"><span class="de">Wie heißt du?</span> <span class="pr">[vi haist du]</span> — <i>Cum te cheamă?</i><br>
+    <span class="de">Ich heiße …</span> <span class="pr">[ih haise]</span> — <i>Mă numesc …</i></div>
+    <x-c c="clara" h="26mm"></x-c>
+  </div>
+  <div class="elena"><b>Für Elena:</b> Ein festes Ritual: jede Stunde mit „Hallo, Chris! Wie geht’s?" beginnen und mit „Tschüss, Chris!" beenden.
+    Rollenspiel: Chris ist Fernanda, Elena ist Pip — „Hallo! Wie heißt du?" – „Ich heiße …". Ein Kuscheltier kann auch mitsprechen!</div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 4 · L1 ÜBUNGEN ======================= -->
+<section class="page" style="--acc:#ffd54a">
+  <header class="top"><span class="lek">Lektion 1</span><div><h1>Übungen</h1><div class="ro">Exerciții</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="ex">
+    <h3><span class="n">1</span>Verbinde! <span class="ro">— Unește imaginea cu cuvântul.</span></h3>
+    <div class="match">
+      <div class="mcol"><div class="mi"><span class="em">🌅</span><i class="pt"></i></div><div class="mi"><x-c c="pip" h="16mm"></x-c><span class="em" style="font-size:8mm">👋</span><i class="pt"></i></div><div class="mi"><span class="em">🎁</span><i class="pt"></i></div><div class="mi"><span class="em">👍</span><i class="pt"></i></div></div>
+      <div class="mcol r"><div class="mi"><i class="pt"></i><span class="de">Danke!</span></div><div class="mi"><i class="pt"></i><span class="de">Ja!</span></div><div class="mi"><i class="pt"></i><span class="de">Guten Morgen!</span></div><div class="mi"><i class="pt"></i><span class="de">Tschüss!</span></div></div>
+    </div>
+  </div>
+  <div class="ex">
+    <h3><span class="n">2</span>Schreib nach! <span class="ro">— Scrie peste literele punctate.</span></h3>
+    <x-t w="Hallo"></x-t>
+    <x-t w="Tschüss"></x-t>
+  </div>
+  <div class="ex row" style="align-items:stretch">
+    <div style="flex:1">
+      <h3><span class="n">3</span>Wer bist du? <span class="ro">— Cine ești tu?</span></h3>
+      <div class="row" style="align-items:flex-end">
+        <div class="bubble l" style="font-size:6.5mm;padding:4mm 5mm">Ich heiße <span class="wl" style="min-width:48mm"></span>.</div>
+      </div>
+      <p class="sm" style="margin-top:6mm">Zeichne dich! <span class="tr">— Desenează-te!</span> <span class="em">✏️</span></p>
+    </div>
+    <div class="draw" style="width:62mm;height:62mm"></div>
+  </div>
+  <div class="stern">Fertig? Male den Stern aus! <span class="tr">— Gata? Colorează steaua!</span> <svg viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.9l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="none" stroke="#1d2433" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 5 · L2 ZAHLEN ======================= -->
+<section class="page" style="--acc:#8ecae6">
+  <header class="top"><span class="lek">Lektion 2</span><div><h1>Die Zahlen 1–10</h1><div class="ro">Numerele de la 1 la 10 — cu roboții lui Chris</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="scene" style="height:56mm">
+    <x-c c="uno" h="46mm"></x-c>
+    <div class="bubble l">Ich bin Uno.<br>Ich zähle bis zehn!<small>Sunt Uno. Număr până la zece!</small></div>
+    <div class="bubble r">Und ich bin <u>zehn</u>!<small>Iar eu sunt zece!</small></div>
+    <x-c c="deca" h="50mm"></x-c>
+  </div>
+  <div class="cards c5">
+    <div class="card"><div class="de" style="font-size:11mm">1</div><span class="dots" data-n="1"></span><div class="de">eins</div><div class="pr">[ains]</div></div>
+    <div class="card"><div class="de" style="font-size:11mm">2</div><span class="dots" data-n="2"></span><div class="de">zwei</div><div class="pr">[țvai]</div></div>
+    <div class="card"><div class="de" style="font-size:11mm">3</div><span class="dots" data-n="3"></span><div class="de">drei</div><div class="pr">[drai]</div></div>
+    <div class="card"><div class="de" style="font-size:11mm">4</div><span class="dots" data-n="4"></span><div class="de">vier</div><div class="pr">[fir]</div></div>
+    <div class="card"><div class="de" style="font-size:11mm">5</div><span class="dots" data-n="5"></span><div class="de">fünf</div><div class="pr">[fünf]</div></div>
+    <div class="card"><div class="de" style="font-size:11mm">6</div><span class="dots" data-n="6"></span><div class="de">sechs</div><div class="pr">[zecs]</div></div>
+    <div class="card"><div class="de" style="font-size:11mm">7</div><span class="dots" data-n="7"></span><div class="de">sieben</div><div class="pr">[ziben]</div></div>
+    <div class="card"><div class="de" style="font-size:11mm">8</div><span class="dots" data-n="8"></span><div class="de">acht</div><div class="pr">[aht]</div></div>
+    <div class="card"><div class="de" style="font-size:11mm">9</div><span class="dots" data-n="9"></span><div class="de">neun</div><div class="pr">[noin]</div></div>
+    <div class="card"><div class="de" style="font-size:11mm">10</div><span class="dots" data-n="10"></span><div class="de">zehn</div><div class="pr">[țen]</div></div>
+  </div>
+  <div class="tip row">
+    <div class="grow">
+      <span class="de">Wie viele?</span> <span class="pr">[vi file]</span> — <i>Câte?</i><br>
+      <span class="de">Zeig mir drei Finger!</span> <span class="pr">[țaik mir drai finger]</span> — <i>Arată-mi trei degete!</i> <span class="em">🖐️</span>
+    </div>
+    <x-c c="centa" h="30mm"></x-c><x-c c="mila" h="34mm"></x-c>
+  </div>
+  <div class="tip" style="background:var(--v-bg)">
+    <b style="font-family:Fredoka"><span class="em">🎵</span> Zählreim</b> <span class="tr">— numărătoare (poezie tradițională)</span><br>
+    <span class="de" style="font-size:5mm;line-height:1.5">Eins, zwei — Polizei, drei, vier — Offizier, fünf, sechs — alte Hex, sieben, acht — gute Nacht, neun, zehn — auf Wiedersehen!</span>
+  </div>
+  <div class="elena"><b>Für Elena:</b> Chris kennt Uno (Einer), Deca (Zehner), Centa (Hunderter) und Mila (Tausender) aus seinen Mathe-Heften.
+    Zahlen mit dem Körper üben: dreimal hüpfen, fünfmal klatschen, mit Würfeln spielen, Treppenstufen zählen. Auch rückwärts: „10, 9, 8 … Start!" <span class="em">🚀</span></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 6 · L2 ÜBUNGEN ======================= -->
+<section class="page" style="--acc:#8ecae6">
+  <header class="top"><span class="lek">Lektion 2</span><div><h1>Übungen</h1><div class="ro">Exerciții</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="ex">
+    <h3><span class="n">1</span>Zähle und kreise ein! <span class="ro">— Numără și încercuiește cuvântul corect.</span></h3>
+    <div style="display:grid;grid-template-columns:1fr auto;row-gap:4mm;align-items:center">
+      <div class="em" style="font-size:11mm">🍕🍕🍕</div><div><span class="choice">zwei</span><span class="choice">drei</span><span class="choice">vier</span></div>
+      <div class="em" style="font-size:11mm">🐧🐧🐧🐧🐧</div><div><span class="choice">sechs</span><span class="choice">vier</span><span class="choice">fünf</span></div>
+      <div class="em" style="font-size:11mm">🎾🎾🎾🎾🎾🎾🎾</div><div><span class="choice">sieben</span><span class="choice">acht</span><span class="choice">neun</span></div>
+      <div class="em" style="font-size:11mm">🐜🐜</div><div><span class="choice">eins</span><span class="choice">zehn</span><span class="choice">zwei</span></div>
+    </div>
+  </div>
+  <div class="ex">
+    <h3><span class="n">2</span>Male <u>vier</u> Unos aus! <span class="ro">— Colorează patru roboței Uno (galben).</span></h3>
+    <div class="row between" style="padding:0 2mm">
+      <x-c c="uno" o h="38mm"></x-c><x-c c="uno" o h="38mm"></x-c><x-c c="uno" o h="38mm"></x-c><x-c c="uno" o h="38mm"></x-c><x-c c="uno" o h="38mm"></x-c><x-c c="uno" o h="38mm"></x-c><x-c c="uno" o h="38mm"></x-c>
+    </div>
+  </div>
+  <div class="ex row" style="align-items:center">
+    <div style="flex:1">
+      <h3><span class="n">3</span>Rechne mit Deca! <span class="ro">— Calculează și spune rezultatul în germană.</span></h3>
+      <div style="font-family:Fredoka;font-weight:500;font-size:7.4mm;line-height:2.1">
+        zwei + drei = <span class="wl" style="min-width:18mm"></span><br>
+        vier + vier = <span class="wl" style="min-width:18mm"></span><br>
+        fünf + fünf = <span class="wl" style="min-width:18mm"></span><br>
+        zehn − eins = <span class="wl" style="min-width:18mm"></span>
+      </div>
+    </div>
+    <x-c c="deca" h="66mm"></x-c>
+  </div>
+  <div class="stern">Fertig? Male den Stern aus! <span class="tr">— Gata? Colorează steaua!</span> <svg viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.9l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="none" stroke="#1d2433" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 7 · L3 FARBEN ======================= -->
+<section class="page" style="--acc:#f4a3c8">
+  <header class="top"><span class="lek">Lektion 3</span><div><h1>Die Farben</h1><div class="ro">Culorile — fiecare prieten are culoarea lui</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="cards xl">
+    <div class="card"><div class="pic"><x-c c="uno" h="24mm"></x-c></div><div class="de"><span class="sw" style="background:#ffc83d;width:5mm;height:5mm"></span> gelb</div><div class="pr">[ghelp]</div><div class="tr">galben</div></div>
+    <div class="card"><div class="pic"><x-c c="deca" h="24mm"></x-c></div><div class="de"><span class="sw" style="background:#3a7bd5;width:5mm;height:5mm"></span> blau</div><div class="pr">[blau]</div><div class="tr">albastru</div></div>
+    <div class="card"><div class="pic"><x-c c="centa" h="24mm"></x-c></div><div class="de"><span class="sw" style="background:#e63946;width:5mm;height:5mm"></span> rot</div><div class="pr">[rot]</div><div class="tr">roșu</div></div>
+    <div class="card"><div class="pic"><x-c c="milo" h="21mm"></x-c></div><div class="de"><span class="sw" style="background:#10b58a;width:5mm;height:5mm"></span> grün</div><div class="pr">[grün]</div><div class="tr">verde</div></div>
+    <div class="card"><div class="pic"><x-c c="multiplo" h="24mm"></x-c></div><div class="de"><span class="sw" style="background:#8e44ad;width:5mm;height:5mm"></span> lila</div><div class="pr">[lila]</div><div class="tr">mov</div></div>
+    <div class="card"><div class="pic"><x-c c="mikey" h="30mm"></x-c></div><div class="de"><span class="sw" style="background:#ff8c1a;width:5mm;height:5mm"></span> orange</div><div class="pr">[oranj]</div><div class="tr">portocaliu</div></div>
+    <div class="card"><div class="pic"><x-c c="simka" h="24mm"></x-c></div><div class="de"><span class="sw" style="background:#ff79b8;width:5mm;height:5mm"></span> rosa</div><div class="pr">[roza]</div><div class="tr">roz</div></div>
+    <div class="card"><div class="pic"><x-c c="melba" h="24mm"></x-c></div><div class="de"><span class="sw" style="background:#fff;width:5mm;height:5mm"></span> weiß</div><div class="pr">[vais]</div><div class="tr">alb</div></div>
+    <div class="card"><div class="pic"><x-c c="pip" h="22mm"></x-c></div><div class="de"><span class="sw" style="background:#1d1d1d;width:5mm;height:5mm"></span> schwarz</div><div class="pr">[șvarț]</div><div class="tr">negru</div></div>
+    <div class="card"><div class="pic"><x-c c="fernanda" h="18mm"></x-c></div><div class="de"><span class="sw" style="background:#a0522d;width:5mm;height:5mm"></span> braun</div><div class="pr">[braun]</div><div class="tr">maro</div></div>
+    <div class="card"><div class="pic"><x-c c="mila" h="24mm"></x-c></div><div class="de"><span class="sw" style="background:#b8c2cc;width:5mm;height:5mm"></span> silber</div><div class="pr">[zilbăr]</div><div class="tr">argintiu</div></div>
+    <div class="card"><div class="pic"><x-c c="mello" h="16mm"></x-c></div><div class="de"><span class="sw" style="background:#e7b340;width:5mm;height:5mm"></span> gold</div><div class="pr">[golt]</div><div class="tr">auriu</div></div>
+  </div>
+  <div class="tip">
+    <span class="de">Uno ist gelb.</span> — <i>Uno este galben.</i><br>
+    <span class="de">Welche Farbe hat Deca?</span> <span class="pr">[velhe farbe hat deca]</span> — <i>Ce culoare are Deca?</i> &nbsp;<span class="de">Blau!</span>
+  </div>
+  <div class="elena"><b>Für Elena:</b> „Ich sehe was, was du nicht siehst, und das ist … blau!" spielen. Oder: „Zeig mir etwas Rotes!" — Chris läuft durchs Zimmer und sucht.
+    Die Ninja-Schildkröten haben verschiedenfarbige Masken: Leonardo blau, Raphael rot, Donatello lila, Michelangelo orange.</div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 8 · L3 ÜBUNGEN ======================= -->
+<section class="page" style="--acc:#f4a3c8">
+  <header class="top"><span class="lek">Lektion 3</span><div><h1>Übungen</h1><div class="ro">Exerciții</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="ex">
+    <h3><span class="n">1</span>Male die Masken aus! <span class="ro">— Colorează masca fiecărei țestoase. Pielea e <b>grün</b>.</span></h3>
+    <div class="row between" style="padding:0 3mm;text-align:center">
+      <div><x-c c="leo" o h="60mm"></x-c><div class="de">blau</div><div class="sm">Leonardo</div></div>
+      <div><x-c c="raph" o h="60mm"></x-c><div class="de">rot</div><div class="sm">Raphael</div></div>
+      <div><x-c c="donnie" o h="60mm"></x-c><div class="de">lila</div><div class="sm">Donatello</div></div>
+      <div><x-c c="mikey" o h="60mm"></x-c><div class="de">orange</div><div class="sm">Michelangelo</div></div>
+    </div>
+  </div>
+  <div class="ex">
+    <h3><span class="n">2</span>Male die Roboter aus! <span class="ro">— Colorează roboții după cuvânt.</span></h3>
+    <div class="row between" style="padding:0 6mm;text-align:center;align-items:flex-end">
+      <div><x-c c="uno" o h="48mm"></x-c><div class="de">gelb</div></div>
+      <div><x-c c="deca" o h="52mm"></x-c><div class="de">blau</div></div>
+      <div><x-c c="centa" o h="48mm"></x-c><div class="de">rot</div></div>
+      <div><x-c c="milo" o h="44mm"></x-c><div class="de">grün</div></div>
+      <div><x-c c="multiplo" o h="48mm"></x-c><div class="de">lila</div></div>
+    </div>
+  </div>
+  <div class="ex row">
+    <div style="flex:1">
+      <h3><span class="n">3</span>Und du? <span class="ro">— Și tu? Care e culoarea ta preferată?</span></h3>
+      <p style="font-family:Fredoka;font-weight:500;font-size:6.4mm;margin-top:3mm">Meine Lieblingsfarbe ist <span class="wl" style="min-width:40mm"></span>.</p>
+    </div>
+    <svg viewBox="0 0 100 70" style="width:44mm"><path d="M12 38 Q6 12 34 10 Q50 -2 70 10 Q96 8 92 34 Q100 58 72 60 Q54 72 32 62 Q4 64 12 38Z" fill="none" stroke="#1d2433" stroke-width="2" stroke-dasharray="5 4"/></svg>
+  </div>
+  <div class="stern">Fertig? Male den Stern aus! <span class="tr">— Gata? Colorează steaua!</span> <svg viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.9l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="none" stroke="#1d2433" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 9 · L4 TIERE ======================= -->
+<section class="page" style="--acc:#b9e3a0">
+  <header class="top"><span class="lek">Lektion 4</span><div><h1>Die Tiere</h1><div class="ro">Animalele — prietenii cu blăniță, pene și antene</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="cards" style="--ph:40mm">
+    <div class="card"><div class="pic" style="height:40mm"><x-c c="fernanda" h="28mm"></x-c></div><div class="de"><span class="art">die</span> Ameise</div><div class="pr">[amaize]</div><div class="tr">furnica · Fernanda</div></div>
+    <div class="card"><div class="pic" style="height:40mm"><x-c c="pip" h="38mm"></x-c></div><div class="de"><span class="art">der</span> Pinguin</div><div class="pr">[pinguin]</div><div class="tr">pinguinul · Pip</div></div>
+    <div class="card"><div class="pic" style="height:40mm"><x-c c="robbe" h="26mm"></x-c></div><div class="de"><span class="art">die</span> Robbe</div><div class="pr">[robe]</div><div class="tr">foca</div></div>
+    <div class="card"><div class="pic" style="height:40mm"><x-c c="mello" h="28mm"></x-c></div><div class="de"><span class="art">der</span> Hund</div><div class="pr">[hunt]</div><div class="tr">câinele · Mello</div></div>
+    <div class="card"><div class="pic" style="height:40mm"><x-c c="malva" h="20mm"></x-c></div><div class="de"><span class="art">die</span> Maus</div><div class="pr">[maus]</div><div class="tr">șoricelul · Malva</div></div>
+    <div class="card"><div class="pic" style="height:40mm"><x-c c="melba" h="40mm"></x-c></div><div class="de"><span class="art">das</span> Alpaka</div><div class="pr">[alpaka]</div><div class="tr">alpaca · Melba</div></div>
+    <div class="card"><div class="pic" style="height:40mm"><x-c c="donnie" h="40mm"></x-c></div><div class="de"><span class="art">die</span> Schildkröte</div><div class="pr">[șilt-kröte]</div><div class="tr">țestoasa · Donatello</div></div>
+    <div class="card"><div class="pic" style="height:40mm"><x-c c="splinter" h="40mm"></x-c></div><div class="de"><span class="art">die</span> Ratte</div><div class="pr">[rate]</div><div class="tr">șobolanul · Splinter</div></div>
+  </div>
+  <div class="tip">
+    <span class="de">Das ist Pip. Pip ist ein Pinguin.</span> — <i>Acesta e Pip. Pip e un pinguin.</i><br>
+    <span class="de">Fernanda ist eine Ameise.</span> — <i>Fernanda e o furnică.</i>
+  </div>
+  <div class="row" style="gap:3mm">
+    <div class="tip grow" style="background:var(--b-bg);text-align:center"><span class="em" style="font-size:9mm">🐶</span><br>Der Hund macht:<br><span class="de">„Wau wau!"</span></div>
+    <div class="tip grow" style="background:var(--b-bg);text-align:center"><span class="em" style="font-size:9mm">🐭</span><br>Die Maus macht:<br><span class="de">„Piep piep!"</span></div>
+    <div class="tip grow" style="background:var(--b-bg);text-align:center"><span class="em" style="font-size:9mm">🐜</span><br>Die Ameise macht:<br><span class="de">„… psst!"</span></div>
+  </div>
+  <div class="elena"><b>Für Elena:</b> Tier-Pantomime: Chris spielt ein Tier, Elena rät — „Bist du ein Hund?" – „Ja!/Nein!" Dann tauschen.
+    Melba ist ein Alpaka und passt immer auf alle auf; Splinter ist der alte, weise Lehrer der Schildkröten.</div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 10 · L4 ÜBUNGEN ======================= -->
+<section class="page" style="--acc:#b9e3a0">
+  <header class="top"><span class="lek">Lektion 4</span><div><h1>Übungen</h1><div class="ro">Exerciții</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="ex">
+    <h3><span class="n">1</span>Verbinde! <span class="ro">— Unește animalul cu numele lui.</span></h3>
+    <div class="match">
+      <div class="mcol"><div class="mi" style="height:20mm"><x-c c="malva" h="13mm"></x-c><i class="pt"></i></div><div class="mi" style="height:20mm"><x-c c="pip" h="20mm"></x-c><i class="pt"></i></div><div class="mi" style="height:20mm"><x-c c="melba" h="20mm"></x-c><i class="pt"></i></div><div class="mi" style="height:20mm"><x-c c="mello" h="16mm"></x-c><i class="pt"></i></div></div>
+      <div class="mcol r"><div class="mi" style="height:20mm"><i class="pt"></i><span class="de"><span class="art">der</span> Hund</span></div><div class="mi" style="height:20mm"><i class="pt"></i><span class="de"><span class="art">das</span> Alpaka</span></div><div class="mi" style="height:20mm"><i class="pt"></i><span class="de"><span class="art">die</span> Maus</span></div><div class="mi" style="height:20mm"><i class="pt"></i><span class="de"><span class="art">der</span> Pinguin</span></div></div>
+    </div>
+  </div>
+  <div class="ex">
+    <h3><span class="n">2</span>Wer bin ich? <span class="ro">— Cine sunt eu? Elena citește, tu încercuiești.</span></h3>
+    <div style="display:grid;grid-template-columns:1fr auto;gap:3mm 4mm;align-items:center">
+      <div class="sm" style="font-size:4.4mm"><b>„Ich bin klein. Ich habe eine Brille. Ich fliege!"</b></div>
+      <div class="row"><x-c c="mello" h="13mm"></x-c><x-c c="fernanda" h="13mm"></x-c><x-c c="melba" h="18mm"></x-c></div>
+      <div class="sm" style="font-size:4.4mm"><b>„Ich bin groß und weiß. Ich passe auf."</b></div>
+      <div class="row"><x-c c="malva" h="10mm"></x-c><x-c c="pip" h="16mm"></x-c><x-c c="melba" h="18mm"></x-c></div>
+      <div class="sm" style="font-size:4.4mm"><b>„Ich wohne am Südpol. Ich bin schwarz und weiß."</b></div>
+      <div class="row"><x-c c="pip" h="16mm"></x-c><x-c c="malva" h="10mm"></x-c><x-c c="mello" h="13mm"></x-c></div>
+    </div>
+  </div>
+  <div class="ex row" style="align-items:stretch;flex:1">
+    <div style="flex:1">
+      <h3><span class="n">3</span>Mein Lieblingstier</h3>
+      <p class="tr">Animalul meu preferat</p>
+      <p style="font-family:Fredoka;font-weight:500;font-size:6mm;margin-top:3mm;line-height:1.8">Mein Lieblingstier ist<br><span class="wl" style="min-width:66mm"></span>.</p>
+      <p class="sm" style="margin-top:3mm">Zeichne es! <span class="tr">— Desenează-l!</span></p>
+    </div>
+    <div class="draw" style="width:78mm"></div>
+  </div>
+  <div class="stern">Fertig? Male den Stern aus! <span class="tr">— Gata? Colorează steaua!</span> <svg viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.9l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="none" stroke="#1d2433" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 11 · L5 FAMILIE ======================= -->
+<section class="page" style="--acc:#ffb38a">
+  <header class="top"><span class="lek">Lektion 5</span><div><h1>Familie und Freunde</h1><div class="ro">Familia și prietenii</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="scene" style="height:62mm;align-items:flex-end;gap:7mm">
+    <div style="text-align:center"><x-c c="mama" h="46mm"></x-c><div class="de">die Mama</div></div>
+    <div style="text-align:center"><x-c c="papa" h="50mm"></x-c><div class="de">der Papa</div></div>
+    <div style="text-align:center"><x-c c="chris" h="38mm"></x-c><div class="de">ich</div></div>
+    <div class="bubble l" style="font-size:4.8mm">Das ist meine Mama.<br>Das ist mein Papa.<br>Und das bin ich!<small>Aceasta e mama. Acesta e tata. Și ăsta sunt eu!</small></div>
+  </div>
+  <div class="cards c3">
+    <div class="card"><div class="pic"><x-c c="clara" h="24mm"></x-c></div><div class="de"><span class="art">die</span> Freundin</div><div class="pr">[froindin]</div><div class="tr">prietena · Clara</div></div>
+    <div class="card"><div class="pic"><x-c c="nolik" h="24mm"></x-c></div><div class="de"><span class="art">der</span> Freund</div><div class="pr">[froint]</div><div class="tr">prietenul · Nolik</div></div>
+    <div class="card"><div class="pic"><x-c c="eric" h="24mm"></x-c></div><div class="de"><span class="art">der</span> Roboter</div><div class="pr">[robotăr]</div><div class="tr">robotul · Eric</div></div>
+  </div>
+  <div class="ex" style="border-color:#ffd9c4">
+    <div class="row between" style="align-items:flex-end;text-align:center;padding:0 4mm">
+      <div><x-c c="millie" h="40mm"></x-c><div class="de">Millie</div><div class="sm"><span class="art">die</span> <b>Schwester</b> <span class="pr">[șvestăr]</span></div><div class="sm">Sie ist <b>elf</b> (11).</div></div>
+      <div><x-c c="miguel" h="33mm"></x-c><x-c c="mello" h="14mm"></x-c><div class="de">Miguel</div><div class="sm"><span class="art">der</span> <b>Bruder</b> <span class="pr">[bruder]</span></div><div class="sm">Er ist <b>acht</b> (8).</div></div>
+      <div><x-c c="mike" h="26mm"></x-c><x-c c="malva" h="8mm"></x-c><div class="de">Mike</div><div class="sm"><span class="art">der</span> <b>kleine Bruder</b></div><div class="sm">Er ist <b>fünf</b> (5).</div></div>
+    </div>
+  </div>
+  <div class="tip">
+    <span class="de">Wie alt bist du?</span> <span class="pr">[vi alt bist du]</span> — <i>Câți ani ai?</i><br>
+    <span class="de">Ich bin sieben Jahre alt.</span> <span class="pr">[ih bin ziben iare alt]</span> — <i>Am șapte ani.</i>
+  </div>
+  <div class="elena"><b>Für Elena:</b> Chris kann Familienfotos zeigen: „Wer ist das?" – „Das ist meine Mama." Die Mimigs sind Geschwister vom Planeten Mimondo:
+    Millie (11) passt auf die Kleinen auf, Miguel (8) hat den Hund Mello, Mike (5) die Maus Malva.</div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 12 · L5 ÜBUNGEN ======================= -->
+<section class="page" style="--acc:#ffb38a">
+  <header class="top"><span class="lek">Lektion 5</span><div><h1>Übungen</h1><div class="ro">Exerciții</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="ex">
+    <h3><span class="n">1</span>Wie alt? Verbinde! <span class="ro">— Câți ani are fiecare? Unește.</span></h3>
+    <div class="match">
+      <div class="mcol"><div class="mi"><x-c c="mike" h="15mm"></x-c><span class="de">Mike</span><i class="pt"></i></div><div class="mi"><x-c c="millie" h="17mm"></x-c><span class="de">Millie</span><i class="pt"></i></div><div class="mi"><x-c c="miguel" h="16mm"></x-c><span class="de">Miguel</span><i class="pt"></i></div></div>
+      <div class="mcol r"><div class="mi"><i class="pt"></i><span class="de">acht</span></div><div class="mi"><i class="pt"></i><span class="de">fünf</span></div><div class="mi"><i class="pt"></i><span class="de">elf</span></div></div>
+    </div>
+  </div>
+  <div class="ex row">
+    <div style="flex:1">
+      <h3><span class="n">2</span>Mein Geburtstagskuchen <span class="ro">— Tortul meu</span></h3>
+      <p style="font-family:Fredoka;font-weight:500;font-size:6mm;line-height:1.8">Ich bin <span class="wl" style="min-width:28mm"></span> Jahre alt.</p>
+      <p class="sm">Zeichne die Kerzen! <span class="tr">— Desenează lumânările (câți ani ai?)</span> <span class="em">🕯️</span></p>
+    </div>
+    <svg viewBox="0 0 120 80" style="width:62mm"><g stroke="#1d2433" stroke-width="2" stroke-linejoin="round"><rect x="8" y="72" width="104" height="6" rx="3" fill="#dfe3ea"/><rect x="16" y="34" width="88" height="38" rx="6" fill="#ffd1dc"/><path d="M16 46 Q27 54 38 46 Q49 54 60 46 Q71 54 82 46 Q93 54 104 46" fill="none" stroke="#fff" stroke-width="4"/><circle cx="30" cy="62" r="2.4" fill="#0072B2" stroke="none"/><circle cx="60" cy="60" r="2.4" fill="#ffc83d" stroke="none"/><circle cx="90" cy="62" r="2.4" fill="#b0578d" stroke="none"/></g></svg>
+  </div>
+  <div class="ex" style="flex:1;display:flex;flex-direction:column">
+    <h3><span class="n">3</span>Meine Familie <span class="ro">— Desenează-ți familia și scrie cine e fiecare.</span></h3>
+    <div class="draw" style="flex:1;position:relative"></div>
+    <div class="row between" style="margin-top:3mm;font-family:Fredoka;font-weight:500;font-size:5mm">
+      <span>Das ist <span class="wl" style="min-width:34mm"></span>.</span><span>Das ist <span class="wl" style="min-width:34mm"></span>.</span>
+    </div>
+  </div>
+  <div class="stern">Fertig? Male den Stern aus! <span class="tr">— Gata? Colorează steaua!</span> <svg viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.9l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="none" stroke="#1d2433" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 13 · L6 ESSEN ======================= -->
+<section class="page" style="--acc:#ffd54a">
+  <header class="top"><span class="lek">Lektion 6</span><div><h1>Essen und Trinken</h1><div class="ro">Mâncare și băutură — cu Mikey, care iubește pizza</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="scene" style="height:58mm">
+    <x-c c="mikey" h="50mm" m="lacht"></x-c>
+    <div class="bubble l">Ich habe Hunger!<br>Ich mag Pizza! <span class="em">🍕</span><small>Mi-e foame! Îmi place pizza!</small></div>
+    <div class="bubble r">Guten Appetit!<small>Poftă bună!</small></div>
+    <x-c c="splinter" h="48mm"></x-c>
+  </div>
+  <div class="cards xl">
+    <div class="card"><div class="pic"><span class="em">🍕</span></div><div class="de"><span class="art">die</span> Pizza</div><div class="pr">[pițța]</div><div class="tr">pizza</div></div>
+    <div class="card"><div class="pic"><span class="em">🍎</span></div><div class="de"><span class="art">der</span> Apfel</div><div class="pr">[apfel]</div><div class="tr">mărul</div></div>
+    <div class="card"><div class="pic"><span class="em">🍌</span></div><div class="de"><span class="art">die</span> Banane</div><div class="pr">[banane]</div><div class="tr">banana</div></div>
+    <div class="card"><div class="pic"><span class="em">🍞</span></div><div class="de"><span class="art">das</span> Brot</div><div class="pr">[brot]</div><div class="tr">pâinea</div></div>
+    <div class="card"><div class="pic"><span class="em">🧀</span></div><div class="de"><span class="art">der</span> Käse</div><div class="pr">[keze]</div><div class="tr">brânza</div></div>
+    <div class="card"><div class="pic"><span class="em">🥛</span></div><div class="de"><span class="art">die</span> Milch</div><div class="pr">[milh]</div><div class="tr">laptele</div></div>
+    <div class="card"><div class="pic"><span class="em">💧</span></div><div class="de"><span class="art">das</span> Wasser</div><div class="pr">[vasăr]</div><div class="tr">apa</div></div>
+    <div class="card"><div class="pic"><span class="em">🍦</span></div><div class="de"><span class="art">das</span> Eis</div><div class="pr">[ais]</div><div class="tr">înghețata</div></div>
+  </div>
+  <div class="row" style="gap:3mm">
+    <div class="tip grow"><span class="em" style="font-size:7mm">😋</span> <span class="de">Ich mag Eis. Lecker!</span><br><i>Îmi place înghețata. Delicios!</i> <span class="pr">[ih mak ais. leker]</span></div>
+    <div class="tip grow" style="background:var(--o-bg)"><span class="em" style="font-size:7mm">😖</span> <span class="de">Ich mag Käse nicht. Igitt!</span><br><i>Nu-mi place brânza. Bleah!</i> <span class="pr">[ih mak keze niht]</span></div>
+  </div>
+  <div class="elena"><b>Für Elena:</b> Kaufladen oder Restaurant spielen: „Ich möchte eine Pizza, bitte!" – „Bitte schön!" – „Danke!" (wiederholt Lektion 1).
+    Michelangelo („Mikey") redet immer nur von Pizza — Chris findet das sehr lustig.</div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 14 · L6 ÜBUNGEN ======================= -->
+<section class="page" style="--acc:#ffd54a">
+  <header class="top"><span class="lek">Lektion 6</span><div><h1>Übungen</h1><div class="ro">Exerciții</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="ex">
+    <h3><span class="n">1</span>Was magst du? <span class="ro">— Ce-ți place? Bifează ✔ sau ✖.</span></h3>
+    <div style="display:grid;grid-template-columns:repeat(8,1fr);gap:1.6mm;text-align:center">
+      <div><span class="em" style="font-size:11mm">🍕</span></div><div><span class="em" style="font-size:11mm">🍎</span></div><div><span class="em" style="font-size:11mm">🍌</span></div><div><span class="em" style="font-size:11mm">🍞</span></div><div><span class="em" style="font-size:11mm">🧀</span></div><div><span class="em" style="font-size:11mm">🥛</span></div><div><span class="em" style="font-size:11mm">💧</span></div><div><span class="em" style="font-size:11mm">🍦</span></div>
+    </div>
+    <div id="likes" style="display:grid;grid-template-columns:repeat(8,1fr);gap:1.6mm;text-align:center;margin-top:1.5mm"></div>
+    <p class="sm" style="margin-top:2mm"><span class="em">😋</span> ✔ = Ich mag … &nbsp;&nbsp; <span class="em">😖</span> ✖ = Ich mag … nicht.</p>
+  </div>
+  <div class="ex row" style="align-items:center">
+    <div style="flex:1">
+      <h3><span class="n">2</span>Mikeys Pizza <span class="ro">— Pizza lui Mikey</span></h3>
+      <p style="font-size:4.6mm;line-height:1.6">Zeichne auf die Pizza: <span class="tr">— Desenează pe pizza:</span></p>
+      <div style="font-family:Fredoka;font-weight:500;font-size:6mm;line-height:1.6">
+        <span class="em">🍅</span> drei Tomaten<br><span class="em">🍄</span> zwei Pilze<br><span class="em">⚫</span> fünf Oliven<br><span class="em">🧀</span> viel Käse!
+      </div>
+    </div>
+    <svg viewBox="0 0 120 120" style="width:82mm"><g stroke="#1d2433" stroke-width="1.8"><circle cx="60" cy="60" r="56" fill="#e9b872"/><circle cx="60" cy="60" r="47" fill="#fff"/><path d="M60 13 V107 M13 60 H107 M27 27 L93 93 M93 27 L27 93" stroke="#c5ccd8" stroke-width="1" stroke-dasharray="3 3"/></g></svg>
+  </div>
+  <div class="ex">
+    <h3><span class="n">3</span>Schreib nach! <span class="ro">— Scrie peste.</span></h3>
+    <x-t w="Guten Appetit!"></x-t>
+  </div>
+  <div class="ex">
+    <h3><span class="n">4</span>Und du? <span class="ro">— Și tu? Scrie sau desenează.</span></h3>
+    <p style="font-family:Fredoka;font-weight:500;font-size:6.4mm;line-height:2">
+      <span class="em">😋</span> Ich mag <span class="wl" style="min-width:60mm"></span>.<br>
+      <span class="em">😖</span> Ich mag <span class="wl" style="min-width:60mm"></span> nicht.
+    </p>
+  </div>
+  <div class="stern">Fertig? Male den Stern aus! <span class="tr">— Gata? Colorează steaua!</span> <svg viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.9l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="none" stroke="#1d2433" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 15 · L7 KÖRPER ======================= -->
+<section class="page" style="--acc:#8ecae6">
+  <header class="top"><span class="lek">Lektion 7</span><div><h1>Mein Körper</h1><div class="ro">Corpul meu</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div id="body-chris" class="fig" style="height:140mm"></div>
+  <div class="scene" style="height:44mm;justify-content:flex-start;padding-left:10mm">
+    <x-c c="eric" h="36mm" m="lacht"></x-c>
+    <div class="bubble l">Ich bin Eric. Ich habe keine Nase! <span class="em">😄</span><br>Aber ich habe eine Antenne!<small>Eu n-am nas! Dar am o antenă!</small></div>
+  </div>
+  <div class="tip">
+    <span class="de">Zeig mir die Nase!</span> <span class="pr">[țaik mir di naze]</span> — <i>Arată-mi nasul!</i><br>
+    <span class="de">Fernanda sagt: Zeig mir den Fuß!</span> — <i>Fernanda spune: arată-mi piciorul (laba)!</i>
+  </div>
+  <div class="elena"><b>Für Elena:</b> „Kopf, Schulter, Knie und Fuß" singen (immer schneller!). Dann „Fernanda sagt …" (wie „Simon sagt"):
+    Nur wenn „Fernanda sagt" davor steht, zeigt Chris den Körperteil. Rollen tauschen — Chris gibt die Befehle!</div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 16 · L7 ÜBUNGEN ======================= -->
+<section class="page" style="--acc:#8ecae6">
+  <header class="top"><span class="lek">Lektion 7</span><div><h1>Übungen</h1><div class="ro">Exerciții</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="ex">
+    <h3><span class="n">1</span>Schreib die Wörter! <span class="ro">— Scrie cuvintele pe linii.</span></h3>
+    <div class="row center" style="gap:2mm;flex-wrap:wrap;margin-bottom:1mm">
+      <span class="choice">Kopf</span><span class="choice">Arm</span><span class="choice">Hand</span><span class="choice">Bein</span><span class="choice">Fuß</span><span class="choice">Antenne</span>
+    </div>
+    <div id="body-eric" class="fig" style="height:96mm"></div>
+  </div>
+  <div class="ex row" style="align-items:stretch;flex:1">
+    <div style="width:62mm">
+      <h3><span class="n">2</span>Zeichne einen Roboter! <span class="ro"></span></h3>
+      <p class="tr" style="margin-bottom:2mm">Desenează un robot care are:</p>
+      <div style="font-family:Fredoka;font-weight:500;font-size:6mm;line-height:1.55">
+        1 Kopf<br>3 Augen <span class="em">👀</span><br>4 Arme<br>2 Beine<br>1 Antenne
+      </div>
+      <p class="sm" style="margin-top:3mm">Er heißt: <span class="wl" style="min-width:34mm"></span></p>
+    </div>
+    <div class="draw grow"></div>
+  </div>
+  <div class="stern">Fertig? Male den Stern aus! <span class="tr">— Gata? Colorează steaua!</span> <svg viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.9l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="none" stroke="#1d2433" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 17 · L8 GEFÜHLE ======================= -->
+<section class="page" style="--acc:#d7b8e8">
+  <header class="top"><span class="lek">Lektion 8</span><div><h1>Wie geht’s?</h1><div class="ro">Ce mai faci? — Sentimentele</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="scene" style="height:52mm">
+    <x-c c="elena" h="46mm"></x-c>
+    <div class="bubble l">Wie geht’s, Chris?<small>Ce mai faci, Chris?</small></div>
+    <div class="bubble r">Super, danke!<small>Super, mulțumesc!</small></div>
+    <x-c c="chris" h="40mm" m="lacht"></x-c>
+  </div>
+  <div class="row between" style="text-align:center;font-family:Fredoka;font-weight:600;font-size:5.4mm;padding:0 4mm">
+    <div><span class="em" style="font-size:11mm">😀</span><br>Super!</div>
+    <div><span class="em" style="font-size:11mm">🙂</span><br>Gut!</div>
+    <div><span class="em" style="font-size:11mm">😐</span><br>Es geht.</div>
+    <div><span class="em" style="font-size:11mm">🙁</span><br>Nicht so gut.</div>
+  </div>
+  <div class="cards c3 xl">
+    <div class="card"><div class="pic" style="height:34mm"><x-c c="mikey" h="34mm" m="lacht"></x-c></div><div class="de">froh</div><div class="pr">[froo]</div><div class="tr">vesel · Mikey ist froh.</div></div>
+    <div class="card"><div class="pic" style="height:34mm"><x-c c="chris" h="34mm" m="traurig"></x-c></div><div class="de">traurig</div><div class="pr">[traurih]</div><div class="tr">trist</div></div>
+    <div class="card"><div class="pic" style="height:34mm"><x-c c="raph" h="34mm" m="wütend"></x-c></div><div class="de">wütend</div><div class="pr">[vütent]</div><div class="tr">furios · Raphael ist wütend.</div></div>
+    <div class="card"><div class="pic" style="height:34mm"><x-c c="uno" h="34mm" m="angst"></x-c></div><div class="de">Ich habe Angst.</div><div class="pr">[ih habe angst]</div><div class="tr">Mi-e frică. · Uno hat Angst.</div></div>
+    <div class="card"><div class="pic" style="height:34mm"><x-c c="clara" h="34mm" m="müde"></x-c></div><div class="de">müde</div><div class="pr">[müde]</div><div class="tr">obosit(ă)</div></div>
+    <div class="card"><div class="pic" style="height:34mm"><x-c c="pip" h="32mm" m="überrascht"></x-c></div><div class="de">überrascht</div><div class="pr">[übărașt]</div><div class="tr">surprins · Pip ist überrascht.</div></div>
+  </div>
+  <div class="tip"><span class="de">Ich bin froh.</span> — <i>Sunt vesel.</i> &nbsp;·&nbsp; <span class="de">Ich bin müde.</span> — <i>Sunt obosit.</i></div>
+  <div class="elena"><b>Für Elena:</b> Gefühle-Pantomime: Elena macht ein Gesicht, Chris rät: „Bist du traurig?" Jede Stunde fragen: „Wie geht’s dir heute?" und auf Seite 18 eintragen.</div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 18 · L8 ÜBUNGEN ======================= -->
+<section class="page" style="--acc:#d7b8e8">
+  <header class="top"><span class="lek">Lektion 8</span><div><h1>Übungen</h1><div class="ro">Exerciții</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="ex">
+    <h3><span class="n">1</span>Verbinde! <span class="ro">— Unește fața cu cuvântul.</span></h3>
+    <div class="match">
+      <div class="mcol"><div class="mi"><x-c c="face" m="müde" h="15mm"></x-c><i class="pt"></i></div><div class="mi"><x-c c="face" m="froh" h="15mm"></x-c><i class="pt"></i></div><div class="mi"><x-c c="face" m="überrascht" h="15mm"></x-c><i class="pt"></i></div><div class="mi"><x-c c="face" m="traurig" h="15mm"></x-c><i class="pt"></i></div></div>
+      <div class="mcol r"><div class="mi"><i class="pt"></i><span class="de">traurig</span></div><div class="mi"><i class="pt"></i><span class="de">müde</span></div><div class="mi"><i class="pt"></i><span class="de">froh</span></div><div class="mi"><i class="pt"></i><span class="de">überrascht</span></div></div>
+    </div>
+  </div>
+  <div class="ex">
+    <h3><span class="n">2</span>Zeichne das Gesicht! <span class="ro">— Desenează fața potrivită.</span></h3>
+    <div class="row between" style="text-align:center;padding:0 6mm">
+      <div><x-c c="face" m="leer" h="26mm"></x-c><div class="de">froh</div></div>
+      <div><x-c c="face" m="leer" h="26mm"></x-c><div class="de">wütend</div></div>
+      <div><x-c c="face" m="leer" h="26mm"></x-c><div class="de">Angst</div></div>
+      <div><x-c c="face" m="leer" h="26mm"></x-c><div class="de">müde</div></div>
+    </div>
+  </div>
+  <div class="ex">
+    <h3><span class="n">3</span>Mein Dienstag mit Elena <span class="ro">— În fiecare marți: încercuiește cum te simți.</span></h3>
+    <div id="mood" style="display:grid;grid-template-columns:auto 1fr;gap:2mm 4mm;align-items:center"></div>
+  </div>
+  <div class="stern">Fertig? Male den Stern aus! <span class="tr">— Gata? Colorează steaua!</span> <svg viewBox="0 0 24 24"><path d="M12 1.8l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.9l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="none" stroke="#1d2433" stroke-width="1.3" stroke-linejoin="round"/></svg></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 19 · SPIEL ======================= -->
+<section class="page" style="--acc:#ffd54a;gap:3mm">
+  <header class="top"><span class="lek">Spiel</span><div><h1>Das große Deutsch-Spiel</h1><div class="ro">Marele joc de germană — de la avionul Fernandei până la Pip</div></div><span class="audio"><span class="em">🎧</span></span></header>
+  <div class="tip sm" style="font-size:3.9mm;padding:2mm 4mm">
+    <b>Du brauchst:</b> <span class="em">🎲</span> 1 Würfel + 2 Spielfiguren. <b>Würfle, geh vor, mach die Aufgabe!</b> Richtig? Super! Falsch? Geh 1 Feld zurück.
+    <span class="tr">— Ai nevoie de un zar și 2 pioni. Aruncă, mergi, fă sarcina. Greșit? Un pas înapoi.</span>
+  </div>
+  <div class="board" id="board"></div>
+  <footer><span>Mein Deutschheft · Chris</span><span class="pn"></span></footer>
+</section>
+
+<!-- ======================= 20 · URKUNDE ======================= -->
+<section class="page" style="padding:10mm">
+  <div style="flex:1;border:2.5mm double #e8b800;border-radius:8mm;padding:8mm 10mm;display:flex;flex-direction:column;align-items:center;gap:4mm;text-align:center">
+    <div class="flag" style="margin:0"><i style="background:#1d1d1d"></i><i style="background:#dd0000"></i><i style="background:#ffce00"></i></div>
+    <h1 style="font-size:20mm;letter-spacing:1mm">URKUNDE</h1>
+    <div style="font-family:Fredoka;font-weight:600;font-size:9mm">Chris spricht Deutsch!</div>
+    <div class="ro" style="font-size:4.6mm">Diplomă — Chris vorbește germană!</div>
+    <div class="row center" style="align-items:flex-end;gap:2mm;height:50mm">
+      <x-c c="leo" h="36mm"></x-c><x-c c="clara" h="40mm"></x-c><x-c c="chris" h="46mm" m="lacht" racket></x-c><x-c c="elena" h="50mm"></x-c><x-c c="eric" h="32mm" m="lacht"></x-c><x-c c="pip" h="28mm" m="lacht"></x-c>
+    </div>
+    <div style="font-family:Fredoka;font-weight:600;font-size:6mm">Ich kann … <span class="tr" style="font-family:Andika;font-weight:400;font-size:4mm">— Eu știu … (colorează o stea pentru fiecare lecție)</span></div>
+    <div id="stars" style="display:grid;grid-template-columns:repeat(2,1fr);gap:5mm 10mm;width:80%;margin-top:2mm"></div>
+    <x-c c="fernplane" h="30mm" style="margin-top:auto"></x-c>
+    <div class="row" style="width:100%;justify-content:space-around;font-family:Fredoka;font-weight:500;font-size:5mm">
+      <div><span class="wl" style="min-width:50mm"></span><br>Elena</div>
+      <div><span class="wl" style="min-width:40mm"></span><br>Datum</div>
+      <div><span class="wl" style="min-width:50mm"></span><br>Chris</div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ===================== Drawing library (all characters are simple SVG) ===================== */
+const INK = '#1d2433';
+let OUT = false;                       // outline mode = uncoloured, for colouring exercises
+const C = c => OUT ? '#ffffff' : c;
+const wrap = (vb, g) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${vb}" fill="none" stroke="${INK}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${g}</svg>`;
+const P = (d, a = '') => `<path d="${d}" ${a}/>`;
+
+function face(cx, cy, u, mood = 'froh', o = {}) {
+  const K = (!OUT && o.col) || INK;
+  return `<g stroke="${K}">${faceInner(cx, cy, u, mood, o, K)}</g>`;
+}
+function faceInner(cx, cy, u, mood, o, K) {
+  const ex = u * .42, ey = cy - u * .12, L = cx - ex, R = cx + ex, my = cy + u * .4, w = u * .3;
+  const dot = x => o.col ? `<ellipse cx="${x}" cy="${ey}" rx="${u * .13}" ry="${u * .19}" fill="${K}" stroke="none"/>` : `<circle cx="${x}" cy="${ey}" r="${u * .12}" fill="${K}" stroke="none"/>`;
+  const big = x => `<circle cx="${x}" cy="${ey}" r="${u * .2}" fill="#fff" stroke-width="1.6"/><circle cx="${x}" cy="${ey + u * .04}" r="${u * .09}" fill="${INK}" stroke="none"/>`;
+  const cheeks = `<circle cx="${L - u * .1}" cy="${my - u * .1}" r="${u * .13}" fill="#ff8fa3" stroke="none" opacity=".45"/><circle cx="${R + u * .1}" cy="${my - u * .1}" r="${u * .13}" fill="#ff8fa3" stroke="none" opacity=".45"/>`;
+  const browsUp = P(`M${L - u * .16} ${ey - u * .2} L${L + u * .12} ${ey - u * .32}`) + P(`M${R + u * .16} ${ey - u * .2} L${R - u * .12} ${ey - u * .32}`);
+  let e = '', m = '', x = '';
+  switch (mood) {
+    case 'leer': return '';
+    case 'lacht':
+      e = dot(L) + dot(R);
+      m = `<path d="M${cx - w * 1.1} ${my - u * .1} Q${cx} ${my + u * .38} ${cx + w * 1.1} ${my - u * .1} Z" fill="#8c2f39"/>`;
+      x = cheeks; break;
+    case 'traurig':
+      e = dot(L) + dot(R) + browsUp;
+      m = P(`M${cx - w} ${my + u * .12} Q${cx} ${my - u * .14} ${cx + w} ${my + u * .12}`);
+      x = `<path d="M${R + u * .08} ${ey + u * .16} q${-u * .09} ${u * .15} 0 ${u * .22} q${u * .09} ${-u * .07} 0 ${-u * .22}Z" fill="#6cc4ff" stroke-width="1"/>`; break;
+    case 'wütend':
+      e = dot(L) + dot(R) + P(`M${L - u * .2} ${ey - u * .34} L${L + u * .14} ${ey - u * .16}`, 'stroke-width="3"') + P(`M${R + u * .2} ${ey - u * .34} L${R - u * .14} ${ey - u * .16}`, 'stroke-width="3"');
+      m = P(`M${cx - w} ${my + u * .1} Q${cx} ${my - u * .08} ${cx + w} ${my + u * .1}`); break;
+    case 'müde':
+      e = P(`M${L - u * .13} ${ey} Q${L} ${ey + u * .12} ${L + u * .13} ${ey}`) + P(`M${R - u * .13} ${ey} Q${R} ${ey + u * .12} ${R + u * .13} ${ey}`);
+      m = `<ellipse cx="${cx}" cy="${my + u * .04}" rx="${u * .08}" ry="${u * .1}" fill="${K}" stroke="none"/>`;
+      x = `<text x="${cx + u * .75}" y="${cy - u * .75}" font-family="Fredoka" font-weight="700" font-size="${u * .45}" fill="#0072B2" stroke="none">z Z</text>`; break;
+    case 'angst':
+      e = big(L) + big(R) + browsUp;
+      m = P(`M${cx - w} ${my + u * .05} l${w / 2} ${-u * .08} l${w / 2} ${u * .08} l${w / 2} ${-u * .08} l${w / 2} ${u * .08}`);
+      x = `<path d="M${R + u * .4} ${ey - u * .3} q${-u * .1} ${u * .16} 0 ${u * .24} q${u * .1} ${-u * .08} 0 ${-u * .24}Z" fill="#6cc4ff" stroke-width="1"/>`; break;
+    case 'überrascht':
+      e = big(L) + big(R) + P(`M${L - u * .14} ${ey - u * .34} Q${L} ${ey - u * .46} ${L + u * .14} ${ey - u * .34}`) + P(`M${R - u * .14} ${ey - u * .34} Q${R} ${ey - u * .46} ${R + u * .14} ${ey - u * .34}`);
+      m = `<ellipse cx="${cx}" cy="${my + u * .04}" rx="${u * .1}" ry="${u * .14}" fill="${K}" stroke="none"/>`; break;
+    default:
+      e = dot(L) + dot(R);
+      m = P(`M${cx - w} ${my - u * .05} Q${cx} ${my + u * .25} ${cx + w} ${my - u * .05}`);
+      x = cheeks;
+  }
+  const nose = o.nose ? P(`M${cx - u * .06} ${cy + u * .1} Q${cx} ${cy + u * .18} ${cx + u * .06} ${cy + u * .1}`, 'stroke-width="1.6"') : '';
+  return e + nose + (o.noMouth ? '' : m) + x;
+}
+
+/* ---------- humans (Chris, Clara, Elena, Mama, Papa, Fixiki) — viewBox 0 0 100 150 ---------- */
+function personG(o) {
+  const skin = o.skin || '#f7d2b3', hair = o.hair || '#7a4a24', st = o.style || 'short';
+  const shirt = o.shirt || '#0072B2', pants = o.pants || '#2b3a67', shoes = o.shoes || '#3a3a3a';
+  let s = '';
+  if (st === 'long') s += `<path d="M23 50 Q17 14 50 14 Q83 14 77 50 L80 88 Q50 96 20 88 Z" fill="${C(hair)}"/>`;
+  if (o.bag) {
+    s += `<rect x="21" y="76" width="58" height="38" rx="9" fill="${C(o.bag)}"/>`;
+    if (o.bagDots) s += [[25, 84, '#ff5d8f'], [25, 100, '#4d96ff'], [75, 90, '#ffc83d'], [75, 106, '#43aa8b']].map(([x, y, c]) => `<circle cx="${x}" cy="${y}" r="2.6" fill="${C(c)}" stroke="none"/>`).join('');
+  }
+  s += `<rect x="36" y="110" width="11" height="29" rx="4" fill="${C(pants)}"/><rect x="53" y="110" width="11" height="29" rx="4" fill="${C(pants)}"/>`;
+  s += `<ellipse cx="40" cy="140" rx="9" ry="5" fill="${C(shoes)}"/><ellipse cx="60" cy="140" rx="9" ry="5" fill="${C(shoes)}"/>`;
+  const armC = o.shortSleeves ? skin : shirt;
+  s += `<rect x="20" y="76" width="11" height="32" rx="5.5" fill="${C(armC)}" transform="rotate(14 25.5 80)"/><rect x="69" y="76" width="11" height="32" rx="5.5" fill="${C(armC)}" transform="rotate(-14 74.5 80)"/>`;
+  if (o.shortSleeves) s += `<rect x="19" y="75" width="13" height="14" rx="5" fill="${C(shirt)}" transform="rotate(14 25.5 80)"/><rect x="68" y="75" width="13" height="14" rx="5" fill="${C(shirt)}" transform="rotate(-14 74.5 80)"/>`;
+  s += `<path d="M32 76 Q50 68 68 76 L71 114 Q50 118 29 114 Z" fill="${C(shirt)}"/>`;
+  if (o.collar) s += `<path d="M39 72 L50 79 L45 85Z" fill="${C(o.collar)}"/><path d="M61 72 L50 79 L55 85Z" fill="${C(o.collar)}"/><path d="M50 79 V92" stroke-width="1.4"/><circle cx="50" cy="84" r="1" fill="${INK}"/><circle cx="50" cy="89" r="1" fill="${INK}"/>`;
+  if (o.dress) s += `<path d="M31 100 L27 120 Q50 126 73 120 L69 100 Z" fill="${C(o.dress)}"/>`;
+  s += `<circle cx="18.7" cy="108" r="5.5" fill="${C(skin)}"/><circle cx="81.3" cy="108" r="5.5" fill="${C(skin)}"/>`;
+  if (st === 'pigtails') s += `<ellipse cx="20" cy="56" rx="8" ry="13" fill="${C(hair)}" transform="rotate(20 20 56)"/><ellipse cx="80" cy="56" rx="8" ry="13" fill="${C(hair)}" transform="rotate(-20 80 56)"/>`;
+  s += `<circle cx="25.5" cy="50" r="5" fill="${C(skin)}"/><circle cx="74.5" cy="50" r="5" fill="${C(skin)}"/>`;
+  s += `<circle cx="50" cy="46" r="25" fill="${C(skin)}"/>`;
+  if (st === 'short' || st === 'beret') s += `<path d="M25.5 46 Q23 19 50 19 Q77 19 74.5 46 Q71 33 62 31 Q55 37 47 31 Q37 31 25.5 46Z" fill="${C(hair)}"/>`;
+  if (st === 'long' || st === 'pigtails') s += `<path d="M25.5 47 Q24 20 50 20 Q76 20 74.5 47 Q70 32 58 29 Q50 36 40 30 Q30 34 25.5 47Z" fill="${C(hair)}"/>`;
+  if (st === 'pigtails') s += `<circle cx="26" cy="44" r="3.4" fill="${C(o.tie || '#ffc83d')}"/><circle cx="74" cy="44" r="3.4" fill="${C(o.tie || '#ffc83d')}"/>`;
+  if (st === 'beret') s += `<path d="M23 31 Q28 12 52 13 Q77 14 79 29 Q58 21 23 31Z" fill="${C(o.beret || '#264653')}"/><circle cx="54" cy="12" r="3" fill="${C(o.beret || '#264653')}"/>`;
+  if (st === 'spiky') s += `<path d="M25 46 L20 30 L31 31 L27 15 L40 22 L44 6 L53 20 L63 8 L66 23 L79 19 L74 33 L79 44 Q70 32 61 31 Q53 37 45 31 Q35 32 25 46Z" fill="${C(hair)}"/>`;
+  if (st === 'cap') s += `<path d="M25 38 Q25 17 50 17 Q75 17 75 38 Q50 30 25 38Z" fill="${C(o.cap)}"/><path d="M60 33 Q78 30 90 37 Q76 42 62 38Z" fill="${C(o.cap)}"/><circle cx="50" cy="17" r="2.5" fill="${C(o.cap)}"/>`;
+  if (o.antennae) s += P('M42 23 Q36 10 30 5', 'stroke-width="1.8"') + P('M58 23 Q64 10 70 5', 'stroke-width="1.8"') + `<circle cx="30" cy="5" r="3.6" fill="${C(o.antennae)}"/><circle cx="70" cy="5" r="3.6" fill="${C(o.antennae)}"/>`;
+  s += face(50, 50, 20, o.m, { nose: true });
+  if (o.glasses) s += `<circle cx="41.6" cy="47.6" r="5.5" stroke-width="1.8"/><circle cx="58.4" cy="47.6" r="5.5" stroke-width="1.8"/><path d="M47.1 47.6 L52.9 47.6" stroke-width="1.8"/>`;
+  if (o.racket) s += `<g transform="rotate(8 81 106)"><line x1="81" y1="106" x2="81" y2="86" stroke-width="3.4"/><ellipse cx="81" cy="72" rx="10" ry="14" fill="${C('#fffbe6')}" stroke="#D55E00" stroke-width="2.6"/><path d="M75 64 V80 M81 60 V84 M87 64 V80 M72 68 H90 M71 74 H91 M73 80 H89" stroke-width=".7" stroke="#8a91a0"/></g><circle cx="94" cy="118" r="5" fill="${C('#d7ef3b')}"/>`;
+  if (o.wrench) s += `<g transform="rotate(-25 18.7 108)"><rect x="16.7" y="84" width="4" height="22" rx="1.5" fill="${C('#9aa5b1')}"/><path d="M12.5 86 Q12 76 18.7 76 Q25.4 76 24.9 86 L21.6 82.5 H15.8 Z" fill="${C('#9aa5b1')}"/></g>`;
+  return s;
+}
+
+/* ---------- robots — viewBox 0 0 100 150 ---------- */
+function robotG(o) {
+  const c = o.c, D = {
+    box:   { h: [28, 30, 44, 36, 10], b: [30, 70, 40, 42, 8] },
+    round: { h: [27, 28, 46, 40, 19], b: [25, 70, 50, 44, 22] },
+    tall:  { h: [32, 10, 36, 30, 9],  b: [34, 44, 32, 70, 8] },
+    wide:  { h: [22, 34, 56, 32, 10], b: [18, 70, 64, 44, 10] },
+    slim:  { h: [34, 30, 32, 32, 10], b: [38, 66, 24, 48, 8] },
+  }[o.shape || 'box'];
+  const [hx, hy, hw, hh, hr] = D.h, [bx, by, bw, bh, br] = D.b, bot = by + bh, grey = C('#9aa5b1');
+  let s = '';
+  if (o.ant === 'short') s += `<line x1="50" y1="${hy}" x2="50" y2="${hy - 9}"/><circle cx="50" cy="${hy - 12}" r="4" fill="${C(c)}"/>`;
+  if (o.ant === 'long') s += `<line x1="50" y1="${hy}" x2="50" y2="${hy - 21}"/><circle cx="50" cy="${hy - 24}" r="4" fill="${C(c)}"/>`;
+  if (o.ant === 'fine') s += `<path d="M42 ${hy + 1} L35 ${hy - 13}" stroke-width="1.4"/><circle cx="35" cy="${hy - 15}" r="2.6" fill="${C(c)}"/><path d="M58 ${hy + 1} L65 ${hy - 13}" stroke-width="1.4"/><circle cx="65" cy="${hy - 15}" r="2.6" fill="${C(c)}"/>`;
+  s += `<rect x="37" y="${bot - 2}" width="9" height="${140 - bot}" rx="3" fill="${grey}"/><rect x="54" y="${bot - 2}" width="9" height="${140 - bot}" rx="3" fill="${grey}"/>`;
+  s += `<rect x="32" y="137" width="16" height="8" rx="4" fill="${C(c)}"/><rect x="52" y="137" width="16" height="8" rx="4" fill="${C(c)}"/>`;
+  const ay = by + 10;
+  const arm = (x, d, up) => {
+    const path = up ? `M${x} ${ay} Q${x + d * 16} ${ay - 4} ${x + d * 20} ${ay - 18}` : `M${x} ${ay} Q${x + d * 12} ${ay + 10} ${x + d * 10} ${ay + 26}`;
+    const hx2 = up ? x + d * 21 : x + d * 10, hy2 = up ? ay - 21 : ay + 29;
+    return `<path d="${path}" stroke-width="7"/><path d="${path}" stroke="${grey}" stroke-width="3.6"/><circle cx="${hx2}" cy="${hy2}" r="4.5" fill="${C(c)}"/>`;
+  };
+  if (o.many) s += `<g opacity=".35">${arm(bx + 2, -1, true)}${arm(bx + bw - 2, 1, true)}</g>`;
+  s += arm(bx + 2, -1) + arm(bx + bw - 2, 1);
+  s += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="${br}" fill="${C(c)}"/>`;
+  if (o.label) {
+    const pw = Math.min(28, bw - 6), fs = o.label.length > 3 ? 10 : o.label.length > 2 ? 12 : 16;
+    s += `<rect x="${50 - pw / 2}" y="${by + bh / 2 - 10}" width="${pw}" height="20" rx="5" fill="#fff" stroke-width="1.6"/>`;
+    s += `<text x="50" y="${by + bh / 2 + fs * .36}" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="${fs}" fill="${INK}" stroke="none">${o.label}</text>`;
+  }
+  if (o.heart) { const y = by + bh / 2; s += `<path d="M50 ${y + 7} L42.5 ${y - .5} A4.3 4.3 0 0 1 50 ${y - 5} A4.3 4.3 0 0 1 57.5 ${y - .5} Z" fill="${C('#8ff6ff')}" stroke-width="1.6"/>`; }
+  s += `<rect x="${hx - 5}" y="${hy + hh / 2 - 6}" width="7" height="12" rx="2" fill="${grey}"/><rect x="${hx + hw - 2}" y="${hy + hh / 2 - 6}" width="7" height="12" rx="2" fill="${grey}"/>`;
+  s += `<rect x="${hx}" y="${hy}" width="${hw}" height="${hh}" rx="${hr}" fill="${C(c)}"/>`;
+  s += `<rect x="${hx + 5}" y="${hy + 5}" width="${hw - 10}" height="${hh - 10}" rx="${Math.max(hr - 4, 4)}" fill="${C('#1e2a3a')}" stroke-width="1.6"/>`;
+  s += face(50, hy + hh / 2, Math.min(hw, hh) * .42, o.m, { col: '#5ff2ff' });
+  return s;
+}
+
+/* ---------- Fernanda (ant, round glasses) — viewBox 0 0 130 100 ---------- */
+function antG() {
+  const b = C('#bf6a2c');
+  let s = P('M52 64 L40 78 L32 90') + P('M58 66 L54 82 L48 94') + P('M64 64 L74 80 L82 92') + P('M67 60 L84 70 L92 84');
+  s += `<ellipse cx="30" cy="56" rx="25" ry="18" fill="${b}" transform="rotate(-14 30 56)"/>`;
+  s += P('M20 42 Q27 56 22 71', 'stroke-width="1.3" opacity=".5"') + P('M34 40 Q40 54 35 70', 'stroke-width="1.3" opacity=".5"');
+  s += `<ellipse cx="60" cy="58" rx="12" ry="9.5" fill="${b}"/>`;
+  s += `<path d="M70 52 Q80 60 72 65 Q60 72 44 77 Q54 66 62 62 Q66 58 70 52Z" fill="${C('#ff6fa8')}"/>`;
+  s += P('M80 22 Q74 8 62 6') + `<circle cx="62" cy="6" r="3.6" fill="${INK}"/>` + P('M95 21 Q100 7 112 5') + `<circle cx="112" cy="5" r="3.6" fill="${INK}"/>`;
+  s += `<circle cx="88" cy="40" r="21" fill="${b}"/>`;
+  s += `<circle cx="80" cy="39" r="7" fill="#fff" fill-opacity=".6" stroke-width="2.4"/><circle cx="97" cy="39" r="7" fill="#fff" fill-opacity=".6" stroke-width="2.4"/>` + P('M87 38 Q88.5 35.5 90 38');
+  s += `<circle cx="80.5" cy="39.5" r="2.4" fill="${INK}" stroke="none"/><circle cx="96.5" cy="39.5" r="2.4" fill="${INK}" stroke="none"/>`;
+  s += P('M82 50 Q88.5 56 95 50') + `<circle cx="76" cy="50" r="3" fill="#ff8fa3" stroke="none" opacity=".5"/><circle cx="101" cy="50" r="3" fill="#ff8fa3" stroke="none" opacity=".5"/>`;
+  return s;
+}
+function fernPlaneG() {
+  return P('M-14 70 H-2 M-18 82 H0 M-10 94 H4', 'stroke="#8a91a0" stroke-width="2"') +
+    `<path d="M6 92 L224 34 L84 104 Z" fill="${C('#ffffff')}"/><path d="M84 104 L224 34 L104 134 Z" fill="${C('#dde4ee')}"/>` +
+    `<g transform="translate(64,8) scale(.72)">${antG()}</g>`;
+}
+
+/* ---------- Pip (penguin pilot) — viewBox 0 0 100 130 ---------- */
+function pipG(o) {
+  const n = C('#23304a'), or = C('#ff9f1c');
+  let s = `<ellipse cx="38" cy="122" rx="10" ry="5" fill="${or}"/><ellipse cx="62" cy="122" rx="10" ry="5" fill="${or}"/>`;
+  s += `<path d="M21 60 Q4 82 15 98 Q22 84 27 72Z" fill="${n}"/><path d="M79 60 Q96 82 85 98 Q78 84 73 72Z" fill="${n}"/>`;
+  s += `<ellipse cx="50" cy="72" rx="32" ry="46" fill="${n}"/><ellipse cx="50" cy="84" rx="22" ry="32" fill="${C('#fff')}"/>`;
+  s += `<path d="M30 46 Q30 30 50 32 Q70 30 70 46 Q70 60 50 62 Q30 60 30 46Z" fill="${C('#fff')}"/>`;
+  s += face(50, 46, 15, o.m, { noMouth: true });
+  s += `<path d="M44 52 L56 52 L50 60Z" fill="${or}"/>`;
+  s += `<path d="M28 64 Q50 74 72 64 L72 71 Q50 81 28 71Z" fill="${C('#e63946')}"/><path d="M60 73 L70 92 L57 88Z" fill="${C('#e63946')}"/>`;
+  return s;
+}
+
+/* ---------- animals ---------- */
+function robbeG(o) {
+  const g = C('#f7f9fc'), d = C('#dfe5ee');
+  let s = `<path d="M24 66 L6 54 L10 68 L4 82 L24 74Z" fill="${d}"/>`;
+  s += `<path d="M18 70 Q16 52 44 50 Q72 48 94 34 L114 46 Q112 72 88 78 Q52 86 18 70Z" fill="${g}"/>`;
+  s += `<path d="M78 70 Q82 84 98 86 Q92 74 90 66Z" fill="${d}"/>`;
+  s += `<circle cx="104" cy="32" r="19" fill="${g}"/>`;
+  s += face(104, 31, 15, o.m, { noMouth: true });
+  s += `<ellipse cx="104" cy="41" rx="8" ry="5" fill="${C('#ffffff')}"/><ellipse cx="104" cy="38" rx="3" ry="2" fill="${INK}" stroke="none"/>`;
+  s += P('M101 44 Q104 46 107 44', 'stroke-width="1.4"') + P('M96 41 L85 39 M96 43 L85 45 M112 41 L123 39 M112 43 L123 45', 'stroke-width="1"');
+  return s;
+}
+function melloG() {
+  const g = C('#e7b340'), d = C('#b9832a');
+  let s = P('M26 50 Q10 40 14 22', 'stroke-width="8"') + P('M26 50 Q10 40 14 22', `stroke="${g}" stroke-width="4"`);
+  s += [30, 44, 68, 82].map(x => `<rect x="${x}" y="60" width="10" height="30" rx="4" fill="${g}"/>`).join('');
+  s += `<ellipse cx="57" cy="58" rx="36" ry="19" fill="${g}"/><circle cx="92" cy="36" r="20" fill="${g}"/>`;
+  s += `<path d="M77 22 Q64 30 70 52 Q80 46 82 28Z" fill="${d}"/><path d="M107 22 Q120 30 114 52 Q104 46 102 28Z" fill="${d}"/>`;
+  s += `<ellipse cx="92" cy="46" rx="10" ry="7" fill="${C('#f7dc95')}"/><ellipse cx="92" cy="42" rx="4" ry="3" fill="${INK}" stroke="none"/>` + P('M88 49 Q92 52 96 49');
+  s += `<circle cx="85" cy="32" r="2.4" fill="${INK}" stroke="none"/><circle cx="99" cy="32" r="2.4" fill="${INK}" stroke="none"/>`;
+  s += P('M75 52 Q92 61 109 52', 'stroke="#0072B2" stroke-width="4"') + `<circle cx="92" cy="59" r="3" fill="#ffd54a" stroke-width="1.2"/>`;
+  return s;
+}
+function malvaG() {
+  const m = C('#b9b3c9'), p = C('#ffb3c7');
+  let s = P('M22 60 Q4 56 8 40 Q12 28 4 20', 'stroke-width="2"');
+  s += `<ellipse cx="36" cy="73" rx="7" ry="4" fill="${m}"/><ellipse cx="62" cy="73" rx="7" ry="4" fill="${m}"/>`;
+  s += `<circle cx="72" cy="24" r="11" fill="${m}"/><circle cx="72" cy="24" r="6" fill="${p}" stroke="none"/><circle cx="93" cy="27" r="11" fill="${m}"/><circle cx="93" cy="27" r="6" fill="${p}" stroke="none"/>`;
+  s += `<ellipse cx="50" cy="56" rx="30" ry="18" fill="${m}"/><circle cx="83" cy="45" r="16" fill="${m}"/>`;
+  s += `<path d="M64 16 L58 10 L58 22Z M64 16 L70 10 L70 22Z" fill="${C('#b0578d')}" stroke-width="1.4"/>`;
+  s += `<circle cx="99" cy="49" r="3" fill="${C('#ff7aa2')}"/><circle cx="79" cy="42" r="2.2" fill="${INK}" stroke="none"/><circle cx="90" cy="41" r="2.2" fill="${INK}" stroke="none"/>`;
+  s += P('M85 51 Q89 54 93 51', 'stroke-width="1.6"') + P('M95 51 L108 47 M95 53 L108 56', 'stroke-width="1"');
+  return s;
+}
+function cloud(arr, fill) {
+  return arr.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}"/>`).join('') +
+         arr.map(([x, y, r]) => `<circle cx="${x}" cy="${y}" r="${r - 1.3}" fill="${fill}" stroke="none"/>`).join('');
+}
+function melbaG() {
+  const w = C('#fbf8f2');
+  let s = [28, 40, 62, 74].map(x => `<rect x="${x}" y="100" width="9" height="38" rx="3" fill="${w}"/><rect x="${x}" y="134" width="9" height="6" rx="2" fill="${C('#6b5a4a')}"/>`).join('');
+  s += cloud([[30, 96, 15], [44, 88, 17], [60, 88, 17], [74, 94, 15], [62, 104, 15], [44, 106, 15], [30, 106, 11], [78, 78, 11], [82, 64, 10], [84, 52, 10]], w);
+  s += `<path d="M79 26 L74 7 L86 20Z" fill="${w}"/><path d="M95 22 L100 5 L103 24Z" fill="${w}"/>`;
+  s += `<ellipse cx="88" cy="36" rx="14" ry="16" fill="${w}"/>`;
+  s += cloud([[82, 23, 6], [89, 20, 7], [96, 24, 5]], w);
+  s += `<ellipse cx="92" cy="46" rx="8" ry="6" fill="${C('#efe4d2')}"/>` + P('M89 44 Q92 46 95 44', 'stroke-width="1.6"') + P('M89 49 Q92 51 95 49', 'stroke-width="1.6"');
+  s += `<circle cx="83" cy="35" r="2.4" fill="${INK}" stroke="none"/><circle cx="96" cy="35" r="2.4" fill="${INK}" stroke="none"/>`;
+  s += `<path d="M44 86 l2.2 4.6 5 .6 -3.7 3.4 1 5 -4.5 -2.5 -4.5 2.5 1 -5 -3.7 -3.4 5 -.6z" fill="${C('#ffd54a')}" stroke-width="1.2"/>`;
+  return s;
+}
+
+/* ---------- turtles — viewBox 0 0 100 150 ---------- */
+function turtleG(o) {
+  const g = C('#6cbf4a'), m = C(o.mask);
+  let s = `<rect x="35" y="112" width="12" height="26" rx="5" fill="${g}"/><rect x="53" y="112" width="12" height="26" rx="5" fill="${g}"/>`;
+  s += `<ellipse cx="40" cy="140" rx="9" ry="5" fill="${g}"/><ellipse cx="60" cy="140" rx="9" ry="5" fill="${g}"/>`;
+  s += `<rect x="20" y="76" width="11" height="32" rx="5.5" fill="${g}" transform="rotate(14 25.5 80)"/><rect x="69" y="76" width="11" height="32" rx="5.5" fill="${g}" transform="rotate(-14 74.5 80)"/>`;
+  s += `<ellipse cx="50" cy="93" rx="25" ry="27" fill="${C('#3f7d2a')}"/><ellipse cx="50" cy="94" rx="18" ry="22" fill="${C('#f0d98a')}"/>`;
+  s += P('M34 86 H66 M33 97 H67 M36 108 H64 M50 72 V116', 'stroke-width="1.3"');
+  s += P('M26 99 Q50 106 74 99', `stroke="${C('#8b5a2b')}" stroke-width="5"`);
+  s += `<circle cx="50" cy="103" r="6" fill="${C('#e3e3e3')}" stroke-width="1.6"/><text x="50" y="106.3" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="9" fill="${INK}" stroke="none">${o.letter}</text>`;
+  s += `<circle cx="18.7" cy="108" r="6" fill="${g}"/><circle cx="81.3" cy="108" r="6" fill="${g}"/>`;
+  s += `<path d="M29 40 L10 32 L15 44 L8 54 L29 48Z" fill="${m}"/>`;
+  s += `<circle cx="50" cy="44" r="23" fill="${g}"/>`;
+  s += `<path d="M27.5 37 Q50 31 72.5 37 L73 49 Q50 43 27 49Z" fill="${m}"/>`;
+  s += `<ellipse cx="41" cy="42" rx="5.5" ry="4.2" fill="#fff" stroke-width="1.4"/><ellipse cx="59" cy="42" rx="5.5" ry="4.2" fill="#fff" stroke-width="1.4"/>`;
+  s += `<circle cx="42" cy="42.5" r="2" fill="${INK}" stroke="none"/><circle cx="58" cy="42.5" r="2" fill="${INK}" stroke="none"/>`;
+  if (o.glasses) s += `<circle cx="41" cy="42" r="7.5" stroke-width="1.6"/><circle cx="59" cy="42" r="7.5" stroke-width="1.6"/>`;
+  if (o.m === 'wütend') s += P('M33 35 L46 39.5 M67 35 L54 39.5', 'stroke-width="3"') + P('M41 60 Q50 54 59 60');
+  else if (o.m === 'lacht') s += `<path d="M39 55 Q50 68 61 55 Z" fill="#8c2f39"/>`;
+  else s += P('M40 56 Q50 64 60 56');
+  if (o.pizza && !OUT) s += `<path d="M78 112 L99 96 L97 120Z" fill="${C('#ffcc4d')}"/>` + P('M99 96 L97 120', `stroke="${C('#c98a3a')}" stroke-width="4"`) + `<circle cx="91" cy="108" r="2.2" fill="${C('#D55E00')}" stroke="none"/><circle cx="94" cy="114" r="1.8" fill="${C('#D55E00')}" stroke="none"/>`;
+  return s;
+}
+function splinterG() {
+  const f = C('#9c8b7a'), r = C('#a0522d'), p = C('#f4b6c2');
+  let s = P('M34 136 Q12 142 10 120 Q9 108 16 100', 'stroke-width="5.5"') + P('M34 136 Q12 142 10 120 Q9 108 16 100', `stroke="${p}" stroke-width="3"`);
+  s += `<ellipse cx="40" cy="142" rx="8" ry="4" fill="${f}"/><ellipse cx="60" cy="142" rx="8" ry="4" fill="${f}"/>`;
+  s += `<rect x="20" y="76" width="12" height="30" rx="6" fill="${r}" transform="rotate(14 26 80)"/><rect x="68" y="76" width="12" height="30" rx="6" fill="${r}" transform="rotate(-14 74 80)"/>`;
+  s += `<path d="M32 72 Q50 64 68 72 L76 140 L24 140Z" fill="${r}"/>` + P('M34 98 Q50 104 66 98', `stroke="${C('#e8c170')}" stroke-width="3"`);
+  s += P('M81 78 L85 144', `stroke="${C('#6b4423')}" stroke-width="3.5"`) + P('M81 78 Q80 70 86 70', `stroke="${C('#6b4423')}" stroke-width="3.5"`);
+  s += `<circle cx="18.7" cy="108" r="5" fill="${f}"/><circle cx="82" cy="104" r="5" fill="${f}"/>`;
+  s += `<circle cx="30" cy="27" r="11" fill="${f}"/><circle cx="30" cy="27" r="6" fill="${p}" stroke="none"/><circle cx="70" cy="27" r="11" fill="${f}"/><circle cx="70" cy="27" r="6" fill="${p}" stroke="none"/>`;
+  s += `<ellipse cx="50" cy="44" rx="21" ry="22" fill="${f}"/>`;
+  s += `<path d="M38 52 Q50 78 62 52Z" fill="${f}"/><circle cx="50" cy="66" r="3" fill="${INK}" stroke="none"/>`;
+  s += P('M37 42 Q42 39 47 42') + P('M53 42 Q58 39 63 42') + `<circle cx="42" cy="44" r="1.8" fill="${INK}" stroke="none"/><circle cx="58" cy="44" r="1.8" fill="${INK}" stroke="none"/>`;
+  s += P('M45 64 L32 60 M45 67 L32 69 M55 64 L68 60 M55 67 L68 69', 'stroke-width="1"');
+  return s;
+}
+
+/* ---------- Mimigs — viewBox 0 0 100 130 ---------- */
+function mimigG(o) {
+  const c = C(o.c);
+  let s = `<ellipse cx="38" cy="122" rx="10" ry="6" fill="${c}"/><ellipse cx="62" cy="122" rx="10" ry="6" fill="${c}"/>`;
+  s += `<path d="M36 28 L39 8 L49 23 L57 5 L65 28Z" fill="${c}"/>`;
+  s += `<ellipse cx="18" cy="80" rx="7" ry="13" fill="${c}" transform="rotate(20 18 80)"/><ellipse cx="82" cy="80" rx="7" ry="13" fill="${c}" transform="rotate(-20 82 80)"/>`;
+  s += `<path d="M20 72 Q18 24 50 22 Q82 24 80 72 Q82 120 50 120 Q18 120 20 72Z" fill="${c}"/>`;
+  s += `<ellipse cx="50" cy="94" rx="18" ry="19" fill="#fff" opacity=".35" stroke="none"/>`;
+  s += face(50, 56, 20, o.m);
+  return s;
+}
+
+/* ---------- registry ---------- */
+const H = '0 0 100 150';
+const DRAW = {
+  chris:    o => wrap(H, personG({ hair: '#8a5a2b', shirt: '#ffffff', collar: '#1f3a68', shortSleeves: true, pants: '#4a6fa5', shoes: '#e9ecef', m: o.m, racket: o.racket })),
+  clara:    o => wrap(H, personG({ hair: '#b5651d', style: 'pigtails', shirt: '#ff7eb6', pants: '#6a4c93', bag: '#ffffff', bagDots: true, tie: '#0072B2', m: o.m })),
+  elena:    o => wrap(H, personG({ hair: '#e3b64a', style: 'long', shirt: '#2a9d8f', pants: '#34495e', m: o.m })),
+  mama:     o => wrap(H, personG({ hair: '#4a2c1a', style: 'long', shirt: '#b0578d', pants: '#2b3a67', m: o.m })),
+  papa:     o => wrap(H, personG({ hair: '#3b2a1a', shirt: '#264653', pants: '#44475a', glasses: true, m: o.m })),
+  simka:    o => wrap(H, personG({ hair: '#ff4fa3', style: 'spiky', shirt: '#ff9ccc', pants: '#ff79b8', wrench: true, m: o.m })),
+  nolik:    o => wrap(H, personG({ skin: '#8ec5ff', style: 'cap', cap: '#2f6fd0', shirt: '#2f6fd0', pants: '#1d3557', m: o.m })),
+  fernanda: o => wrap('0 0 130 100', antG()),
+  fernplane:o => wrap('-20 0 250 140', fernPlaneG()),
+  eric:     o => wrap('0 0 100 150', robotG({ c: '#3fb6c8', shape: 'round', ant: 'short', heart: true, m: o.m })),
+  uno:      o => wrap('0 0 100 150', robotG({ c: '#ffc83d', shape: 'box', ant: 'short', label: '1', m: o.m })),
+  deca:     o => wrap('0 0 100 150', robotG({ c: '#3a7bd5', shape: 'box', ant: 'long', label: '10', m: o.m })),
+  centa:    o => wrap('0 0 100 150', robotG({ c: '#e63946', shape: 'round', label: '100', m: o.m })),
+  mila:     o => wrap('0 0 100 150', robotG({ c: '#b8c2cc', shape: 'tall', label: '1000', m: o.m })),
+  multiplo: o => wrap('0 0 100 150', robotG({ c: '#8e44ad', shape: 'slim', ant: 'short', label: '×', many: true, m: o.m })),
+  milo:     o => wrap('0 0 100 150', robotG({ c: '#10b58a', shape: 'round', ant: 'fine', m: o.m })),
+  pip:      o => wrap('0 0 100 130', pipG(o)),
+  robbe:    o => wrap('0 0 130 90', robbeG(o)),
+  mello:    o => wrap('0 0 120 95', melloG()),
+  malva:    o => wrap('0 0 112 80', malvaG()),
+  melba:    o => wrap('0 0 110 146', melbaG()),
+  leo:      o => wrap(H, turtleG({ mask: '#3a7bd5', letter: 'L', m: o.m })),
+  raph:     o => wrap(H, turtleG({ mask: '#e63946', letter: 'R', m: o.m })),
+  donnie:   o => wrap(H, turtleG({ mask: '#8e44ad', letter: 'D', glasses: true, m: o.m })),
+  mikey:    o => wrap('0 0 104 150', turtleG({ mask: '#ff8c1a', letter: 'M', pizza: true, m: o.m })),
+  splinter: o => wrap(H, splinterG()),
+  miguel:   o => wrap(H, personG({ skin: '#f47a6b', hair: '#d63a2f', style: 'spiky', shirt: '#c0392b', pants: '#2b3a67', m: o.m })),
+  millie:   o => wrap(H, personG({ skin: '#98d983', hair: '#3d9a4a', style: 'long', shirt: '#8e44ad', dress: '#8e44ad', pants: '#8e44ad', antennae: '#3d9a4a', m: o.m })),
+  mike:     o => wrap(H, personG({ skin: '#7db8f7', style: 'none', shirt: '#2f6fd0', pants: '#1d3557', antennae: '#2f6fd0', m: o.m })),
+  face:     o => wrap('0 0 60 60', `<circle cx="30" cy="30" r="27" fill="${C('#ffe08a')}"/>` + face(30, 30, 22, o.m)),
+};
+
+/* ---------- labelled figure (body parts) ---------- */
+function labelled(inner, tx, ty, labels, vb, fs) {
+  let s = `<g transform="translate(${tx},${ty})">${inner}</g>`;
+  for (const [t, lx, ly, px, py] of labels) {
+    const left = lx < px + tx, ax = left ? lx + 2 : lx - 2;
+    s += `<line x1="${ax}" y1="${ly - fs * .3}" x2="${px + tx}" y2="${py + ty}" stroke="#8a91a0" stroke-width="1"/><circle cx="${px + tx}" cy="${py + ty}" r="1.8" fill="${INK}" stroke="none"/>`;
+    s += t ? `<text x="${lx}" y="${ly}" text-anchor="${left ? 'end' : 'start'}" font-family="Fredoka" font-weight="600" font-size="${fs}" fill="${INK}" stroke="none">${t}</text>`
+           : `<line x1="${left ? lx - 58 : lx}" y1="${ly + 1}" x2="${left ? lx : lx + 58}" y2="${ly + 1}" stroke="${INK}" stroke-width="1.2"/>`;
+  }
+  return wrap(vb, s);
+}
+
+/* ===================== render ===================== */
+document.querySelectorAll('x-c').forEach(el => {
+  OUT = el.hasAttribute('o');
+  el.innerHTML = DRAW[el.getAttribute('c')]({ m: el.getAttribute('m') || 'froh', racket: el.hasAttribute('racket') });
+  OUT = false;
+  if (el.getAttribute('h')) el.style.height = el.getAttribute('h');
+});
+
+document.querySelectorAll('x-t').forEach(el => {
+  const w = el.getAttribute('w'), fs = 26, est = w.length * fs * .52, gap = 22;
+  let txt = '', x = 6;
+  do { txt += `<text x="${x}" y="30" font-family="Andika" font-size="${fs}" fill="#d3d8e1">${w}</text>`; x += est + gap; } while (x + est < 300);
+  el.innerHTML = `<svg viewBox="0 0 300 40" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="11" x2="300" y2="11" stroke="#c5ccd8" stroke-width=".6"/><line x1="0" y1="18.5" x2="300" y2="18.5" stroke="#c5ccd8" stroke-width=".6" stroke-dasharray="3 2"/><line x1="0" y1="30" x2="300" y2="30" stroke="#1d2433" stroke-width=".8"/><line x1="0" y1="37" x2="300" y2="37" stroke="#c5ccd8" stroke-width=".6"/>${txt}</svg>`;
+});
+
+document.querySelectorAll('.dots').forEach(el => { el.innerHTML = '<i></i>'.repeat(+el.dataset.n); });
+
+document.getElementById('likes').innerHTML = Array(8).fill('<div style="display:flex;justify-content:center;gap:1mm;font-family:Fredoka;font-size:4.2mm"><span style="border:.5mm solid #1d2433;border-radius:1.2mm;width:7mm;height:7mm;display:inline-flex;align-items:center;justify-content:center;color:#8a91a0">✔</span><span style="border:.5mm solid #1d2433;border-radius:1.2mm;width:7mm;height:7mm;display:inline-flex;align-items:center;justify-content:center;color:#8a91a0">✖</span></div>').join('');
+
+document.getElementById('mood').innerHTML = Array(5).fill(0).map(() =>
+  `<span style="font-family:Fredoka;font-weight:500;font-size:4.6mm">Dienstag, <span class="wl" style="min-width:26mm;height:6mm"></span></span><span class="row between" style="padding:0 4mm"><span class="em" style="font-size:9mm">😀</span><span class="em" style="font-size:9mm">🙂</span><span class="em" style="font-size:9mm">😐</span><span class="em" style="font-size:9mm">🙁</span><span class="em" style="font-size:9mm">😴</span></span>`).join('');
+
+/* body page: Chris labelled / Eric with blanks */
+{
+  const chris = personG({ hair: '#8a5a2b', shirt: '#ffffff', collar: '#1f3a68', shortSleeves: true, pants: '#4a6fa5', shoes: '#e9ecef', m: 'froh' });
+  const fs = 8.5;
+  document.getElementById('body-chris').innerHTML = labelled(chris, 80, 8, [
+    ['der Kopf', 66, 22, 30, 28], ['das Ohr', 66, 58, 21, 50], ['der Arm', 66, 94, 24, 92], ['die Hand', 66, 122, 18.7, 110], ['das Bein', 66, 146, 41, 128],
+    ['die Haare', 196, 18, 62, 24], ['das Auge', 196, 46, 58.4, 38], ['die Nase', 196, 64, 50, 53], ['der Mund', 196, 82, 52, 60], ['der Bauch', 196, 110, 55, 100], ['der Fuß', 196, 150, 62, 140],
+  ], '0 0 270 162', fs);
+  const pr = { 'der Kopf': 'kopf', 'das Ohr': 'oor', 'der Arm': 'arm', 'die Hand': 'hant', 'das Bein': 'bain', 'die Haare': 'haare', 'das Auge': 'auge', 'die Nase': 'naze', 'der Mund': 'munt', 'der Bauch': 'bauh', 'der Fuß': 'fus' };
+  document.querySelectorAll('#body-chris text').forEach(t => {
+    const k = t.textContent; if (!pr[k]) return;
+    const a = t.getAttribute('text-anchor') === 'end';
+    t.insertAdjacentHTML('afterend', `<text x="${t.getAttribute('x')}" y="${+t.getAttribute('y') + 6.5}" text-anchor="${a ? 'end' : 'start'}" font-family="Andika" font-size="5" fill="#8a91a0" stroke="none">[${pr[k]}]</text>`);
+  });
+
+  const eric = robotG({ c: '#3fb6c8', shape: 'round', ant: 'short', heart: true, m: 'froh' });
+  document.getElementById('body-eric').innerHTML = labelled(eric, 90, 8, [
+    ['', 72, 14, 50, 14], ['', 72, 50, 30, 38], ['', 72, 92, 21, 91], ['', 72, 134, 41, 126],
+    ['', 208, 106, 83, 109], ['', 208, 144, 60, 141],
+  ], '0 0 280 156', 9);
+}
+
+/* board game */
+{
+  const T = [
+    ['big', '✈️', '<span class="de">START</span>'], ['w', '👋', 'Sag „Hallo!"'], ['z', '🖐️', 'Zähle bis 5!'], ['w', '🎨', 'Sag 2 Farben!'], ['w', '🐶', '„Wau wau!"<br>Welches Tier?'], ['k', '👃', 'Zeig mir die Nase!'],
+    ['m', '➡️', 'Geh 2 Felder vor!'], ['w', '🙋', 'Wie heißt du?'], ['g', '🍕', 'Was ist das?'], ['z', '🔟', 'Zähle bis 10!'], ['w', '🎂', 'Wie alt bist du?'], ['g', '😢', 'Wie fühlt er sich?'],
+    ['m', '↩️', 'Geh 1 Feld zurück!'], ['w', '🐾', 'Sag 3 Tiere!'], ['k', '✋', 'Zeig mir die Hand!'], ['g', '🍎', 'Was ist das?'], ['w', '🔵', 'Welche Farbe hat Deca?'], ['w', '🎁', 'Sag „Danke!"'],
+    ['m', '➡️', 'Geh 3 Felder vor!'], ['w', '💬', 'Wie geht’s?'], ['w', '🐭', '„Piep piep!"<br>Welches Tier?'], ['w', '🌈', 'Sag 3 Farben!'], ['k', '👀', 'Zeig mir die Augen!'], ['m', '↩️', 'Geh 2 Felder zurück!'],
+    ['g', '😋', '„Ich mag …"'], ['z', '🙌', 'Wie viele Finger? (10)'], ['w', '🐧', 'Wer ist Pip?'], ['w', '🌅', 'Sag „Guten Morgen!"'], ['g', '😠', 'Wie fühlt er sich?'], ['big', '🏁', '<span class="de">ZIEL!</span><br>„Tschüss!"'],
+  ];
+  document.getElementById('board').innerHTML = T.map(([k, e, t], i) => {
+    const r = Math.floor(i / 6), c = r % 2 ? 5 - i % 6 : i % 6;
+    return `<div class="sq ${k}" style="grid-row:${r + 1};grid-column:${c + 1}"><b>${i + 1}</b><span class="em">${e}</span><span>${t}</span></div>`;
+  }).join('');
+}
+
+/* certificate stars */
+document.getElementById('stars').innerHTML = [['Hallo sagen', '1'], ['zählen', '2'], ['Farben', '3'], ['Tiere', '4'], ['Familie', '5'], ['Essen', '6'], ['Körper', '7'], ['Gefühle', '8']]
+  .map(([t, n]) => `<div class="row" style="gap:3mm;justify-content:flex-start"><svg viewBox="0 0 24 24" style="width:16mm;height:16mm;flex:none"><path d="M12 1.8l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.9l-6.4 3.5 1.4-7.1-5.3-5 7.2-.9z" fill="none" stroke="#1d2433" stroke-width="1.1" stroke-linejoin="round"/><text x="12" y="15" text-anchor="middle" font-family="Fredoka" font-size="6" fill="#8a91a0">${n}</text></svg><span style="font-family:Fredoka;font-weight:500;font-size:6.4mm;text-align:left">${t}</span></div>`).join('');
+
+/* ?p=N shows a single page (for previews) */
+const p = new URLSearchParams(location.search).get('p');
+if (p) { document.documentElement.classList.add('solo'); document.querySelectorAll('.page').forEach((s, i) => { if (i + 1 !== +p) s.remove(); }); document.querySelector('.page').style.counterSet = `pg ${p}`; }
+</script>
+</body>
+</html>
